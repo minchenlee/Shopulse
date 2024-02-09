@@ -100,15 +100,15 @@ function formatJsonData(data) {
       data[key] = removeTwoWhiteSpaces(data[key]);
     }
 
-    // // productShortSpec 處理
-    // if (key === 'productShortSpec') {
-    //   data[key] = formatProductShortSpec(data[key]);
-    // }
+    // productShortSpec 處理
+    if (key === 'productShortSpec') {
+      data[key] = formatProductShortSpec(data[key]);
+    }
 
-    // // productFeatures 處理
-    // if (key === 'productFeactures') {
-    //   data[key] = formatProductFeactures(data[key], data['productName']);
-    // }
+    // productFeatures 處理
+    if (key === 'productFeactures') {
+      data[key] = formatProductFeactures(data[key], data['productName']);
+    }
 
     // productDetail 處理
     if (key === 'productDetail') {
@@ -125,10 +125,4 @@ function formatJsonData(data) {
 
 module.exports = {
   formatJsonData: formatJsonData,
-  formatProductFeactures: formatProductFeactures,
-  formatProductShortSpec: formatProductShortSpec,
-  formatProductDetail: formatProductDetail,
-  formatProductSpec: formatProductSpec,
-  removeTwoWhiteSpaces: removeTwoWhiteSpaces,
-  convertListToDict: convertListToDict
 }
