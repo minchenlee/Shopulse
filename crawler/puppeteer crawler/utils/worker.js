@@ -16,7 +16,8 @@ const { createCursor } = require("ghost-cursor");
 const { 
     getTextContent, getChildrenTextContent, getModelCodes, 
     getProductPrice, getProductShortSpec, getProductImageList, 
-    getReview, getProductDetailAndSpec, addObjectToFile , getRandomUserAgent
+    getReview, getProductDetailAndSpec, addObjectToFile , 
+    getRandomUserAgent, checkBlocked
   } = require('../utils/actions.js');
 const { formatJsonData } = require('../utils/formatting.js');
 
@@ -24,10 +25,10 @@ const { formatJsonData } = require('../utils/formatting.js');
 // worker("https://www.amazon.com/LG-42-Inch-Refresh-AI-Powered-OLED42C2PUA/dp/B09RMFZZPX?ref_=ast_sto_dp&th=1&psc=1", showProgress = false, checkStealth = false, "result/productInfo.json");
 
 async function worker(url, showProgress = false, checkStealth = false, saveTo) {
-    // 啟動瀏覽器
-    const browser = await puppeteer.launch({
-      headless: 'new',
-    });  
+  // 啟動瀏覽器
+  const browser = await puppeteer.launch({
+    headless: 'new',
+  });  
 
   // Progress Bar and Performance Timer 啟動
   console.log(`Crawling data from ${url}`);
@@ -74,10 +75,7 @@ async function worker(url, showProgress = false, checkStealth = false, saveTo) {
     });
 
     // check if the page is blocked
-    const checkBlock = await page.evaluate(() => {
-      return document.querySelector('body').innerText.includes('Sorry, we just need to make sure you\'re not a robot');
-    });
-
+    const checkBlock = await checkBlocked(page);
     checkBlock ? console.log('Blocked by Amazon!') : console.log('Not blocked by Amazon!');
     isBlocked = checkBlock;
   }
@@ -98,11 +96,11 @@ async function worker(url, showProgress = false, checkStealth = false, saveTo) {
   await page.screenshot({ path: 'screen_shot/stealth/live.png'});
   showProgress && progressBar.update(40);
 
-  productPrice = await retry(() => getProductPrice(page), 3, 'Get product price', url);
+  productPrice = await retry(() => getProductPrice(page, debug = true), 3, 'Get product price', url);
   await page.screenshot({ path: 'screen_shot/stealth/live.png'});
   showProgress && progressBar.update(60);
 
-  productShortSpec = await retry(() => getProductShortSpec(page), 3, 'Get product short spec', url);
+  productShortSpec = await retry(() => getProductShortSpec(page, debug = true), 3, 'Get product short spec', url);
   await page.screenshot({ path: 'screen_shot/stealth/live.png'});
   showProgress && progressBar.update(80);
 
@@ -110,11 +108,11 @@ async function worker(url, showProgress = false, checkStealth = false, saveTo) {
   await page.screenshot({ path: 'screen_shot/stealth/live.png'});
   showProgress && progressBar.update(100);
 
-  productImageList = await retry(() => getProductImageList(page), 3, 'Get product image list', url);
+  productImageList = await retry(() => getProductImageList(page, debug = true), 3, 'Get product image list', url);
   await page.screenshot({ path: 'screen_shot/stealth/live.png'});
   showProgress && progressBar.update(120);
 
-  productReview = await retry(() => getReview(page), 3, 'Get product review', url);
+  productReview = await retry(() => getReview(page, debug = true), 3, 'Get product review', url);
   await page.screenshot({ path: 'screen_shot/stealth/live.png'});
   showProgress && progressBar.update(140);
 

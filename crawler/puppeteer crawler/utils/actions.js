@@ -74,8 +74,9 @@ async function getProductPrice(page, debug = false) {
       prodcutPrice = productPrice;
       isSuccess = true;
     } catch (error) {
-      console.log('error:', error);
-      console.log('performing a retry...');
+      // console.log('error:', error);
+      break;
+      console.log('Can not get product price, performing a retry...');
     }
   }
 
@@ -133,8 +134,15 @@ async function getProductImageList(page, debug = false) {
 
   await delay(1000);
   // await page.screenshot({ path: 'screen_shot/check20.png' });
-  const closeButton = await page.waitForSelector('body > div.a-modal-scroller.a-declarative > div > div > header > button');
-  await closeButton.click();
+  try {
+    const closeButton = await page.waitForSelector('body > div.a-modal-scroller.a-declarative > div > div > header > button');
+    await closeButton.click();
+  } catch (error) {
+    const modal = await page.waitForSelector('body > div.a-modal-scroller.a-declarative')
+    await modal.click();
+    await page.keyboard.press('Escape');
+  }
+
   return productImageList;
 }
 
@@ -173,43 +181,84 @@ async function getReview(page, debug = false) {
   }
   
   debug && await page.screenshot({ path: 'screen_shot/check32.png' });
+  let reviewRatingRetryCount = 0;
+  let ratingSelector;
+  let reviewCountSelector;
+  let ratingDistribution;
 
-  // 取得商品評分
-  const ratingSelector = await page.waitForSelector('#cm_cr-product_info > div > div.a-text-left.a-fixed-left-grid-col.reviewNumericalSummary.celwidget.a-col-left > div.a-row.a-spacing-small.averageStarRatingIconAndCount > div > div > div.a-fixed-left-grid-col.aok-align-center.a-col-right > div');
-  const rating = await ratingSelector.evaluate(el => el.innerText.split(' ')[0]);
+  let rating;
+  let reviewCount;
+  while ( reviewRatingRetryCount < 3) {
+    try {
+      // 取得商品評分
+      ratingSelector = await page.waitForSelector('#cm_cr-product_info > div > div.a-text-left.a-fixed-left-grid-col.reviewNumericalSummary.celwidget.a-col-left > div.a-row.a-spacing-small.averageStarRatingIconAndCount > div > div > div.a-fixed-left-grid-col.aok-align-center.a-col-right > div');
+      rating = await ratingSelector.evaluate(el => el.innerText.split(' ')[0]);
 
-  debug && console.log(`Rating: ${rating}`);
+      debug && console.log(`Rating: ${rating}`);
 
-  // 取得商品評論數
-  const reviewCountSelector = await page.waitForSelector('#cm_cr-product_info > div > div.a-text-left.a-fixed-left-grid-col.reviewNumericalSummary.celwidget.a-col-left > div.a-row.a-spacing-medium.averageStarRatingNumerical');
-  const reviewCount = await reviewCountSelector.evaluate(el => el.innerText.split(' ')[0]);
-  debug && console.log('reviewCount:', reviewCount);
+      // 取得商品評論數
+      reviewCountSelector = await page.waitForSelector('#cm_cr-product_info > div > div.a-text-left.a-fixed-left-grid-col.reviewNumericalSummary.celwidget.a-col-left > div.a-row.a-spacing-medium.averageStarRatingNumerical');
+      reviewCount = await reviewCountSelector.evaluate(el => el.innerText.split(' ')[0]);
+      debug && console.log('reviewCount:', reviewCount);
 
-  // 取得商品評分分佈
-  const ratingDistribution = await page.waitForSelector('#cm_cr-product_info > div > div.a-text-left.a-fixed-left-grid-col.reviewNumericalSummary.celwidget.a-col-left > div:nth-child(4)');
+      // 取得商品評分分佈
+      ratingDistribution = await page.waitForSelector('#cm_cr-product_info > div > div.a-text-left.a-fixed-left-grid-col.reviewNumericalSummary.celwidget.a-col-left > div:nth-child(4)');
 
-  // 從 #histogramTable 裡面取得評分分佈
-  const ratingDistributionList = await ratingDistribution.evaluate((ratingDistribution) => {
-    const ratingDistributionList = [];
-    const ratingDistributionRows = ratingDistribution.querySelectorAll('tr');
-    console.log('ratingDistributionRows:', ratingDistributionRows);
-    for (const row of ratingDistributionRows) {
-      const rating = row.querySelector('td.aok-nowrap').innerText;
-      const count = row.querySelector('td.a-text-right').innerText;
-      ratingDistributionList.push({rating, count});
+
+      await page.screenshot({ path: 'screen_shot/check33.png' });
+      break;
+    } catch (error) {
+      console.log('can not get rating and review count, performing a retry...');
+      debug && await page.screenshot({ path: 'screen_shot/check33.png' });
+      reviewRatingRetryCount += 1;
     }
-    return ratingDistributionList;
-  }, ratingDistribution);
-  debug && console.log('ratingDistributionList:', ratingDistributionList);
+  }
+
+  let ratingDistributionList = [];
+  // 從 #histogramTable 裡面取得評分分佈
+  let retryCount = 0;
+  while (retryCount < 3) {
+    try {
+      ratingDistributionList = await ratingDistribution.evaluate((ratingDistribution) => {
+        const ratingDistributionList = [];
+        const ratingDistributionRows = ratingDistribution.querySelectorAll('tr');
+        for (const row of ratingDistributionRows) {
+          const rating = row.querySelector('td.aok-nowrap, td.a-nowrap > span.a-size-base').innerText;
+          const count = row.querySelector('td.a-text-right').innerText;
+          ratingDistributionList.push({rating, count});
+        }
+        return ratingDistributionList;
+      }, ratingDistribution);
+
+      console.log(ratingDistributionList);
+      debug && console.log('ratingDistributionList:', ratingDistributionList);
+      break;
+    } catch (error) {
+      console.log('error:', error);
+      console.log('can not get rating distribution, performing a retry...');
+      retryCount += 1;
+    }
+  }
 
   // 取得商品評論
   // 取得 30 則評論
   let reviewList = [];
   for (let i = 0; i < 2; i++) {
     i !== 0 && await delay(2000);
-    debug && await page.screenshot({ path: `screen_shot/check${33 + i}.png` });
+    debug && await page.screenshot({ path: `screen_shot/check${34 + i}.png` });
 
-    const reviewSectionSelector = await page.waitForSelector('#cm_cr-review_list');
+    let retryCount = 0;
+    let reviewSectionSelector;
+    while (retryCount < 3) {
+      try {
+        reviewSectionSelector = await page.waitForSelector('#cm_cr-review_list');
+        break;
+      } catch (error) {
+        console.log('error:', error);
+        console.log('can not get review performing a retry...');
+        retryCount += 1;
+      }
+    }
     const reviewListBatch = await reviewSectionSelector.evaluate((reviewSectionSelector) => {
       const reviewList = [];
       const reviewItems = reviewSectionSelector.querySelectorAll('div.a-section.review.aok-relative');
@@ -227,13 +276,16 @@ async function getReview(page, debug = false) {
 
     // try three time if the next page button is not clickable
     let attempt = 0;
-    while (attempt < 3) {
+    while (attempt < 2) {
       try {
         const nextPageButton = await page.waitForSelector('#cm_cr-pagination_bar > ul > li.a-last > a');
         await nextPageButton.click();
+        break;
       } catch (error) {
         attempt += 1;
+        console.log('the next page button is not clickable, performing a retry...');
         page.reload();
+        await delay(2000);
       }
     }
   }
@@ -360,6 +412,135 @@ async function getProductDetailAndSpec(page, productModelCode, debug = false) {
 }
 
 
+async function getProductDetail(page, debug = false) {
+  // 選擇搜尋結果的第一個商品
+  const ResultSelector = await page.waitForSelector('#maincontent > main > div > div:nth-child(2) > div > div > div.w-100.relative-m.pl4.pr4.flex.pt2 > div.relative.w-80 > div > section > div');
+
+  // 一個一個搜尋，直到找到沒有 "Sponsored" 的商品
+  const resultList = await ResultSelector.$$('div.mb0.ph1.ph0-xl.pt0-xl.pb3-m.bb.b--near-white.w-25');
+  let productLink = '';
+  for (const result of resultList) {
+    const text = await result.evaluate(el => el.innerText);
+    if (!text.includes('Sponsored')) {
+      productLink = await result.$eval('a', el => el.getAttribute('href'));
+      productLink = productLink.split('?')[0];
+      break;
+    }
+  }
+  debug && console.log('productLink:', productLink);
+
+  // 新開一個瀏覽器，以繞過
+  const tempBrowser = await puppeteer.launch({
+    headless: 'new',
+  });
+
+  // 開啟新分頁，
+  const tempPage = await tempBrowser.newPage();
+
+  // 等待商品頁面載入
+  const cursor = createCursor(tempPage);
+  await tempPage.setViewport({ width: 2560, height: 1664 });  // 把視窗調整成 Mac Book Air 13" 的大小，用來截圖除錯用
+  await tempPage.setDefaultTimeout(20000);  // set timeout to 20 seconds
+  const userAgent = new UserAgent({ deviceCategory: 'desktop' });
+  await tempPage.setUserAgent(userAgent.toString());
+  await tempPage.goto('https://www.walmart.com' + productLink, { waitUntil: 'domcontentloaded' });
+  
+
+  // 取得商品 detail
+  const productDetailSelector = await tempPage.waitForSelector('section[data-testid="product-description"]');
+  const productDetailList = await tempPage.evaluate((productDetailSelector) => {
+    const productDetailList = [];
+    const productDetailItems = productDetailSelector.querySelectorAll('li');
+    for (const item of productDetailItems) {
+      productDetailList.push(item.innerText);
+    }
+    return productDetailList;
+  }, productDetailSelector);
+
+  debug && console.log('productDetail:', productDetailList);
+
+  await tempBrowser.close()
+  return productDetailList;
+}
+
+
+async function getProductSpec(page, debug = false) {
+  // 選擇搜尋結果的第一個商品
+  const ResultSelector = await page.waitForSelector('#maincontent > main > div > div:nth-child(2) > div > div > div.w-100.relative-m.pl4.pr4.flex.pt2 > div.relative.w-80 > div > section > div');
+
+  // 一個一個搜尋，直到找到沒有 "Sponsored" 的商品
+  const resultList = await ResultSelector.$$('div.mb0.ph1.ph0-xl.pt0-xl.pb3-m.bb.b--near-white.w-25');
+  let productLink = '';
+  for (const result of resultList) {
+    const text = await result.evaluate(el => el.innerText);
+    if (!text.includes('Sponsored')) {
+      productLink = await result.$eval('a', el => el.getAttribute('href'));
+      productLink = productLink.split('?')[0];
+      break;
+    }
+  }
+  debug && console.log('productLink:', productLink);
+
+  // 新開一個瀏覽器，以繞過
+  const tempBrowser = await puppeteer.launch({
+    headless: 'new',
+  });
+
+  // 開啟新分頁，
+  const tempPage = await tempBrowser.newPage();
+
+  // 等待商品頁面載入
+  const cursor = createCursor(tempPage);
+  await tempPage.setViewport({ width: 2560, height: 1664 });  // 把視窗調整成 Mac Book Air 13" 的大小，用來截圖除錯用
+  await tempPage.setDefaultTimeout(20000);  // set timeout to 20 seconds
+  const userAgent = new UserAgent({ deviceCategory: 'desktop' });
+  await tempPage.setUserAgent(userAgent.toString());
+  await tempPage.goto('https://www.walmart.com' + productLink, { waitUntil: 'domcontentloaded' });
+
+  // 取得商品 specification
+  // 點擊 more detail button
+  const moreDetailButton = await tempPage.waitForSelector('button[aria-label="More details"]');
+  await cursor.click(moreDetailButton);
+
+  // 檢查 modal 是否已經打開，如果沒有就一直點擊
+  let modalOpen = false;
+  let retryCount = 0;
+  while (!modalOpen) {
+    retryCount += 1;
+    modalOpen = await tempPage.evaluate(() => {
+      const modal = document.querySelector('div.w_dUbF');
+      return modal !== null;
+    });
+    if (!modalOpen) {
+      await delay(1000);
+      await cursor.click(moreDetailButton);
+    }
+  }
+
+  // 取得商品規格
+  // let productSpecList = await getTextContent(tempPage, 'div.w_dUbF');
+  // productSpecList = productSpecList.split('\n')
+  let productSpecDict = {};
+  let specTitleList = await getChildrenTextContent(tempPage, 'div.w_dUbF', 'div.pb2 > h3');
+  let specContentList = await getChildrenTextContent(tempPage, 'div.w_dUbF', 'div.pb2 > div');
+
+  // 過一遍 specContentList，如果包含多個項目（以 "\n" 分隔），就用 ", " 取代
+  for (let i = 0; i < specContentList.length; i++) {
+    if (specContentList[i].includes('\n')) {
+      specContentList[i] = specContentList[i].replace(/\n/g, ', ');
+    }
+  }
+
+  // 把 specTitleList 和 specContentList 合併成一個 dict
+  for (let i = 0; i < specTitleList.length; i++) {
+    productSpecDict[specTitleList[i]] = specContentList[i];
+  }
+
+  debug && console.log('productSpecList:', productSpecDict);
+  await tempBrowser.close()
+  return productSpecDict;
+}
+
 
 /*
 #############################
@@ -374,7 +555,7 @@ async function getTextContent(page, selector) {
     return await element?.evaluate(el => el.innerText);
   } 
   catch (error) {
-    console.log('error:', error);
+    throw new Error(error)
     return '';
   }
 };
@@ -470,6 +651,25 @@ async function addObjectToFile(filePath, newObject) {
   }
 }
 
+
+// 檢查是否被擋
+async function checkBlocked(page) {
+  let amazonBlocked = false;
+  let walmartBlocked = false;
+
+  const isBlocked = await page.evaluate(() => {
+    const amazonBlocked = document.querySelector('body').innerText.includes(`Sorry, we just need to make sure you're not a robot. For best results, please make sure your browser is accepting cookies.`);
+    const walmartBlocked = document.querySelector('body').innerText.includes('Activate and hold the button to confirm that you\'re human. Thank You!');
+    return amazonBlocked || walmartBlocked;
+  });
+
+  amazonBlocked && console.log('Amazon has blocked the request.');
+  walmartBlocked && console.log('Walmart has blocked the request.');
+
+  return isBlocked;
+}
+
+
 module.exports = {
   getModelCodes: getModelCodes,
   getProductPrice: getProductPrice,
@@ -477,10 +677,13 @@ module.exports = {
   getProductImageList: getProductImageList,
   getReview: getReview,
   getProductDetailAndSpec: getProductDetailAndSpec,
+  getProductDetail: getProductDetail,
+  getProductSpec: getProductSpec,
   getTextContent: getTextContent,
   getChildrenTextContent: getChildrenTextContent,
   delay: delay,
   randomDelay: randomDelay,
   getRandomUserAgent: getRandomUserAgent,
-  addObjectToFile: addObjectToFile
+  addObjectToFile: addObjectToFile,
+  checkBlocked: checkBlocked
 }

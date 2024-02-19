@@ -18,7 +18,7 @@ function convertListToDict(list) {
 
 // product short spec formatting
 function formatProductShortSpec(shortSpecList) {
-
+  // 
   shortSpecList = shortSpecList.map((item) => {
     item = item.replace(/\t\n/g, '\t');
     item = item.replace(/\t/g, ':');
@@ -28,7 +28,7 @@ function formatProductShortSpec(shortSpecList) {
     }
     return item
   });
-  
+
   return convertListToDict(shortSpecList);
 }
 
@@ -80,18 +80,6 @@ function formatProductDetail(detailList) {
 }
 
 
-// product spec formatting
-function formatProductSpec(specList) {
-  // 把 specList 兩兩一組轉成 dict
-  // let specDict = {};
-  // for (let i = 0; i < specList.length; i += 2) {
-  //   specDict[specList[i]] = specList[i + 1];
-  // }
-  return specList;
-}
-
-
-
 // 對 JSON data 做 formatting
 function formatJsonData(data) {
   for (const key in data) {
@@ -112,17 +100,15 @@ function formatJsonData(data) {
 
     // productDetail 處理
     if (key === 'productDetail') {
+      console.log(data[key]);
       data[key] = formatProductDetail(data[key]);
     }
 
-    // productSpec 處理
-    if (key === 'productSpec') {
-      data[key] = formatProductSpec(data[key]);
-    }
   }
 }
 
 
 module.exports = {
   formatJsonData: formatJsonData,
+  formatProductDetail: formatProductDetail,
 }
