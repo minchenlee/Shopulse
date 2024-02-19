@@ -30,15 +30,9 @@ const productSchema = new Schema({
     type: Map,
     of: String // Assuming all values in this Map are strings
   },
-  productFeatures: {
-    type: Map,
-    of: String // Adjust the type based on expected values
-  },
+  productFeatures: String,
   productImageList: [String],
-  productDetail: {
-    type: Map,
-    of: String // This can be adjusted if the values are not always strings
-  },
+  productDetail: String,
   productSpec: {
     type: Map,
     of: String // Or a more specific type/schema if applicable

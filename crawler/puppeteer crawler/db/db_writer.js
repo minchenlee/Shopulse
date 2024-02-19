@@ -19,7 +19,11 @@ async function main() {
 
     // Save all products to MongoDB
     const productInfoJsonList = Object.values(jsonData);
-    for (const product of productInfoJsonList) {
+    for (let product of productInfoJsonList) {
+      // 把 productDetail 和 productFeatures 轉成 string
+      product.productDetail = JSON.stringify(product.productDetail);
+      product.productFeatures = JSON.stringify(product.productFeatures);
+
       const newProduct = new productModel(product);
       await newProduct.save();
     }
