@@ -3,8 +3,8 @@ let router = express.Router();
 require('dotenv').config();
 
 
-const openAiInterface = require('../model/openAi');
-const { getIntentOnly } = require('../model/dialogflow');
+const openAiInterface = require('../test/openAi');
+const { getIntentOnly } = require('../test/dialogflow');
 
 
 
