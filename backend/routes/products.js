@@ -27,7 +27,7 @@ router.get('/search', validateSearchParams, async (req, res) => {
                 }
               },
             ],
-            filter: [
+            should: [
               // Add a match stage for brand, screenType, resolution, refreshRate, priceRange, screenSize, connectivity, smartTVPlatform, supportedService
               ...(brand ? [{
                 text: {
@@ -114,7 +114,7 @@ router.get('/search', validateSearchParams, async (req, res) => {
           productName: 1,
           productPrice: 1,
           productShortSpec: 1,
-          // productSpec: 1,
+          productSpec: 1,
           productFeatures: 1,
           productImageList: 1,
           score: { $meta: 'searchScore' },
@@ -123,7 +123,7 @@ router.get('/search', validateSearchParams, async (req, res) => {
       }
     ]);
 
-    // product 的 prodcutFeatures 和 productDetail 是 json string，要轉成 object
+    // prodcutFeatures and productDetail are json string, need to convert to object
     results = results.map(result => {
       result.productFeatures = JSON.parse(result.productFeatures);
       // result.productDetail = JSON.parse(result.productDetail);
@@ -141,14 +141,13 @@ router.get('/search', validateSearchParams, async (req, res) => {
 router.get('/filter', validateSearchParams, async (req, res) => {
   const { limit, pagination, minPrice, maxPrice, brand, screenType, resolution, refreshRate, screenSize, connectivity, smartTVPlatform, supportedService } = req.query;
 
-
   try {
     let results = await productModel.aggregate([
       {
         $search: {
           searchAfter: pagination ? pagination : null,
           compound: {
-            filter : [
+            should : [
               // Add a match stage for brand, screenType, resolution, refreshRate, priceRange, screenSize, connectivity, smartTVPlatform, supportedService
               ...(brand ? [{
                 text: {
@@ -177,7 +176,7 @@ router.get('/filter', validateSearchParams, async (req, res) => {
               ...(refreshRate ? [{
                 text: {
                   query: refreshRate,
-                  path: 'productSpec.RefreshRate',
+                  path: 'productSpec.Refresh Rate',
                   fuzzy: {}
                 }
               }] : []),
@@ -235,7 +234,7 @@ router.get('/filter', validateSearchParams, async (req, res) => {
           productName: 1,
           productPrice: 1,
           productShortSpec: 1,
-          // productSpec: 1,
+          productSpec: 1,
           productFeatures: 1,
           productImageList: 1,
           score: { $meta: 'searchScore' },
@@ -290,7 +289,7 @@ router.get('/:productId', async (req, res) => {
 
     // Send the response
     res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(productDetails, null, 2));
+    res.send(JSON.stringify(productDetails));
   } catch (error) {
     console.error(`Internal Server Error: ${error}`);
     res.status(500).send('Internal Server Error');

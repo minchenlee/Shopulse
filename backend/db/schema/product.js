@@ -40,6 +40,4 @@ const productSchema = new Schema({
   productReview: productReviewSummarySchema
 });
 
-module.exports = {
-  productSchema: productSchema,
-}
+module.exports = productSchema;
