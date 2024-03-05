@@ -1,0 +1,41 @@
+{
+  "howToAsk": {
+    "Tips": [
+      "Be specific about what you're looking for.",
+      "Mention any particular brands, sizes, features, or price ranges you're interested in.",
+      "Feel free to ask for comparisons between different models.",
+      "Ask for user reviews or ratings to get an idea of customer satisfaction.",
+      "If you're unsure, ask for recommendations based on your needs."
+    ],
+    "Consulting": [
+      "Can you help me choose the right TV for my living room?",
+      "I need advice on the best TV for gaming. Can you assist?",
+      "What should I consider when buying a new television?",
+      "Could you suggest a TV that's good for both movies and sports?"
+    ],
+    "Search/Filtering": [
+      "Show me all 4K TVs under $500.",
+      "I'm looking for a Samsung smart TV within a $700 budget. What are my options?",
+      "Can you find TVs that are 55 inches and above with HDR technology?",
+      "I need a list of the latest OLED televisions you have."
+    ],
+    "Product Detailing": [
+      "Tell me more about the LG CX OLED TV.",
+      "What are the features of the Sony Bravia X90J?",
+      "Can you provide details on the Samsung QLED Q80T's display quality?",
+      "I'd like to know the specifications of the Panasonic HZ2000."
+    ],
+    "Getting Reviews": [
+      "What are the customer reviews for the TCL 6-Series?",
+      "Can you show me the ratings and reviews for the Hisense H8G?",
+      "I want to see user feedback on the Vizio P-Series Quantum X.",
+      "Are there any reviews for the Philips OLED 805?"
+    ]
+  },
+  "Welcoming": {
+    "Welcome to Our Research Experiment!": "Thank you for your interest and willingness to participate in our study. Your contribution is invaluable to us and will help advance our understanding of [topic].",
+    "Please Begin by Verifying Your Participation": "To maintain our study's integrity and validate your participation, please enter your User ID on the next page. This unique identifier helps us monitor your progress without compromising your privacy.",
+    "Verification": ""
+  }
+}
+
