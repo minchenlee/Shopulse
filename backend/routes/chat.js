@@ -112,7 +112,7 @@ router.post('/messages', async (req, res) => {
     sendMessageUpdateToUser(threadId, { type: 'runStatus', data: run });
 
     // Initialize polling control variables
-    const maxAttempts = 10; // Maximum number of polling attempts
+    const maxAttempts = 5; // Maximum number of polling attempts
     let attempts = 0; // Current attempt count
 
     // Polling with timeout and max attempts
@@ -126,6 +126,7 @@ router.post('/messages', async (req, res) => {
       await new Promise(resolve => setTimeout(resolve, 3000)); // 3-second delay
       try {
         run = await checkRunStatus(threadId, run.id);
+        // console.log(run.status);
 
         if (run.status !== previousStatus) {
           sendMessageUpdateToUser(threadId, { type: 'runStatus', data: run });
@@ -137,27 +138,48 @@ router.post('/messages', async (req, res) => {
         }
 
         if (run.status === 'requires_action') {
-          let result_list = await actions(run.required_action.submit_tool_outputs.tool_calls);
+          const toolCalls = run.required_action.submit_tool_outputs.tool_calls;
+          let result_list = await actions(toolCalls);
           // The result.output is a JSON string, parse to JSON object
           // so that the frontend can easily access the data
-          actionResult = [...result_list];
+          // Action result contain asked by different toolCalls
+          actionResult = structuredClone(result_list);
           actionResult = actionResult.map(result => {
             result.output = JSON.parse(result.output);
             return result;
           });
           // console.log(actionResult[0].output)
-        
+
           // Before submitting the tool outputs, iterate through the result_list and
           // delete productImageList from the result
           // so that the asssistant's reponse will not contain the image URLs
           result_list = result_list.map(result => {
-            if (result.output.productImageList) {
-              delete result.output.productImageList;
+            result.output = JSON.parse(result.output);
+            // if the tool call is for the filter_products
+            // the output will be an array of products
+            if (result.tool_call_name === 'filter_products') {
+              delete result.tool_call_name;
+              result.output = result.output.map(output => {
+                if (output.productImageList) {
+                  delete output.productImageList;
+                }
+                return output;
+              });
             }
+            // if the tool call is for the get_product_details
+            // the output will be a single product
+            if (result.tool_call_name === 'get_product_details') {
+              delete result.tool_call_name;
+              if (result.output.productImageList) {
+                delete result.output.productImageList;
+                // console.log('deleted productImageList');
+              }
+            }
+
             result.output = JSON.stringify(result.output);
             return result;
           });
-
+          
           await submitToolOutputs(threadId, run.id, result_list);
           previousStatus = run.status;
         }
@@ -173,11 +195,66 @@ router.post('/messages', async (req, res) => {
       let messages = await getMessages(threadId);
       // add new key to the messages object
       if (actionResult !== null) {
-        actionResult.map(result => {
+        await Promise.all(actionResult.map(async (result) => {
+          // if the tool call is for the filter_products or get_product_details
+          // modify the message to include the productImageList
+          const isProductToolCall = ["filter_products", "get_product_details"].includes(result.tool_call_name);
+          if (isProductToolCall) {
+            let productImageList = null;
+
+            // if the tool call is for the filter_products
+            // there contains multiple products in the output
+            if (result.tool_call_name === 'filter_products') {
+              productImageList = result.output.map(product => product.productImageList[0]);
+            }
+
+            // if the tool call is for the get_product_details
+            // there only contains a single product in the output
+            if (result.tool_call_name === 'get_product_details') {
+              productImageList = result.output.productImageList;
+            }
+
+            // the process will be the same for both filter_products and get_product_details
+            if (productImageList) {
+              // imageList may be too long, split every 5 images under a single key
+              let imageList = [];
+              for (let i = 0; i < productImageList.length; i += 5) {
+                imageList.push(productImageList.slice(i, i + 5));
+              }
+
+              // create image Dict, with the image batch name img_list_1, 2... as the key
+              // and the sub-image list as the value
+              let metaData = {};
+              imageList.map((imgSubList, index) => {
+                metaData[`img_list_${index + 1}`] = JSON.stringify(imgSubList);
+              });
+
+              // add the tool call name to the metaData
+              metaData.tool_call_name = result.tool_call_name;
+
+              // add the product name list to the metaData
+              if (result.tool_call_name === 'filter_products') {
+                metaData.product_name_list = JSON.stringify(result.output.map(product => product.productName));
+              }
+
+              if (result.tool_call_name === 'get_product_details') {
+                metaData.product_name_list = JSON.stringify([result.output.productName]);
+              }
+
+              console.log(metaData);
+
+              // modify the message
+              const messageId = messages.data[0].id;
+              await modifyMessage(threadId, messageId, metaData);
+            }
+          }
+          
           result.run_id = run.id;
           return result;
-        });
+        }));
       }
+
+      messages = await getMessages(threadId);
       messages.addtionalData = actionResult;
       sendMessageUpdateToUser(threadId, { type: 'messages', data: messages });
       res.status(200).send({ success: true, message: 'Message processed successfully' });
@@ -191,6 +268,25 @@ router.post('/messages', async (req, res) => {
   }
 });
 
+
+// Delete /chat/threads
+// Delete a thread for a user
+router.delete('/threads', validateUserId, async (req, res) => {
+  const { userId, threadId } = req.query;
+
+  if (!userId || !threadId) {
+    return res.status(400).send({ error: 'Missing userId or threadId' });
+  }
+
+  try {
+    await ThreadModel.deleteOne({ userId: userId, threadId: threadId });
+    await openai.beta.threads.del(threadId);
+    res.status(200).send({ success: true, message: `Thread ${threadId} deleted successfully` });
+  } catch (error) {
+    console.error('Failed to delete thread:', error);
+    res.status(500).send({ error: 'Failed to delete thread' });
+  }
+});
 
 
 /* Utility functions for managing chat threads */
@@ -288,8 +384,6 @@ async function submitToolOutputs(threadId, runId, result_list) {
     tool_outputs: result_list
   };
 
-  // console.log(requestBody);
-
   const run = await openai.beta.threads.runs.submitToolOutputs(
     threadId,
     runId,
@@ -302,6 +396,22 @@ async function submitToolOutputs(threadId, runId, result_list) {
 
   return run;
 }
+
+// modify the message
+async function modifyMessage(threadId, messageId, textContent) {
+  const message = await openai.beta.threads.messages.update(
+    threadId,
+    messageId,
+    { metadata: textContent }
+  );
+
+  if (!message) {
+    throw new Error(`Failed to modify message for thread ${threadId}`);
+  }
+
+  return message;
+}
+
 
 // check the run steps
 async function checkRunSteps(threadId, runId) {
@@ -331,6 +441,7 @@ async function actions(tool_calls) {
       const output = await callProductAPI(tool_call.function);
       let result = {}
       result.tool_call_id = tool_call.id;
+      result.tool_call_name = tool_call.function.name;
       result.output = JSON.stringify(output);
       results_list.push(result);
     }
@@ -380,6 +491,5 @@ async function callProductAPI(function_call) {
     return data;
   }
 }
-
 
 module.exports = router;
