@@ -1,0 +1,557 @@
+{
+    "type": "messages",
+    "data": {
+        "options": {
+            "method": "get",
+            "path": "/threads/thread_SOLt75slhbBD8u8VmHnaxv6t/messages",
+            "query": {},
+            "headers": {
+                "OpenAI-Beta": "assistants=v1"
+            }
+        },
+        "response": {
+            "size": 0,
+            "timeout": 0
+        },
+        "body": {
+            "object": "list",
+            "data": [
+                {
+                    "id": "msg_VIkzW2Cxgp513NpGjUWYyaT7",
+                    "object": "thread.message",
+                    "created_at": 1709461065,
+                    "assistant_id": "asst_eX6ciGuku8aK96iDfcodkF6w",
+                    "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                    "run_id": "run_im7AJvXRO4ZcfUKopHwClUgQ",
+                    "role": "assistant",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "value": "### LG C2 Series 42-Inch Class OLED evo Smart TV (OLED42C2PUA) Overview:\n\n- **Price:** $989.95\n- **Screen Size:** 42 Inches\n- **Resolution:** 4K UHD (3840 x 2160)\n- **Refresh Rate:** 120 Hz\n- **Smart TV Platform:** WebOS\n- **Included Components:** Television, Power Cable, Remote Control Battery (AA), Magic Remote, Quick Start Guide\n\n#### Key Features:\n1. **SELF-LIT OLED TECHNOLOGY:**\n   - Experience beautiful picture quality with infinite contrast, deep black, and over a billion colors.\n   - Features 100% color fidelity, wide color gamut, and optimal operating temperature conditions.\n2. **α9 GEN 5 AI PROCESSOR 4K:**\n   - Exclusive processor adapts to content, improving picture and sound quality automatically.\n3. **FILMMAKER MODE & DOLBY ENHANCEMENTS:**\n   - Preserve cinematic intent with Filmmaker Mode and enhance viewing with Dolby Vision IQ and Dolby Atmos.\n4. **LG GAME OPTIMIZER:**\n   - Enhances gaming experience with modes like NVIDIA G-SYNC, FreeSync, and Variable Refresh Rate (VRR).\n5. **VERSATILE MOUNTING & CONTEMPORARY DESIGN:**\n   - Mountable design with VESA mount compatibility. Includes Magic Remote, power cable, and wall mount accessories.\n    \n#### User Reviews Summary:\n- **Positive Feedback:**\n   - Users praise the vibrant colors, deep blacks, and picture quality.\n   - Smart features like Auto Low Latency Mode and Bluetooth connectivity are appreciated for gaming and content streaming.\n- **Areas for Improvement:**\n   - Some users suggest using external sound systems for better audio quality.\n   - A few users mention minor texturing initially but addressed through pixel cleaning.\n- **Overall Sentiment:**\n   - The TV is highly rated for its exceptional picture quality, gaming features, and elegant design.\n   - Users highlight the ease of setup, vibrant HDR, and immersive viewing experience.\n\nThis LG C2 Series OLED TV is a standout choice for its impressive OLED technology, advanced AI processor, rich color reproduction, and dedicated gaming features. If you have any specific questions or need more details about this model, feel free to ask!",
+                                "annotations": []
+                            }
+                        }
+                    ],
+                    "file_ids": [],
+                    "metadata": {
+                        "img_list_1": "[\"https://m.media-amazon.com/images/I/71s8GhR-pHL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/71JAWPhsKnL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/718XaCZJSkL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/31WcKTnsJlL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/51fkYcReVHL._AC_SL1200_.jpg\"]",
+                        "img_list_2": "[\"https://m.media-amazon.com/images/I/41pptv-b2yL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/61yHyNH9IgL._AC_SL1200_.jpg\"]",
+                        "tool_call_name": "get_product_details",
+                        "product_name_list": "[\"LG C2 Series 42-Inch Class OLED evo Smart TV OLED42C2PUA, 2022 - AI-Powered 4K TV, Alexa Built-in\"]"
+                    }
+                },
+                {
+                    "id": "msg_8Ma1utDHdPVSP9vL1wg46q6q",
+                    "object": "thread.message",
+                    "created_at": 1709461060,
+                    "assistant_id": null,
+                    "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                    "run_id": null,
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "value": "I want to know more about first option.",
+                                "annotations": []
+                            }
+                        }
+                    ],
+                    "file_ids": [],
+                    "metadata": {}
+                },
+                {
+                    "id": "msg_LvjfnuLxuqPY1yCDXdoip8wB",
+                    "object": "thread.message",
+                    "created_at": 1709461048,
+                    "assistant_id": "asst_eX6ciGuku8aK96iDfcodkF6w",
+                    "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                    "run_id": "run_Phxbp7lCTiYeQZoqyrFaBWBx",
+                    "role": "assistant",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "value": "### Recommended LG OLED TVs with 4K Resolution in the Price Range of $500 to $1500:\n\n1. **LG C2 Series 42-Inch Class OLED evo Smart TV OLED42C2PUA, 2022**\n   - **Price:** $989.95\n   - **Screen Size:** 42 Inches\n   - **Resolution:** 4K\n   - **Refresh Rate:** 120 Hz\n   - **Special Features:** \n     - Self-Lit OLED Technology\n     - α9 Gen 5 AI Processor 4K\n     - Filmmaker Mode & Dolby Enhancements\n     - LG Game Optimizer\n     - Versatile Mounting & Contemporary Design\n   - **Smart TV Platform:** WebOS\n   - **Included Components:** Television, Power Cable, Remote Control Battery, Magic Remote, Quick Start Guide\n\n2. **LG C2 Series 48-Inch Class OLED evo Smart TV OLED48C2PUA, 2022**\n   - **Price:** $1044.95\n   - **Screen Size:** 48 Inches\n   - **Resolution:** 4K\n   - **Refresh Rate:** 120 Hz\n   - **Special Features:** \n     - Self-Lit OLED Technology\n     - α9 Gen 5 AI Processor 4K\n     - Filmmaker Mode & Dolby Enhancements\n     - LG Game Optimizer\n     - Versatile Mounting & Contemporary Design\n   - **Smart TV Platform:** WebOS\n   - **Included Components:** Stand, Power Cable, Remote Control Battery, Magic Remote, Quick Start Guide\n\n3. **LG C3 Series 48-Inch Class OLED evo Smart TV OLED48C3PUA, 2023**\n   - **Price:** $996.99\n   - **Screen Size:** 48 Inches\n   - **Resolution:** 4K\n   - **Refresh Rate:** 120 Hz\n   - **Special Features:** \n     - LG OLED EVO\n     - Ultra Slim Design\n     - webOS 23 & LG Channels\n     - Dolby Vision + Home Theater\n     - Ultimate Gaming\n   - **Smart TV Platform:** WebOS\n   - **Included Components:** Remote Control Battery, Power Cable, Magic Remote, Quick Start Guide\n\nThese LG OLED TVs offer excellent picture quality, smart features, and a range of enhancements for an immersive viewing experience within your specified budget range. Let me know if you'd like more details on any specific model or if you have further preferences to consider!",
+                                "annotations": []
+                            }
+                        }
+                    ],
+                    "file_ids": [],
+                    "metadata": {
+                        "img_list_1": "[\"https://m.media-amazon.com/images/I/71s8GhR-pHL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/71TyVccbMCL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/71YkhhDj3IL._AC_SL1500_.jpg\"]",
+                        "tool_call_name": "filter_products",
+                        "product_name_list": "[\"LG C2 Series 42-Inch Class OLED evo Smart TV OLED42C2PUA, 2022 - AI-Powered 4K TV, Alexa Built-in\",\"LG C2 Series 48-Inch Class OLED evo Smart TV OLED48C2PUA, 2022 - AI-Powered 4K TV, Alexa Built-in, Dark Silver\",\"LG C3 Series 48-Inch Class OLED evo Smart TV OLED48C3PUA, 2023 - AI-Powered 4K, Alexa Built-in\"]"
+                    }
+                },
+                {
+                    "id": "msg_HdDFJXezMT6UTHqHe8bt8rPs",
+                    "object": "thread.message",
+                    "created_at": 1709461043,
+                    "assistant_id": null,
+                    "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                    "run_id": null,
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "value": "I'm looking for LG OLED TVs with 4K resolution priced between $500 and $1500.",
+                                "annotations": []
+                            }
+                        }
+                    ],
+                    "file_ids": [],
+                    "metadata": {}
+                },
+                {
+                    "id": "msg_6ecGzEjhdV4bWdELTOXtEazB",
+                    "object": "thread.message",
+                    "created_at": 1709461034,
+                    "assistant_id": "asst_eX6ciGuku8aK96iDfcodkF6w",
+                    "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                    "run_id": "run_tqUgGLdmD1BT0qQkYqq9Fnnd",
+                    "role": "assistant",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "value": "Selecting the right television involves a combination of understanding your needs, preferences, and the latest technology available in the market. Here are some key considerations to guide you through the decision-making process:\n\n### 1. Screen Size & Viewing Distance\n- Screen Size: Consider the size of the room or space where the TV will be placed. Larger screens are great for family rooms or home theaters, while smaller sizes might be more appropriate for bedrooms or kitchen areas.\n- Viewing Distance: The optimal viewing distance depends on the screen size and resolution. A common rule of thumb is 1.5 to 2.5 times the diagonal screen size. For instance, for a 55-inch TV, the ideal viewing distance would be about 6.9 to 11.5 feet.\n\n### 2. Resolution & Picture Quality\n- Resolution: Look for higher resolutions like 4K for sharper image quality and more detailed visuals.\n- Picture Quality: Consider features like HDR (High Dynamic Range) for improved brightness, colors, and contrast in your viewing experience.\n\n### 3. Smart Features & Connectivity\n- Smart Capabilities: Check for smart TV platforms for streaming services, apps, and voice control options.\n- Connectivity: Ensure the TV has the necessary ports like HDMI and Ethernet for external devices and internet connectivity.\n\n### 4. Audio Quality & Additional Features\n- Audio Features: Evaluate sound quality, speaker placement, and compatibility with external audio systems.\n- Special Features: Look for extras like gaming modes, screen mirroring, and AI assistants for added convenience.\n\nBy considering these factors and aligning them with your preferences and budget, you can make an informed decision when choosing a television. Feel free to share any specific requirements you have for personalized recommendations!",
+                                "annotations": []
+                            }
+                        }
+                    ],
+                    "file_ids": [],
+                    "metadata": {}
+                },
+                {
+                    "id": "msg_DUcvY3HSW2ezi9oDHVlOdubc",
+                    "object": "thread.message",
+                    "created_at": 1709461033,
+                    "assistant_id": null,
+                    "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                    "run_id": null,
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "value": "HOw to pick television?",
+                                "annotations": []
+                            }
+                        }
+                    ],
+                    "file_ids": [],
+                    "metadata": {}
+                },
+                {
+                    "id": "msg_FO81vZl3pUHFynA0VBlETnW6",
+                    "object": "thread.message",
+                    "created_at": 1709461029,
+                    "assistant_id": "asst_eX6ciGuku8aK96iDfcodkF6w",
+                    "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                    "run_id": "run_QhBnqUIqMTIPzfBIRBmuAoY7",
+                    "role": "assistant",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "value": "Hello! How can I assist you today with television-related inquiries or recommendations? Feel free to ask any questions or provide specific preferences for personalized guidance.",
+                                "annotations": []
+                            }
+                        }
+                    ],
+                    "file_ids": [],
+                    "metadata": {}
+                },
+                {
+                    "id": "msg_5VazqQzoBLwOo2v6DPCjihau",
+                    "object": "thread.message",
+                    "created_at": 1709461027,
+                    "assistant_id": null,
+                    "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                    "run_id": null,
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "value": "Hi!",
+                                "annotations": []
+                            }
+                        }
+                    ],
+                    "file_ids": [],
+                    "metadata": {}
+                }
+            ],
+            "first_id": "msg_VIkzW2Cxgp513NpGjUWYyaT7",
+            "last_id": "msg_5VazqQzoBLwOo2v6DPCjihau",
+            "has_more": false
+        },
+        "data": [
+            {
+                "id": "msg_VIkzW2Cxgp513NpGjUWYyaT7",
+                "object": "thread.message",
+                "created_at": 1709461065,
+                "assistant_id": "asst_eX6ciGuku8aK96iDfcodkF6w",
+                "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                "run_id": "run_im7AJvXRO4ZcfUKopHwClUgQ",
+                "role": "assistant",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "value": "### LG C2 Series 42-Inch Class OLED evo Smart TV (OLED42C2PUA) Overview:\n\n- **Price:** $989.95\n- **Screen Size:** 42 Inches\n- **Resolution:** 4K UHD (3840 x 2160)\n- **Refresh Rate:** 120 Hz\n- **Smart TV Platform:** WebOS\n- **Included Components:** Television, Power Cable, Remote Control Battery (AA), Magic Remote, Quick Start Guide\n\n#### Key Features:\n1. **SELF-LIT OLED TECHNOLOGY:**\n   - Experience beautiful picture quality with infinite contrast, deep black, and over a billion colors.\n   - Features 100% color fidelity, wide color gamut, and optimal operating temperature conditions.\n2. **α9 GEN 5 AI PROCESSOR 4K:**\n   - Exclusive processor adapts to content, improving picture and sound quality automatically.\n3. **FILMMAKER MODE & DOLBY ENHANCEMENTS:**\n   - Preserve cinematic intent with Filmmaker Mode and enhance viewing with Dolby Vision IQ and Dolby Atmos.\n4. **LG GAME OPTIMIZER:**\n   - Enhances gaming experience with modes like NVIDIA G-SYNC, FreeSync, and Variable Refresh Rate (VRR).\n5. **VERSATILE MOUNTING & CONTEMPORARY DESIGN:**\n   - Mountable design with VESA mount compatibility. Includes Magic Remote, power cable, and wall mount accessories.\n    \n#### User Reviews Summary:\n- **Positive Feedback:**\n   - Users praise the vibrant colors, deep blacks, and picture quality.\n   - Smart features like Auto Low Latency Mode and Bluetooth connectivity are appreciated for gaming and content streaming.\n- **Areas for Improvement:**\n   - Some users suggest using external sound systems for better audio quality.\n   - A few users mention minor texturing initially but addressed through pixel cleaning.\n- **Overall Sentiment:**\n   - The TV is highly rated for its exceptional picture quality, gaming features, and elegant design.\n   - Users highlight the ease of setup, vibrant HDR, and immersive viewing experience.\n\nThis LG C2 Series OLED TV is a standout choice for its impressive OLED technology, advanced AI processor, rich color reproduction, and dedicated gaming features. If you have any specific questions or need more details about this model, feel free to ask!",
+                            "annotations": []
+                        }
+                    }
+                ],
+                "file_ids": [],
+                "metadata": {
+                    "img_list_1": "[\"https://m.media-amazon.com/images/I/71s8GhR-pHL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/71JAWPhsKnL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/718XaCZJSkL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/31WcKTnsJlL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/51fkYcReVHL._AC_SL1200_.jpg\"]",
+                    "img_list_2": "[\"https://m.media-amazon.com/images/I/41pptv-b2yL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/61yHyNH9IgL._AC_SL1200_.jpg\"]",
+                    "tool_call_name": "get_product_details",
+                    "product_name_list": "[\"LG C2 Series 42-Inch Class OLED evo Smart TV OLED42C2PUA, 2022 - AI-Powered 4K TV, Alexa Built-in\"]"
+                }
+            },
+            {
+                "id": "msg_8Ma1utDHdPVSP9vL1wg46q6q",
+                "object": "thread.message",
+                "created_at": 1709461060,
+                "assistant_id": null,
+                "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                "run_id": null,
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "value": "I want to know more about first option.",
+                            "annotations": []
+                        }
+                    }
+                ],
+                "file_ids": [],
+                "metadata": {}
+            },
+            {
+                "id": "msg_LvjfnuLxuqPY1yCDXdoip8wB",
+                "object": "thread.message",
+                "created_at": 1709461048,
+                "assistant_id": "asst_eX6ciGuku8aK96iDfcodkF6w",
+                "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                "run_id": "run_Phxbp7lCTiYeQZoqyrFaBWBx",
+                "role": "assistant",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "value": "### Recommended LG OLED TVs with 4K Resolution in the Price Range of $500 to $1500:\n\n1. **LG C2 Series 42-Inch Class OLED evo Smart TV OLED42C2PUA, 2022**\n   - **Price:** $989.95\n   - **Screen Size:** 42 Inches\n   - **Resolution:** 4K\n   - **Refresh Rate:** 120 Hz\n   - **Special Features:** \n     - Self-Lit OLED Technology\n     - α9 Gen 5 AI Processor 4K\n     - Filmmaker Mode & Dolby Enhancements\n     - LG Game Optimizer\n     - Versatile Mounting & Contemporary Design\n   - **Smart TV Platform:** WebOS\n   - **Included Components:** Television, Power Cable, Remote Control Battery, Magic Remote, Quick Start Guide\n\n2. **LG C2 Series 48-Inch Class OLED evo Smart TV OLED48C2PUA, 2022**\n   - **Price:** $1044.95\n   - **Screen Size:** 48 Inches\n   - **Resolution:** 4K\n   - **Refresh Rate:** 120 Hz\n   - **Special Features:** \n     - Self-Lit OLED Technology\n     - α9 Gen 5 AI Processor 4K\n     - Filmmaker Mode & Dolby Enhancements\n     - LG Game Optimizer\n     - Versatile Mounting & Contemporary Design\n   - **Smart TV Platform:** WebOS\n   - **Included Components:** Stand, Power Cable, Remote Control Battery, Magic Remote, Quick Start Guide\n\n3. **LG C3 Series 48-Inch Class OLED evo Smart TV OLED48C3PUA, 2023**\n   - **Price:** $996.99\n   - **Screen Size:** 48 Inches\n   - **Resolution:** 4K\n   - **Refresh Rate:** 120 Hz\n   - **Special Features:** \n     - LG OLED EVO\n     - Ultra Slim Design\n     - webOS 23 & LG Channels\n     - Dolby Vision + Home Theater\n     - Ultimate Gaming\n   - **Smart TV Platform:** WebOS\n   - **Included Components:** Remote Control Battery, Power Cable, Magic Remote, Quick Start Guide\n\nThese LG OLED TVs offer excellent picture quality, smart features, and a range of enhancements for an immersive viewing experience within your specified budget range. Let me know if you'd like more details on any specific model or if you have further preferences to consider!",
+                            "annotations": []
+                        }
+                    }
+                ],
+                "file_ids": [],
+                "metadata": {
+                    "img_list_1": "[\"https://m.media-amazon.com/images/I/71s8GhR-pHL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/71TyVccbMCL._AC_SL1200_.jpg\",\"https://m.media-amazon.com/images/I/71YkhhDj3IL._AC_SL1500_.jpg\"]",
+                    "tool_call_name": "filter_products",
+                    "product_name_list": "[\"LG C2 Series 42-Inch Class OLED evo Smart TV OLED42C2PUA, 2022 - AI-Powered 4K TV, Alexa Built-in\",\"LG C2 Series 48-Inch Class OLED evo Smart TV OLED48C2PUA, 2022 - AI-Powered 4K TV, Alexa Built-in, Dark Silver\",\"LG C3 Series 48-Inch Class OLED evo Smart TV OLED48C3PUA, 2023 - AI-Powered 4K, Alexa Built-in\"]"
+                }
+            },
+            {
+                "id": "msg_HdDFJXezMT6UTHqHe8bt8rPs",
+                "object": "thread.message",
+                "created_at": 1709461043,
+                "assistant_id": null,
+                "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                "run_id": null,
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "value": "I'm looking for LG OLED TVs with 4K resolution priced between $500 and $1500.",
+                            "annotations": []
+                        }
+                    }
+                ],
+                "file_ids": [],
+                "metadata": {}
+            },
+            {
+                "id": "msg_6ecGzEjhdV4bWdELTOXtEazB",
+                "object": "thread.message",
+                "created_at": 1709461034,
+                "assistant_id": "asst_eX6ciGuku8aK96iDfcodkF6w",
+                "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                "run_id": "run_tqUgGLdmD1BT0qQkYqq9Fnnd",
+                "role": "assistant",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "value": "Selecting the right television involves a combination of understanding your needs, preferences, and the latest technology available in the market. Here are some key considerations to guide you through the decision-making process:\n\n### 1. Screen Size & Viewing Distance\n- Screen Size: Consider the size of the room or space where the TV will be placed. Larger screens are great for family rooms or home theaters, while smaller sizes might be more appropriate for bedrooms or kitchen areas.\n- Viewing Distance: The optimal viewing distance depends on the screen size and resolution. A common rule of thumb is 1.5 to 2.5 times the diagonal screen size. For instance, for a 55-inch TV, the ideal viewing distance would be about 6.9 to 11.5 feet.\n\n### 2. Resolution & Picture Quality\n- Resolution: Look for higher resolutions like 4K for sharper image quality and more detailed visuals.\n- Picture Quality: Consider features like HDR (High Dynamic Range) for improved brightness, colors, and contrast in your viewing experience.\n\n### 3. Smart Features & Connectivity\n- Smart Capabilities: Check for smart TV platforms for streaming services, apps, and voice control options.\n- Connectivity: Ensure the TV has the necessary ports like HDMI and Ethernet for external devices and internet connectivity.\n\n### 4. Audio Quality & Additional Features\n- Audio Features: Evaluate sound quality, speaker placement, and compatibility with external audio systems.\n- Special Features: Look for extras like gaming modes, screen mirroring, and AI assistants for added convenience.\n\nBy considering these factors and aligning them with your preferences and budget, you can make an informed decision when choosing a television. Feel free to share any specific requirements you have for personalized recommendations!",
+                            "annotations": []
+                        }
+                    }
+                ],
+                "file_ids": [],
+                "metadata": {}
+            },
+            {
+                "id": "msg_DUcvY3HSW2ezi9oDHVlOdubc",
+                "object": "thread.message",
+                "created_at": 1709461033,
+                "assistant_id": null,
+                "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                "run_id": null,
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "value": "HOw to pick television?",
+                            "annotations": []
+                        }
+                    }
+                ],
+                "file_ids": [],
+                "metadata": {}
+            },
+            {
+                "id": "msg_FO81vZl3pUHFynA0VBlETnW6",
+                "object": "thread.message",
+                "created_at": 1709461029,
+                "assistant_id": "asst_eX6ciGuku8aK96iDfcodkF6w",
+                "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                "run_id": "run_QhBnqUIqMTIPzfBIRBmuAoY7",
+                "role": "assistant",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "value": "Hello! How can I assist you today with television-related inquiries or recommendations? Feel free to ask any questions or provide specific preferences for personalized guidance.",
+                            "annotations": []
+                        }
+                    }
+                ],
+                "file_ids": [],
+                "metadata": {}
+            },
+            {
+                "id": "msg_5VazqQzoBLwOo2v6DPCjihau",
+                "object": "thread.message",
+                "created_at": 1709461027,
+                "assistant_id": null,
+                "thread_id": "thread_SOLt75slhbBD8u8VmHnaxv6t",
+                "run_id": null,
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": {
+                            "value": "Hi!",
+                            "annotations": []
+                        }
+                    }
+                ],
+                "file_ids": [],
+                "metadata": {}
+            }
+        ],
+        "addtionalData": [
+            {
+                "tool_call_id": "call_ogXX24qD3HOB6uKW24nlOMAC",
+                "tool_call_name": "get_product_details",
+                "output": {
+                    "id": "65d305d5d70af04b045a7aa7",
+                    "productName": "LG C2 Series 42-Inch Class OLED evo Smart TV OLED42C2PUA, 2022 - AI-Powered 4K TV, Alexa Built-in",
+                    "productModelCode": "OLED42C2PUA",
+                    "productPrice": 989.95,
+                    "productShortSpec": {
+                        "Screen Size": "42 Inches",
+                        "Brand": "LG",
+                        "Supported Internet Services": "Prime Video, Netflix, HBO Max, Apple TV, Disney+, and more",
+                        "Display Technology": "OLED",
+                        "Product Dimensions": "6.7\"D x 36.7\"W x 22.7\"H",
+                        "Resolution": "4K",
+                        "Refresh Rate": "120 Hz",
+                        "Special Feature": "Nvidia G Sync, Intelligent Voice Recognition, Amd freesync, Browser",
+                        "Model Name": "C2",
+                        "Included Components": "Television, Power Cable, Remote Control Battery (AA), Magic Remote, Quick Start Guide"
+                    },
+                    "productFeatures": {
+                        "SELF-LIT OLED TECHNOLOGY": "Experience amazing, beautiful picture quality with infinite contrast, deep black, and over a billion colors, now even brighter, thanks to LG's 8 million self-lit OLED pixels. Featuring 100% color fidelity and intense color with wide color gamut, Bluetooth support, and optimal operating temperature conditions",
+                        "α9 GEN 5 AI PROCESSOR 4K": "Engineered exclusively for LG, the α9 Gen 5 AI Processor 4K adapts to the content you're watching, automatically adjusting the TV's settings for improved picture and sound quality",
+                        "FILMMAKER MODE & DOLBY ENHANCEMENTS": "Eliminate unnecessary processing with movies and preserve the action the way film directors intend with Filmmaker Mode, and enhance every moment of your viewing experience with Dolby Vision IQ and Dolby Atmos for cinematic quality at home",
+                        "LG GAME OPTIMIZER": "Improve your gaming experience with LG Game Optimizer mode, NVIDIA G-SYNC, FreeSync Premium, and Variable Refresh Rate (VRR), ensuring fluid on-screen motion. Game Optimizer centralizes your game settings for ease of access",
+                        "VERSATILE MOUNTING & CONTEMPORARY DESIGN": "Mount it on the wall with a 300 x 200 VESA mount (sold separately). Comes with Magic Remote with Magic Tap, batteries, power cable, wall mount, and quick start guide. The TV stand is sold separately. The all-new, contemporary LG OLED design transforms your home into an artful space with virtually no gap when mounted on the wall"
+                    },
+                    "productImageList": [
+                        "https://m.media-amazon.com/images/I/71s8GhR-pHL._AC_SL1200_.jpg",
+                        "https://m.media-amazon.com/images/I/71JAWPhsKnL._AC_SL1200_.jpg",
+                        "https://m.media-amazon.com/images/I/718XaCZJSkL._AC_SL1200_.jpg",
+                        "https://m.media-amazon.com/images/I/31WcKTnsJlL._AC_SL1200_.jpg",
+                        "https://m.media-amazon.com/images/I/51fkYcReVHL._AC_SL1200_.jpg",
+                        "https://m.media-amazon.com/images/I/41pptv-b2yL._AC_SL1200_.jpg",
+                        "https://m.media-amazon.com/images/I/61yHyNH9IgL._AC_SL1200_.jpg"
+                    ],
+                    "productDetail": {
+                        "OLED evo ": "Our self-lit OLED pixels create beautiful picture quality with infinite contrast, perfect black and over a billion colors, now even brighter.",
+                        "Refined Design ": "Designed slim and sleek with a new silver bezel so you can focus on the screen and nothing else—not to mention the new, lightweight composite-fiber material that takes a load off installation.",
+                        "α9 Gen5 AI Processor 4K  ": "Make the impossible possible with our latest a9 Gen5 AI Processor 4K, engineered exclusively for LG OLED to automatically adjust your settings to improve picture and sound qualities based on whatever you’re watching.",
+                        "Home Cinema ": "Get in the action the way directors intended with Filmmaker Mode—and enhance every moment with Dolby Vision™ IQ and Dolby AtmosⓇ* for the ultimate home theater experience.",
+                        "Ultimate Gaming ": "Be at the top of your game with NVIDIA G-SYNC®, FreeSync™ Premium and VRR to experience real-time action—plus, the LG Game Optimizer and 4 HDMI 2.1 ports to get you (and keep you) in the action."
+                    },
+                    "productSpec": {
+                        "Estimated Annual Operating Cost": "16",
+                        "Display Resolution": "3840 x 2160",
+                        "Accessories Included": "C2 42 Inch Class 4K OLED evo w/ ThinQ AI, Remote Control Battery, Power Cable, E-Manual, Magic Remote, Quick Start Guide",
+                        "TV Features": "Bluetooth, Wall Mountable, High Dynamic Range",
+                        "Television Type": "OLED TVs",
+                        "Brand": "LG",
+                        "Model": "OLED42C2PUA",
+                        "Screen Size": "42\"",
+                        "Resolution": "4K UHD (2160p)",
+                        "Display Technology": "OLED",
+                        "Refresh Rate": "120 Hz",
+                        "Smart TV Platform": "WebOS",
+                        "Assembled Product Weight": "20.5 lb",
+                        "Manufacturer": "LG Electronics",
+                        "Connector Type": "HDMI",
+                        "Manufacturer Part Number": "OLED42C2PUA",
+                        "Condition": "New",
+                        "Streaming Services": "Netflix, HBO Max, Disney+, Apple TV, Hulu, Paramount+, Peacock, Youtube TV, Spotify, iHeart Radio and more",
+                        "Is Smart": "Y",
+                        "Height (with stand)": "22.7 in",
+                        "Height (without stand)": "21.3 in",
+                        "Depth (without stand)": "1.6 in",
+                        "Width (with stand)": "36.70\"",
+                        "Depth (with stand)": "6.7 in",
+                        "Series": "C2",
+                        "Aspect Ratio": "16:9",
+                        "Inputs & Outputs": "USB, HDMI",
+                        "Virtual Assistant": "Apple HomeKit, Alexa, Google Assistant"
+                    },
+                    "productReview": {
+                        "rating": 4.6,
+                        "reviewCount": 2974,
+                        "ratingDistributionList": [
+                            {
+                                "rating": "5 star ",
+                                "count": " 84%",
+                                "_id": "65d305d5d70af04b045a7aa9"
+                            },
+                            {
+                                "rating": "4 star ",
+                                "count": " 7%",
+                                "_id": "65d305d5d70af04b045a7aaa"
+                            },
+                            {
+                                "rating": "3 star ",
+                                "count": " 3%",
+                                "_id": "65d305d5d70af04b045a7aab"
+                            },
+                            {
+                                "rating": "2 star ",
+                                "count": " 2%",
+                                "_id": "65d305d5d70af04b045a7aac"
+                            },
+                            {
+                                "rating": "1 star ",
+                                "count": " 5%",
+                                "_id": "65d305d5d70af04b045a7aad"
+                            }
+                        ],
+                        "reviewList": [
+                            {
+                                "userName": "Crystal Lunbeck",
+                                "reviewTitle": "Beautiful picture with EVERY SINGLE FEATURE YOU COULD WANT.",
+                                "reviewDate": "Reviewed in the United States on May 22, 2023",
+                                "rating": "5.0",
+                                "review": "Should preface when I turned it on there was some texturing in the middle when all solid colors. This is somewhat normal. I did a pixel cleaning and it was 100% gone and haven’t noticed anything else. If this happens it’s alright it’s normal AND the panel does this cleaning automatically after being turned off. So you will notice if your screen has been on for a couple hours turning it off will not make the same click. It will then click off idk 20 minutes later with a little light at the bottom. Just wanted to preface with that knowledge as I feel I’m a bit more technologically inclined and was still a bit spooked by the texture. Now onto the actual tv. The panel looks perfect. HDR is really bright, colors pop, and blacks are perfect. Features include auto low latency mode meaning a pc or console connection instantly turns it to lowest latency. The input lag on this tv is lower than any panel I’ve ever used even a TN 144hz panel. Airplay 2 support means you can “cast” 1080p 60 hdr video with no loss of quality. I have to be honest even 720p video looks freaking awesome on this due to the super sampling. I personally also enjoy the interpolation this tv provides. Little to actually no artifacts with just fluid motion. Everything has worked correctly and consistently with this TV. This tv is perfect for gaming imo. Such low latency and VRR, GSync, and freesync all work correctly. No flickering, works all way down to 20hz, and even works correctly with my nividia gpu. Additionally this tv even supports Bluetooth if you want to not have the speakers going. The speakers though sound much better than I was expecting I have no desire to get any external equipment. They are very full and no mud even with super low or high frequencies. I’m not saying it’s better than a sound bar I’m just saying it’s definitely the best TV speakers I’ve ever heard. This review is a bit all round but honestly this tv is worth far more than the 1.3k I paid for the 55inch. When it came out it was high high 2k range. It has that level of quality and personally I wouldn’t even look at the c3 or g3 unless these are sold out. In short out of 100 I’d give it 100/100 this isn’t a rounding 5/5 it’s truly perfect and I have no complaints. Get it trust me you won’t be disappointed in the product.",
+                                "_id": "65d305d5d70af04b045a7aae"
+                            },
+                            {
+                                "userName": "MyHonest2Cents",
+                                "reviewTitle": "Using this as a monitor is great",
+                                "reviewDate": "Reviewed in the United States on August 7, 2023",
+                                "rating": "5.0",
+                                "review": "NOTE: LG recently released a firmware update to the LG C2 that substantially reduces the ABL auto-dimming! This makes it much more competitive to the PG4*UQ and other OLEDs without opening the service menu to disable those features.\n\nI hear a lot of issues people have with using a TV as a monitor, especially this one, but I haven't had any such issues. After setting it up properly, the only problem is the RWBG subpixel layout and having to turn it on along with my computer. But as someone that grew up with CRT monitors, having to press an extra button in addition to the power button is not even the slightest bit inconvenient. The thing that really kills this as a monitor is the subpixel layout.\nRWBG adds noticeable fringing and bleed on text on OSes calibrated for RGB subpixels. Turning subpixel rendering compensation off makes it tolerable, but it's still much harder to read than on a normal monitor, and some games use it regardless of OS settings with no obvious way to adjust it. For visual content like movies and games it isn't noticeable at all, however.\nAs long as you aren't planning to read a whole bunch, or if you sit further back and make your text bigger so the subpixels don't mess with the text as much, there isn't a single issue with using this as a computer monitor.\n\nI originally purchased the PG42UQ and PG48UQ instead, and got 2 dead 42's and one 48 that only survived for a few weeks before it spontaneously died. I'd like to compare some points on the C2 vs PG4*UQ:\n- The box on the C2 is thicker, the Styrofoam completely protects the screen unlike on the PG4*UQ where there are tons of gaps, the Styrofoam on the corners is also much thicker preventing drops from affecting the corners like what happened to BOTH of my PG42UQs, and the accessories and feet are placed in sane location unlike the strange Styrofoam origami that was both the PG42UQ and PG48UQ.\n- On both, the panel quality is fantastic. But on the C2, you can really tweak the settings until everything is perfect, especially if you have the service remote or other way to get into the service menu. This TV in particular can easily be color calibrated to make it shine in whatever environment you put it in with 22 point white balance adjustment, gamma curves, and multiple black/white level boosts and compensations.\n- The glossy screen is a boon as it leaves the blacks completely dark, vs. a matte screen like on the PG4*UQ where there is significant light bleed and blooming.\n- The C2's panel is much thicker and doesn't feel fragile compared to the dangerously paper-thin, basically unprotected edges on the PG4*UQ\n- The power button housing on the bottom doesn't bend easily and feel like it's going to snap off like on the PG4*UQ. It's also much thinner and less obnoxious to look at. Man, I hate \"gamer\" stuff.\n- In general, the design on the C2 is much more sleek, simple, and modern, allowing it to fit into the room better than the eye-catching \"gamer\" aesthetic on the PG4*UQ.\n- Due to the thicker panel backplate and rear cover design, the C2 is easier to lift safely without feeling like you're going to damage it.\n- All the cable managing on the C2 is in one spot on one side only, instead of top, right, and bottom.\n- With the right settings in Game Optimizer mode, the C2 can reach the same point-for-point performance metrics as the PG4*UQ, with only the peak brightness not being as good (but that doesn't matter as it dips substantially for both the second a scene starts getting bright, after which the difference is negligible).\n- The subpixel layout on the PG4*UQ is better for reading text. This is the only praise I have for it over the C2.\n- The refresh rate can be overclocked on the PG4*UQ to a staggering 138Hz! Wow, how impressive. Unfortunately, the difference visually between 120Hz and 138Hz is basically nonexistent, as someone that has compared the C2 at 120Hz and PG48UQ at 138Hz. The response time is still fantastic on both units regardless of mode.\n\nOverall, highly recommend this as both a TV and a monitor. I don't use the smart features and leave it disconnected from the network, and unlike with other smart TV platforms, the C2 doesn't annoy you and simply lets you use it without the smart feature bloat impeding you. And if I want to consume content and use the motion smoothing etc. features, they're there at a press of the button. I don't think all the massive number of problems with the ASUS units make the overclocking or other small extra features worth it; and at the same time, the C2 offers some nice features of its own that the PG4*UQ doesn't have. I would highly recommend it as a multimon replacement as I am, if you're willing to live with the subpixel layout and having to turn the TV on and off separately to the connected PC; do note there is a Windows-only, community-maintained companion app, which I can't use as I don't use Windows.",
+                                "_id": "65d305d5d70af04b045a7aaf"
+                            },
+                            {
+                                "userName": "Madeinkingdom",
+                                "reviewTitle": "Exceptional TV and Impeccable Service!",
+                                "reviewDate": "Reviewed in the United States on June 30, 2023",
+                                "rating": "5.0",
+                                "review": "I recently purchased a TV from this seller on Amazon, and I must say that the experience has been nothing short of outstanding. From the moment I placed the order to the prompt delivery, everything went incredibly smoothly.\n\nFirst and foremost, the TV itself is a gem. The picture quality is absolutely breathtaking, with vibrant colors and crisp details that bring every scene to life. The sound quality is equally impressive, delivering a rich and immersive audio experience. I find myself completely immersed in my favorite movies and TV shows, thanks to this remarkable television.\n\nWhat truly sets this seller apart, though, is their exceptional customer service. Throughout the entire process, they were attentive, responsive, and went above and beyond to ensure my satisfaction. They promptly answered all my pre-purchase questions, providing detailed information and expert advice to help me make an informed decision. Their dedication to customer satisfaction was evident from start to finish.\n\nFurthermore, the packaging was done with utmost care and attention to detail. The TV arrived in perfect condition, securely protected against any potential damage during transit. It was evident that the seller takes great pride in their products and values the customer's experience.\n\nI also appreciated the easy setup process. The instructions provided were clear and concise, allowing me to have the TV up and running in no time. It's always a pleasure when a product lives up to its promises, and this TV certainly exceeded my expectations.\n\nOverall, I couldn't be happier with my purchase from this seller on Amazon. They have proven themselves to be reliable, trustworthy, and committed to delivering an exceptional customer experience. If you're in the market for a new TV, I highly recommend considering their offerings. I will undoubtedly turn to them for any future electronic needs. Kudos to the seller for their outstanding product and impeccable service!",
+                                "_id": "65d305d5d70af04b045a7ab0"
+                            },
+                            {
+                                "userName": "Sue A. Waltemath",
+                                "reviewTitle": "Great picture",
+                                "reviewDate": "Reviewed in the United States on January 12, 2024",
+                                "rating": "5.0",
+                                "review": "This tv was easy to set up, remote is intuitive (except for the battery chamber that is not easy to open). Sound it great. Overall a good tv, worth the price.",
+                                "_id": "65d305d5d70af04b045a7ab1"
+                            },
+                            {
+                                "userName": "Zac D.",
+                                "reviewTitle": "Excellent OLED, but suffers from standard OLED issues.",
+                                "reviewDate": "Reviewed in the United States on January 21, 2023",
+                                "rating": "5.0",
+                                "review": "Version: 77 inch\nSeller: Amazon\nDelivery by: NSD (more about this at the bottom)\nPhoto 1: 68\" width. Will need large tv stand to look \"right\".\nPhoto 2: Mid-day reflection handling.\nPhoto 3: Inputs are on the left side of the set. Thin screen, but a wider portion holds the internals.\n\nFirst, the product.\n\nThe picture is fantastic. Viewing high bit-rate content such as Blu-rays is amazing. Ultra HD (2160p) HDR content is flawless and Full HD (1080p) SDR content is handled well. I like the upscaling of my Nvidia Shield for 1080p-> 4K upscaling over the TV’s, but most individuals will find no issues. The ability to turn off pixels for true black allows for an amazing contrast of color and blacks.\n\nThis TV supports high frame rate video game consoles with up to 120 FPS and offers a variable refresh rate (VRR) for gaming that isn’t locked at a steady 120/60/30 FPS. VRR ensures that games that support it will appear smoother and free of the screen tearing that is normally associated with frame rates that don’t match the TV. For PS5 owners, this means games that support a 40 FPS mode can be fully enjoyed on this TV. For PC owners, your 60-120 FPS experience will be similar to a good monitor, plus the amazing features of a top-tier TV. Also, input latency while in game mode is untouchable by non-OLED displays.\n\nThe TV speakers sound fine for daytime TV programming, but I utilize the TV’s eARC feature to send audio to my sound system. This feature works fine and is only a menu toggle away. Unfortunately, I can’t speak on the audio performance beyond this.\n\nThe set handles reflections well, but that doesn’t mean they disappear. This brings me to my one issue with this set, which is an issue shared with most OLEDs. OLED does not get extremely bright. If you intend to use this set in a living room with many windows, I suggest black-out curtains for the best viewing. If you cannot control the light in your room, I recommend considering a high-end LED TV instead, as they can get much brighter than OLEDs.\n\nAs for the TV’s operating system, I find the remote’s “motion as a mouse pointer” a little annoying sometimes, but hardly worth docking stars. Very usable system. The TV handles streaming 4K content from YouTube, Disney, Plex, and other services without issue. The perk of a major brand is knowing popular apps will work without a problem. This remains the case with this set.\n\nLastly, I must discuss my delivery experience. A special freight delivery service is needed for a delivery item of this size. NSD handled fulfillment. My experience was abysmal.\n\nDelivery must be scheduled. A signature is required for delivery, and the item will be placed inside your door (allegedly). NSD was a no-call and no-show on the day of delivery, and they did not reach out to reschedule. I attempted to call NSD for rescheduling three times, was hung up on twice by their system while waiting, and the third time resulted in being told that the local office would call to reschedule. After three more days of no contact, I had to contact chat support another three times over three days, asking to be contacted to reschedule. The second chat said NSD would escalate my delivery due to a no-call no-show. The third chat let me know that had not been done but assured me that they would. The sixth time is the charm. Delivery tracking showed the TV in town for an entire week before delivery was “attempted” and another week before the company finally called to deliver (no rescheduling of delivery, just delivery with only a few minutes warning). I live on a military installation, and the delivery team said they were not able to come onto the installation. This can be the result of several things: a lie, laziness, criminal history of one or both delivery members, or drugs/weapons in the delivery vehicle. As the company did not call to reschedule, I was out of town when they called me for delivery. Fortunately, I had a coworker I trusted to accept delivery off-base and hold the TV at his home until I was able to return.\n\nAs the delivery was not fulfilled by Amazon and the product itself is great, I am not deducting from my rating for this experience. However, let this be a horror story of delivery for potential buyers of the 77” version. If you have to buy online because you are rural like me, select NSD as an absolute last resort. A $2,400 purchase can be quite stressful when no one wants to talk to you about its delivery.",
+                                "_id": "65d305d5d70af04b045a7ab2"
+                            },
+                            {
+                                "userName": "gutthans",
+                                "reviewTitle": "Best Picture on the Market",
+                                "reviewDate": "Reviewed in the United States on August 28, 2023",
+                                "rating": "5.0",
+                                "review": "After lots of online research and in-store viewing I settled on a previous year model 77\" screen OLED, the LGC2-PUA (not for WalMart or Cosco) model. It has more features than I will regularly use and has the best features of the things I want. The newer G2 isn't really a better product if you can get this model.\n\nI settled on this early for picture quality, but hesitated because other reviews noted the interface as difficult or annoying. Then, I discovered some online videos showing hidden menu features to simplify the display and eliminate those same annoyances that others complained about, but apparently missed the tips on. The menu does SOME self-explaining, but you will need to read about the effects if you want to go mess with a DIY calibration for your room. Default isn't too bad, but there are lots of tweaks you can use to get the best in your home.\n\nI have 81 near-flawless hours on the set after gaining operating tips online for tweaking settings. It displays well even in moderately bright day, as long as direct sun isn't hitting the screen, Evening viewing is quite stunning allowing a change of settings for more depth and color. The screen can be very reflective of lamps and other light sources, but we have overhead lighting so don't have an issue there. Off-axis viewing is decent especially in the vertical as we can watch from the upstairs internal balcony. The unit has a self-cleaning feature at shutdown that refreshes pixels every few hours so that burn-in isn't likely.\n\nSet-up was quick and we followed basic LG advice for unpacking. The stand went on easily but does require two people; one to to position & hold the screen until the through-screws can anchor the pedestal to the set. A/V connectors are placed on the side and easily accessible. Premium-capacity HDMI WILL BE a necessary expense to preserve best quality, but there are many reasonably-priced options.\n\nWe route sound to wired, external speakers with a Denon AVR but the TV sound is not too bad with the AI tweaks built-in, and would work OK in a small room setting.\n\nIt WAS more than I intended to spend (after the existing 2014 65\" plasma died) but has been well-worth the money in quality and performance.",
+                                "_id": "65d305d5d70af04b045a7ab3"
+                            },
+                            {
+                                "userName": "Ryan S",
+                                "reviewTitle": "Best Picture Quality in the Biz, software is ok",
+                                "reviewDate": "Reviewed in the United States on June 26, 2023",
+                                "rating": "4.0",
+                                "review": "This really is the best picture quality in the biz. Anything better is only by a small margin in very technical ways that very few users will notice, or need very specific types of scenes in order to display their upper hand. I have a few Samsung QLED displays of varying quality and this blows them away (although Neo QLEDs are closer in match, still not that close). I was sick of inconsistent blacks, backlighting blooming, and other typical LED issues and this TV does not have any of those issues. But I left a little wanting on the software. Here's the breakdown.\n\nPicture Quality 5/5:\nIt's simply the best. Viewing angles are great, contrast is great, HDR and Dolby Vision content is looks spectacular, backlighting is perfect. I had issues with all of these items on my Samsung QLEDs - the blacks and backlighting just completely drove me nuts with those, especially in dark scenes. Practically no viewing angle on a QLED, this you can look at it from 178 degrees with no color degradation. New OLEDs are pretty bright - I live near Phoenix AZ so it's bright everyday, and this is in a North facing living room with big windows. I leave my blinds open all day in there and there are no issues with brightness. So don't listen to people who say it's not bright enough, unless maybe you plan on using this outside in the sun. I will say that the front is more of a reflective glossy surface, so keep in mind lights behind you that may reflect on the tv. I also thought I damaged the panel mounting it to the wall because there were a lot of vertical lines when I turned it on, especially on the left, but after running the Pixel Cleaning cycle on the OLED Panel Care menu the lines completely went away so that's kinda cool.\n\nSoftware 4/5:\nI do like the software on Samsung better. This isn't BAD per-say... it just isn't great. Menus are as clean and easy as the Samsung home screen, or the mini menu that pops over the current content (I don't think LG even has that, just goes to the main home screen). I have a Samsung frame, and that gallery software blows the LG gallery software out of the water. Also not sure you can really compare because a true gallery option isn't really an option due to OLED burn in - you really don't want it displaying one image all day. Alexa kinda doesn't work as well as my Samsung as well. However, I do like that it shows as always on so that I can beam some Airplay content from my phone while the tv is off and it just turns on and goes to my selection.\n\nRemote 4/5:\nEh it's fine. I like the pointer feature, it's better than a wii remote, but if you accidentally scroll the center button instead of click when not using the pointer it switches to pointer and that's annoying. It's also huge! Well, by modern standards. Apple TV remotes are small and maybe too sparse on buttons, but I like the new Samsung remotes that are slim and have the solar charger on the back. They are also bluetooth so you don't need an IR line-of-sight to work. There are a ton of unnecessary buttons on the LG remote. They need to sexy it up and simplify the button layout and switch to BT instead of IR and that would get them back into the modern day remote.\n\nSound 3/5:\nIt's fine - all modern tvs are bad cause they are so slim but this is actually ok. I use their S90QY soundbar/subwoofer so not an issue for me (separate review for that). But why would you buy this tv and go for sub-par sound? Go treat yourself to a nice hometheater, you won't regret the addition.\n\nAesthetics 5/5:\nIt's pretty sexy. People who come over always comment on how thin it is. I have it mounted to the wall with a 0.6\" thick wall mount so that's about as close to the wall as you can get. The bezels are smaller than any other display I've seen. The stand it comes with is unnecessarily big and bulky in my opinion but yeah it looks better on the wall anyways. It's definitely a statement piece in the living room.\n\nDolby Atmos/Dolby Vision 5/5:\nWhenever I stream content that supports this format, it shows a little popover in the top right for a few seconds telling me that it's using that format and my soundbar switches to the right audio profile setting over the e-Arc connection, and the content looks and sounds perfect. Feels like I have the best home theater around. You have to try hard to find it's flaws. Best viewing experience I have ever had.\n\nSummary:\nBest in class viewing experience for the money. They could improve the software and remote a bit, but they aren't unusable and just take a bit of adjusting. Definitely need a good Dolby Atmos capable sound system to really maximize the experience. LG may have finally gotten me off Samsung displays, but now Samsung is hot on their heels with new OLED panels coming out. In 2023, I'd say buy LG C2 OLED (C3 only has marginal improvements for a higher price). We'll see who comes out on top in 2024.",
+                                "_id": "65d305d5d70af04b045a7ab4"
+                            },
+                            {
+                                "userName": "Eric",
+                                "reviewTitle": "Excellent TV for essentially everything!",
+                                "reviewDate": "Reviewed in the United States on March 13, 2023",
+                                "rating": "5.0",
+                                "review": "This TV is the absolute best I have ever owned, no question. It performs very well in dimly lit and brightly lit rooms. The picture is phenomenal, and I absolutely love the myriad of settings to fine-tune everything exactly how I want.\n\nI game pretty extensively, and my experience of this TV with my Playstation 5 has been excellent! It makes for a great gaming experience, can handle everything that the PS5 is capable of, and I simply love the 'game mode' that the TV has, complete with being able to select the type of game I am playing and it automatically adjusts several settings to match the game.\n\nA big plus for me is the screen burn prevention technology that this TV comes with. The ever so slight dimming of static displays on the screen (a HUD in virtually every game I play), and minor, periodic repositioning of those static images to help prevent screen burn are great! You legitimately don't even notice either feature unless you are really paying attention to it, but it does enough that I have yet to have a single issue with screen burn in the last nearly 4 months of heavy gaming. The TV looks just as good right now as it did when it first came out of the box.\n\nMy ONLY knock on this TV, and it is a relatively minor issue, is that is occasionally thinks I'm talking to it to issue a command when I'm simply gaming with friends. Can be a minor distraction when the prompt comes up on the screen, but it's not a major issue. I ensured that I have the setting off that would allow for hands-free Alexa control, instead opting for it to function under the push-and-hold of the Alexa button on the remote, but somehow that doesn't seem to stop the TV from infrequently trying to operate hands-free regardless. Again, not a huge issue, just a minor annoyance. Everything else that this TV offers far outweighs such a minor thing, so my rating remains at 5 stars.\n\nSimply put, if you want a fantastic OLED TV that definitely delivers on what it promises, the C2 is the way to go. I see that the C3 is about to launch, but the 65\" C2 at under $1700 is perfect for me. I don't have any desire to pay $2500 for the 65\" C3 for what is very likely a minor upgrade, if any at all. I'd have to imagine the C3 might have some software and/or UI changes that may somehow improve general quality-of-life, but I find it very unlikely that the screen quality and image quality of the C3 will be any different. Short of being an 8K resolution, there's nothing I can see where it could be improved. (8K is absolutely useless right now anyway; essentially no media content is in 8K).\n\nPerfect TV without draining your savings account! I may end up buying a second one for my bedroom, in all honesty. It's that good.",
+                                "_id": "65d305d5d70af04b045a7ab5"
+                            },
+                            {
+                                "userName": "86",
+                                "reviewTitle": "Frustrating Alexa, CEC, Stutter.",
+                                "reviewDate": "Reviewed in the United States on January 30, 2023",
+                                "rating": "3.0",
+                                "review": "For me, a TV is 50/50 picture/convenience. This is a zero on convenience. (Update 3/19/23 I'll Never buy an LG tv again).\n\nForget the nonsense about \"oleds don't get that bright\". People are just saying stuff that they hear the pros saying because it's a couple hundred nits lower than an LED set. It's plenty bright for HDR highlights and daytime viewing. I have to squint my eyes. And if you're like most people who work a 9-5 and mostly watch tv in the evenings - you'll find it bright enough. Come on people.\n\nLet's start with the UGLY:\n\nCEC: NIGHTMARE\nI have a PS5, XBSX, Shield Pro. Whether these devices are all plugged into tv then ARC-> Yamaha receiver, -OR- everything plugged into a new Denon 760H receiver then eARC-> tv, it's equally faulty. The tv likes to turn on my PS5 whenever I hit the input button (it shows the row of inputs first like it should, but then turns on and switches to PS5, also whenever I hit the back button from the ThinQ menu (I need to remember to hit the HOME button instead) and other odd buttons it fires up the PS5. Last night it did this when I hit the settings button ?!? Cannot get the Shield Pro to turn the tv on when it powers on. Yet, it will turn the tv on when it's connected to my 10 year old Yamaha receiver (eARC to tv).\nThe Universal Control Management is terrible. So much bloated crap on this TV.\n\nAuto-resume?!? Pause while watching netflix. 3 minutes later it starts playing. Watching something on plex- exit to home screen. 5 min later it switches to Plex and resumes movie.\n\nALEXA: HORRIBLE\nThis has to be the WORST Alexa integration EVER. My 3 year old Sony 900h connected on day one and has been FLAWLESS. Same with my $400 TCL roku tv. I say \"Alexa, turn off xxx tv\" and it would work 100% of the time. NOT ON THIS TV. It took me a week to troubleshoot, uninstalling apps, reinstalling (why are there 2 different LG devices on the Alexa app?!?). I'd say it works 10% of the time. Usually it says \"LG tv is not responding, please check it's network and power connection). If I grab the LG remote and hit the Alexa button and tell it to turn off it will work. But I could obviously just hit the power button on the remote.\n\nUPDATE: try calling the Tv \"tv\" instead of \"lg tv\" . ALSO-\" the tv has its own Alexa built in. Our echo dots are all named \"echo\" so this actually works quite well. Try calling \"alexa\" to the tv and issuing command. This has been working lately rather than telling my dot \"echo, pause the tv\". We'll see tomorrow. /update. (This still only works 50% of the time. Usually says \" network error\". 3/19/23)\n\nLEARNING CURVE: STEEP AF\nMake sure to register at AVSFORUM and read up/post your questions. The menu settings are very confusing and oddly placed. Read the manual, do your research. Go onto RTINGS.\n\nREMOTE: LOVE/HATE\nThe pointer wheel is kind of cool and probably quicker most of the time. It's like using a Wii remote but far more accurate and stable. The problem is when you just want to click over and select something (by pressing the wheel in). But my finger slips and instead of pressing the wheel in it turns the wheel which brings up the pointer and takes much longer to do what I need to do. There's also no Play/Pause button, you need to press in the wheel.\n\nI consider myself a person of average intelligence but it's 2023 All remotes should have 3 things MANDATORY:\n1. ALL buttons need to light up when lifted (like the Shield remote).\n2. There ABSOLUTELY NEEDS to be a sliding LOCK BUTTON to prevent accidental button press (and kid mischief).\n3. It needs to have a remote finder. Go into the app, hit a button, the remote makes a sound.\n(4). It would be nice to have a few learning buttons and customizable app buttons, not just Netflix.\n\n\"Gallery\" feature is a missed opportunity. It only appears if you are on an external input after the device has been powered off. Or you can select the gallery app manually. Here's a stellar idea - why not use the gallery as the screensaver instead of the ugly fireworks or clock?\n\nGAMING: SUPERB\nPlaying Horizon Forbidden West on PS5 at 60+ FPS in 4K is absolutely ASSAULTING on the eyes. It looks incredible! TV is responsive in regards to input lag and response time. When the tv is in GAME MODE, hitting the options button on the TV brings up the GAME menu which shows you all the gaming-related options and displays the current FPS on screen. Very nice.\n\nMOVIES: OBJECTIVE\nNo TV is perfect. Side viewing angle is big for me. I can see the color washout sitting 12\" over on the couch while watching my Sony 900h LCD tv. Unacceptable. This TV has an AWESOME VIEWING ANGLE. Go to RTINGS to view and compare. There is no discernable color/luminance washout in any seat in my living room. You need to go off to the extreme right/left to notice it.\n\nMy dvd backups played via PLEX app on TV look incredible, thanks to the rich OLED blacks. 1080p BD rips also look fantastic (compared to my LCD SONY 900h). And of course 4k content looks great. We all know about the \"inky\" blacks of OLED, no need to talk about it. Image quality is the best I've seen.\n\nSTUTTER/(Judder?):\nThis is a big one for me. During panning shots, usually when there is something tall and thin not moving on the screen there is a HORRIBLE STUTTER effect. It's jaggy and looks like the picture can't keep up. It's extremely jarring and takes me right out of the experience. This is due to the extremely fast response time of OLED technology. I find it extremely undesirable and a flaw. Options to mitigate this will introduce the Soap Opera effect, which is worse IMO.\n\nSOUND OUTPUT\nSound on the tv is fine. The usual. Sound output via ARC/eARC will only output the basics: stereo, Atmos, Dolby Digital and (DD+) to your receiver. And there is a difference between this DD and the DD you will find on a DVD/Blu Ray. It's a much more boring, stripped-down version (as with the Atmos I have heard) It's a lower bitrate signal. But it will suffice if you're going for a true 1-remote system. The TV will NOT OUTPUT DTS, DTS-MA, DD True HD via ARC/eARC. ***UPDATE: RECENT NEWS INFORMED THAT LG MIGHT START OFFERING DTS OUTPUT VIA ARC. IT'S UNSURE WHETHER THIS TV WILL RECEIVE THIS UPDATE*** Go onto RTINGS to check this info. Most TV's these days do not support outputting hi res audio signals which is unfortunate. The Nvidia Shield Pro is the recommended set-top box if hi-res audio is important to you.\n\nwebOS: fine\nEveryone seems to hate on the webOS. Look, they ALL have ads. I much prefer the Google Android (SONY tv, Shield) OS. But this one is fine. It offers all the apps I need: Netflix HBO MAX, Hulu, Disney +, and all the other ones, and displays them in a row at the bottom of the screen. You can easily go to what you want without looking or noticing all the other ads and crap on the tv. There is also another \"ThinQ\" app home screen where you can look at more crap you will probably never use. I stay away from all of this and hit my buttons very precisely otherwise one wrong move and I will launch the PS5 or some other device via CEC.\n\nHINT: If your PS5 (maybe other devices too) does turn on, hit the (...) button on the LG remote to bring up a menu where you can put the PS5 back into sleep mode.\n\nEYES\nIt took about 6 weeks for my eyes to adjust to this tv. Not sure of it was the detail, the brightness (it's plenty bright for me) or the blue light - whatever - my eyes got strained. It felt like a dull pressure behind my eyeballs. I'm 43 and perhaps I have some eye issues, so this is objective. I'm sort of used to it now, however I do start to feel eye strain in excess of 2/3 hours. Sooner if gaming.\n\nBOTTOM LINE: WOULD I BUY THIS TV AGAIN?\nI don't think so, especially now with other brands (SONY) offering OLED. I just don't think I should have so much to complain about with a $2500 tv. I would expect it with HiSense, TCL, Westinghouse basement bargain garage sale tvs, but not with a top shelf LG OLED.\n\nI would NOT choose OLED if there was another tech that offered similar gaming response time, decent black levels, and NO STUTTER during panning shots. This is like right on the edge of being a deal-breaker for me.\n\n1/30/23 - I will update when/if things change. 3/19/23. I still hate this tv. Love the picture quality but just HATE the way it operates and all the shortcomings. No more LG for me.",
+                                "_id": "65d305d5d70af04b045a7ab6"
+                            },
+                            {
+                                "userName": "Jim",
+                                "reviewTitle": "LG makes a nice display, but a lousy TV",
+                                "reviewDate": "Reviewed in the United States on March 15, 2023",
+                                "rating": "3.0",
+                                "review": "Yes, I didn't give this a great rating because the engineers made way too many amateurish mistakes in the user interface. To show why is a long review ...\n\nThis TV lacks ATSC 3.0. In the end, I didn't care much because when I downloaded the manual of a very popular competitor's TV that \"had\" ATSC 3.0, the manual stated it wouldn't decode the high def content! Wow--not very useful. So, I wondered how many other TVs had the same limitation that \"claimed\" ATSC 3.0 which is why I removed that as a requirement.\n\nI personally feel that we are approaching the point of diminishing returns on how good TV displays look. Case in point, I looked at the TVs at Walmart & Target, which cost 1/3 this one and they don't look bad. Yes, you can see some color shifting at extreme angles, but still, not bad. As for more expensive TVs, I looked at the various reviews out there and my take is that you can measure differences in display quality amongst the ones costing more or less the same, but unless the TVs are sitting side by side, I think the display difference is barely perceptible, if at all (some reviews actually mention this). In the end, I decided to focus on the user interface of the TVs, not rely on reviewer's measurements.\n\nBefore I go into the remote and user interaction I want to discuss the poor upconversion when watching 480i TV. The jaggies are readily apparent and so bad, small text is difficult to read. It's like all they did was double the pixels and did little interpolation. I attempted to take some pictures. One is from live TV and the other is the same program recorded (and interpolated) by my HTPC. My HTPC with 10 year old software and processor uses a very basic linear interpolation algorithm and it outperforms this TV when displaying this content.\n\nOne thing I noticed when looking at the various TVs was some remotes didn't have numbers. Wow. I'm a TV watcher. I couldn't imagine scrolling through channels trying to get to the one I want.\n\nThe remote is an RF one, but the TV does support an IR one (you lose the \"mouse like cursor\" and I think the \"mouse wheel\" though). The first thing you notice is the buttons are kind of small and close together. I have small hands, so I didn't care.\n\nThe layout is bad. They didn't even try. No excuse--they've been making remotes for how many decades?? The volume up/down paddle is on the left. Below it is the home button, NOT the mute button (the mute button is in the center, where the home button should be). The \"go back to previous channel\" button is on the left, not on the right where the channel up/down paddle is. What this means is you'll be looking at your remote a lot.\n\nThen you notice the various input selection \"types\": up/down \"paddles\" for volume and channels; a ring that can be pressed up/down and maybe left/right; a mouse-like wheel; and don't forget the \"mouse cursor\". Why all of them? It's like rather than do a quality exercise by having various people interact with it and give feedback so they could select one or two, they just used all of them. One problem is all the real estate wasted by this. The other issue is, and this is really weird: the different buttons only work in certain situations. For example, when you start typing a channel number, a list pops up with the channels it could be. You can use the ring to move the selection up/down, but NOT the mouse wheel--apparently, it's function is (apparently only) to scroll to the next channel you are currently watching--it won't work to move the selection up/down. And you can't use the mouse cursor either. It's darn right amateurish, by engineering standards. Think about using a PC/Mac app and in one spot, you had to use the up/down arrows; in another spot you use the mouse, in yet another, you used the mouse wheel. It's maddening and makes it hard to use.\n\nThe \"go back\" ONLY deals with TV channels. It should go back to what was previously displayed on the TV. For example, if you were watching HDMI input 3 and jumped to TV channel 3.2, pressing the \"go back\" button should take you back to HDMI input 3. This is nice because it's a hack to act as a screensaver if you pause the video on an HDMI input. This display suffers from image retention, so if you get up to make popcorn, for example, you don't want a still image. Since there's no \"screen saver\" button (hint), this hack works nicely to quickly jump back and forth. My old Panasonic TV did this and I used it all the time.\n\nThe cursor is nice (and it's fun to use). The mouse wheel works pretty well. I think they found the sweet spot for how hard it is to turn and falsely turning it. However, the wheel is a selection button as well, and a couple of times when scrolling I inadvertently pushed too hard and selected something I didn't want. Also, when scrolling through the up/down submenu for channel selection, I have hit that wheel causing a channel change that I didn't want.\n\nThe remote has a bunch of largish \"quick jump\" buttons on the bottom for jumping to various streaming services. However, they take up valuable real estate. I'd rather they were smaller or replaced by a row of smaller buttons you could program to the stream of choice. There's some small colored buttons (have yet to determine their purpose) and maybe they would suffice.\n\nThe RF remote has a voice input. I was looking forward to trying it out, but it only works if the TV is connected to the internet.\n\nWhen you power up an external device connected to HDMI, a popup appears asking if you want to go to that HDMI input. Nice, BUT, if you try to use the mouse wheel, it unselects the default \"Yes\", but doesn't select the other option (\"No\"). You have to use the ring for that.\n\nOne last note about the RF remote. There are a lot of clones for sale here and elsewhere. Beware. Some hint they are RF remotes when they aren't. And every non LG RF one I looked at appeared to be lacking a sticker on the back with the FCC ID. To be legal for sale/use in the U.S., each device emitting RF must have an FCC ID (that you can lookup) to verify it passed FCC tests. This is to ensure the safety of you and your neighbors. Imagine someone attached to some medical equipment that is interfered with by an illegal RF remote.\n\nUPDATE: I've had this awhile now. I've noticed glitches every now and then. Sometimes it's slow reacting to user input. It lost track of time (was like 10 hours off). I had to uncheck \"auto\" and set it manually to correct it. Time will tell if it will keep track of daylight savings time for me. Lastly, I was looking at the OTA content guide (\"what's on each channel\"--part of ATSC meta data). I moved the remote too quick which causes the cursor to display and then all the channel data blanked out. I had to exit out and come back in to get it to display the content.\n\nTo be fair--there have been two or three updates now for this TV (yikes--why so many?!). Maybe they fixed some of the glitches I'm seeing. However, I'm not a big fan of updating--my experience says you risk breaking something.\n\nAnd the weird layout of the remote is still driving me nuts. I wish a 3rd party would make a remote for these TVs.",
+                                "_id": "65d305d5d70af04b045a7ab7"
+                            }
+                        ],
+                        "_id": "65d305d5d70af04b045a7aa8"
+                    }
+                },
+                "run_id": "run_im7AJvXRO4ZcfUKopHwClUgQ"
+            }
+        ]
+    }
+}
