@@ -11,7 +11,6 @@ const ThreadModel = require('../db/model/thread');
 
 // Import the OpenAI package
 const openAI = require('openai'); 
-const { pre } = require('../db/schema/product');
 const openai = new openAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -25,13 +24,23 @@ router.get('/', async (req, res) => {
     return res.status(400).send({ error: 'Thread ID is required' });
   }
 
+  let data;
+  try {
+    data = await getMessages(threadId);
+  } catch (error) {
+    console.error('Failed to retrieve messages:', error);
+    res.status(500).send({ error: 'Please refresh the page and try again' });
+    return;
+  }
+  // console.log(data);
+
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
     'Connection': 'keep-alive',
   });
 
-  const confirmationMessage = { type: 'confirmation', data: { message: `Connected to thread ${threadId}` }};
+  const confirmationMessage = { type: 'confirmation', data: data };
   res.write(`data: ${JSON.stringify(confirmationMessage)}\n\n`);
 
   const keepAlive = setInterval(() => res.write(': keep-alive\n\n'), 20000);
@@ -74,13 +83,28 @@ router.get('/threads', validateUserId, async (req, res) => {
 
 // POST /chat/threads
 // Create a new thread for a user
-router.post('/threads', validateUserId, async (req, res) => {
+router.post('/threads', async (req, res) => {
   const userId = req.body.userId;
   if (!userId) {
     return res.status(400).send({ error: 'User ID is required' });
   }
 
   try {
+    let request_url = `http://localhost:${process.env.PORT || 3000}/user`;
+    // check if the user id is exist
+    const isUserExist = await fetch(`${request_url}?userId=${userId}`);
+
+    // if the user id is not exist, then create a new user
+    if (isUserExist.status === 404) {
+      await fetch(request_url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: userId }),
+      });
+    }
+
     // check the therads count before creating a new thread
     const threads = await getThreadIdForUser(userId);
     if (threads.length === 3) {
@@ -193,6 +217,8 @@ router.post('/messages', async (req, res) => {
 
     if (run.status === 'completed') {
       let messages = await getMessages(threadId);
+      await updateThreadTimeStamp(threadId);
+
       // add new key to the messages object
       if (actionResult !== null) {
         await Promise.all(actionResult.map(async (result) => {
@@ -233,15 +259,22 @@ router.post('/messages', async (req, res) => {
               metaData.tool_call_name = result.tool_call_name;
 
               // add the product name list to the metaData
+              // each of the product name should not be too long
+              // should be less than 100 characters
               if (result.tool_call_name === 'filter_products') {
-                metaData.product_name_list = JSON.stringify(result.output.map(product => product.productName));
+                metaData.product_name_list = JSON.stringify(result.output.map(product => {
+                  if (product.productName.length > 100) {
+                    return product.productName.substring(0, 100);
+                  }
+                  return product.productName;
+                }));
               }
 
               if (result.tool_call_name === 'get_product_details') {
                 metaData.product_name_list = JSON.stringify([result.output.productName]);
               }
 
-              console.log(metaData);
+              // console.log(metaData);
 
               // modify the message
               const messageId = messages.data[0].id;
@@ -348,6 +381,18 @@ async function getThreadIdForUser(userId) {
 };
 
 
+// update the thread time stamp
+async function updateThreadTimeStamp(threadId) {
+  // update the thread time stamp
+  const thread = await ThreadModel.findOneAndUpdate(
+    { threadId: threadId },
+    { $set: { lastActive: new Date() } },
+    { new: true }
+  );
+  return thread;
+}
+
+
 /* Utility functions for interacting with OpenAI Assitant API */
 // add message to the thread
 async function addMessageToThread(threadId, textContent) {
@@ -427,8 +472,31 @@ async function checkRunStatus(threadId, runId) {
 
 // get the messages
 async function getMessages(threadId) {
-  const messages = await openai.beta.threads.messages.list(threadId);
-  return messages;
+  try {
+    const limit = 100;
+    let messages = await openai.beta.threads.messages.list(threadId, {limit: limit});
+    // console.log(messages);
+
+    // Check if there are more messages
+    // if there are more messages, get the additional messages
+    while (messages.body.has_more) {
+      // console.log(messages.body.has_more);
+      // console.log(messages.body.last_id);
+      const additionalMessages = await openai.beta.threads.messages.list(
+        threadId, {
+        limit: limit, 
+        after: messages.body.last_id
+      });
+      messages.body.data = [...messages.body.data, ...additionalMessages.body.data];
+      messages.data = [...messages.data, ...additionalMessages.data];
+      messages.body.has_more = additionalMessages.body.has_more;
+      messages.body.last_id = additionalMessages.body.last_id;
+    }
+    // console.log(messages.body.has_more);
+    return messages;
+  } catch (error) {
+    throw new Error(`Failed to retrieve messages for thread ${threadId}`);
+  }
 }
 
 
