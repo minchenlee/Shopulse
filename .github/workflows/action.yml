@@ -49,7 +49,7 @@ jobs:
           cd Thesis
           git switch develop
           git pull
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}
+          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.BACKEND_IMAGE_NAME }}
           docker-compose down
           docker-compose up -d
           docker image prune -af
