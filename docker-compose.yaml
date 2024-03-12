@@ -6,6 +6,9 @@ services:
     restart: always
     networks:
       - shopulse
+    env_file:
+      - .env
+
   nginx:
     image: nginx
     restart: always
