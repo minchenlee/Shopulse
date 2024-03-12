@@ -1,5 +1,6 @@
 let createError = require('http-errors');
 let express = require('express');
+let cors = require('cors');
 let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
@@ -11,6 +12,7 @@ let chatRouter = require('./routes/chat');
 let userRouter = require('./routes/user');
 
 let app = express();
+app.use(cors());
 
 // connect to MongoDB
 dbConnection();

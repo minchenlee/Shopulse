@@ -142,106 +142,119 @@ router.get('/filter', validateSearchParams, async (req, res) => {
   const { limit, pagination, minPrice, maxPrice, brand, screenType, resolution, refreshRate, screenSize, connectivity, smartTVPlatform, supportedService } = req.query;
 
   try {
-    let results = await productModel.aggregate([
-      {
+    let aggregationPipeline = [];
+
+    // Dynamically build the should array based on provided query parameters
+    let shouldClauses = [
+      // Add a match stage for brand, screenType, resolution, refreshRate, priceRange, screenSize, connectivity, smartTVPlatform, supportedService  
+      ...(brand ? [{
+        text: {
+          query: brand,
+          path: 'productSpec.Brand',
+          fuzzy: {}
+        }
+      }] : []),
+      ...(screenType ? [{
+        text: {
+          query: screenType,
+          path: [
+            'productSpec.Display Technology', 
+            'productSpec.Television Type'
+          ],
+          fuzzy: {}
+        }
+      }] : []),
+      ...(resolution ? [{
+        text: {
+          query: resolution,
+          path: 'productSpec.Resolution',
+          fuzzy: {}
+        }
+      }] : []),
+      ...(refreshRate ? [{
+        text: {
+          query: refreshRate,
+          path: 'productSpec.Refresh Rate',
+          fuzzy: {}
+        }
+      }] : []),
+      ...(screenSize ? [{
+        text: {
+          query: screenSize,
+          path: 'productSpec.Screen Size',
+          fuzzy: {}
+        }
+      }] : []),
+      ...(connectivity ? [{
+        text: {
+          query: connectivity,
+          path: [
+            'productSpec.Inputs & Outputs', 
+            'productSpec.Features', 
+            'productSpec.Wireless Technology'
+          ],
+          fuzzy: {}
+        }
+      }] : []),
+      ...(smartTVPlatform ? [{
+        text: {
+          query: smartTVPlatform,
+          path: 'productSpec.Smart TV Platform',
+          fuzzy: {}
+        }
+      }] : []),
+      ...(supportedService ? [{
+        text: {
+          query: supportedService,
+          path: [
+            'productSpec.Streaming Services', 
+            'productSpec.Virtual Assistant'
+          ],
+          fuzzy: {}
+        }
+      }] : []),
+    ];
+
+    // Only add the $search stage if there are conditions to evaluate
+    if (shouldClauses.length > 0) {
+      const searchStage = {
         $search: {
-          searchAfter: pagination ? pagination : null,
+          ...(pagination ? { searchAfter: pagination } : {}),
           compound: {
-            should : [
-              // Add a match stage for brand, screenType, resolution, refreshRate, priceRange, screenSize, connectivity, smartTVPlatform, supportedService
-              ...(brand ? [{
-                text: {
-                  query: brand,
-                  path: 'productSpec.Brand',
-                  fuzzy: {}
-                }
-              }] : []),
-              ...(screenType ? [{
-                text: {
-                  query: screenType,
-                  path: [
-                    'productSpec.Display Technology', 
-                    'productSpec.Television Type'
-                  ],
-                  fuzzy: {}
-                }
-              }] : []),
-              ...(resolution ? [{
-                text: {
-                  query: resolution,
-                  path: 'productSpec.Resolution',
-                  fuzzy: {}
-                }
-              }] : []),
-              ...(refreshRate ? [{
-                text: {
-                  query: refreshRate,
-                  path: 'productSpec.Refresh Rate',
-                  fuzzy: {}
-                }
-              }] : []),
-              ...(screenSize ? [{
-                text: {
-                  query: screenSize,
-                  path: 'productSpec.Screen Size',
-                  fuzzy: {}
-                }
-              }] : []),
-              ...(connectivity ? [{
-                text: {
-                  query: connectivity,
-                  path: [
-                    'productSpec.Inputs & Outputs', 
-                    'productSpec.Features', 
-                    'productSpec.Wireless Technology'
-                  ],
-                  fuzzy: {}
-                }
-              }] : []),
-              ...(smartTVPlatform ? [{
-                text: {
-                  query: smartTVPlatform,
-                  path: 'productSpec.Smart TV Platform',
-                  fuzzy: {}
-                }
-              }] : []),
-              ...(supportedService ? [{
-                text: {
-                  query: supportedService,
-                  path: [
-                    'productSpec.Streaming Services', 
-                    'productSpec.Virtual Assistant'
-                  ],
-                  fuzzy: {}
-                }
-              }] : []),
-            ]
+            should: shouldClauses
           }
         }
-      },
-      // Add a match stage for price filtering (if minPrice and maxPrice are provided)
-      ...(minPrice || maxPrice ? [{
+      };
+      aggregationPipeline.push(searchStage);
+    }
+
+    // Add the match stage for price filtering if minPrice or maxPrice are provided
+    if (minPrice || maxPrice) {
+      aggregationPipeline.push({
         $match: {
           ...(minPrice && { productPrice: { $gte: parseInt(minPrice) } }),
           ...(maxPrice && { productPrice: { $lte: parseInt(maxPrice) } }),
         }
-      }] : []),
-      {
-        "$limit": limit ? parseInt(limit) : 10
-      },
-      {
-        $project: {
-          productName: 1,
-          productPrice: 1,
-          productShortSpec: 1,
-          productSpec: 1,
-          productFeatures: 1,
-          productImageList: 1,
-          score: { $meta: 'searchScore' },
-          paginationToken: { $meta : 'searchSequenceToken' }
-        }
+      });
+    }
+
+    // Add the limit and projection stages
+    aggregationPipeline.push({ "$limit": limit ? parseInt(limit) : 10 });
+    aggregationPipeline.push({
+      $project: {
+        productName: 1,
+        productPrice: 1,
+        productShortSpec: 1,
+        productSpec: 1,
+        productFeatures: 1,
+        productImageList: 1,
+        score: { $meta: 'searchScore' },
+        paginationToken: { $meta: 'searchSequenceToken' }
       }
-    ]);
+    });
+
+    // Execute the aggregation pipeline
+    let results = await productModel.aggregate(aggregationPipeline);
 
     // product 的 prodcutFeatures 和 productDetail 是 json string，要轉成 object
     results = results.map(result => {
