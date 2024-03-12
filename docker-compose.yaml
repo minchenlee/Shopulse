@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  backend:
+    image: leeminchen/shopulse-backend
+    restart: always
+    networks:
+      - shopulse
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    networks:
+      - shopulse
+
+networks:
+  shopulse:
+    driver: bridge

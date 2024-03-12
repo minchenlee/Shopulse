@@ -12,7 +12,11 @@ let chatRouter = require('./routes/chat');
 let userRouter = require('./routes/user');
 
 let app = express();
-app.use(cors());
+
+const corsOptions = {
+  origin: 'http://shopulse.com.s3-website-ap-northeast-1.amazonaws.com'
+};
+app.use(cors(corsOptions));
 
 // connect to MongoDB
 dbConnection();
