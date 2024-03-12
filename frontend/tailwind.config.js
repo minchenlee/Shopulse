@@ -16,6 +16,7 @@ export default {
       lg: '1.125rem',
       xl: '1.5rem',
       '2xl': '2rem',
+      '3xl': '2.5rem',
     },
     extend: {
       colors: {
@@ -27,8 +28,13 @@ export default {
         'grey': '#B0B0B0',
         'dark-grey': '#727272',
         'turkey-blue': '#388697'
-      }
-
+      },
+      backgroundImage: {
+        'login-background': "url('/src/assets/login-background.png')",
+      },
+      boxShadow: {
+        'short-cut-button': '0px 3px 21px 5px rgba(0,0,0,0.1);',
+      },
     },
   },
   plugins: [],

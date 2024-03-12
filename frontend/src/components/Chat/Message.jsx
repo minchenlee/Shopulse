@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState, useRef, useContext, useEffect } from 'react'
 import FeatherIcon from 'feather-icons-react'
 import Markdown from 'react-markdown'
@@ -99,12 +100,12 @@ function Carousel(props){
     <div className='relative mt-2'>
       <button
         onClick={scrollLeft}
-        className={`${isHitStart && 'opacity-0'} ${buttonLeftSlowClose && 'invisible'} w-[30px] h-[30px] absolute z-20 left-2 top-1/2 -translate-y-[15px] text-primary cursor-pointer bg-secondary rounded-full border-primary border-[1px] flex items-center justify-center shadow:md hover:shadow-xl hover:scale-110 duration-300`} >
+        className={`${isHitStart && 'opacity-0'} ${buttonLeftSlowClose && 'invisible'} w-[30px] h-[30px] absolute z-[15] left-2 top-1/2 -translate-y-[15px] text-primary cursor-pointer bg-secondary rounded-full border-primary border-[1px] flex items-center justify-center shadow:md hover:shadow-xl hover:scale-110 duration-300`} >
         <FeatherIcon icon='chevron-left' size='24px' strokeWidth={4}/>
       </button>
       <button
       onClick={scrollRight}
-      className={`${isHitEnd && 'opacity-0'} ${buttonRightSlowClose && 'invisible'} w-[30px] h-[30px] absolute z-20 right-2 top-1/2 -translate-y-[15px] text-primary cursor-pointer bg-secondary rounded-full border-primary border-[1px] flex items-center justify-center shadow:md hover:shadow-xl hover:scale-110 duration-300 transition-all`}>
+      className={`${isHitEnd && 'opacity-0'} ${buttonRightSlowClose && 'invisible'} w-[30px] h-[30px] absolute z-[15] right-2 top-1/2 -translate-y-[15px] text-primary cursor-pointer bg-secondary rounded-full border-primary border-[1px] flex items-center justify-center shadow:md hover:shadow-xl hover:scale-110 duration-300 transition-all`}>
         <FeatherIcon icon='chevron-right' size='24px' strokeWidth={4}/>
       </button>
       <ImageList imageList={imageList} scrollRef={scrollRef}/>
@@ -141,4 +142,4 @@ function Image(props){
   )
 }
 
-export default Message;
+export default React.memo(Message);

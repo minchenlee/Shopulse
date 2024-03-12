@@ -1,5 +1,6 @@
 import {createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { useState, useContext, useEffect } from 'react'
+import { UserSessionProvider } from './context/UserSessionContext'
 
 import './App.css'
 import 'react-toastify/dist/ReactToastify.css';
@@ -17,7 +18,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router}/>
+    <UserSessionProvider>
+      <RouterProvider router={router}/>
+    </UserSessionProvider>
   )
 }
 export default App

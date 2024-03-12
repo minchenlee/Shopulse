@@ -1,6 +1,8 @@
 import { useState, useRef, useContext, useEffect } from 'react'
 import FeatherIcon from 'feather-icons-react'
-import 'ldrs/dotPulse'
+import {dotPulse} from 'ldrs'
+dotPulse.register()
+
 import ProfileImage from './ProfileImage'
 
 function MessageStatus(props){
@@ -15,7 +17,7 @@ function MessageStatus(props){
     status = 'Searching'
   }
 
-  if (status === 'in_progress') {
+  if (status === 'in_progress' || status === 'completed') {
     status = 'Typing'
   }
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useUserSession } from '../../context/UserSessionContext';
 import useClickOutside from '../../hooks/useClickOutside';
 import FeatherIcon from 'feather-icons-react';
 import textContent from '../../content_data/Chat.json';
@@ -9,6 +10,7 @@ import picC from '../../assets/undraw_secure_login_pdn4.svg'
 
 // Modal Component
 function LoginModal (props) {
+  const { login } = useUserSession();
   const [index, setIndex] = useState(0);
   const [slowClose, setSlowClose] = useState(false);
   const { isOpen, onClose } = props;
@@ -39,6 +41,7 @@ function LoginModal (props) {
       return;
     }
 
+    login(userID);
     handleClosing();
   }
 

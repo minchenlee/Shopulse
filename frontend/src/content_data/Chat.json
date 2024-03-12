@@ -36,6 +36,14 @@
     "Welcome to Our Research Experiment!": "Thank you for your interest and willingness to participate in our study. Your contribution is invaluable to us and will help advance our understanding of [topic].",
     "Please Begin by Verifying Your Participation": "To maintain our study's integrity and validate your participation, please enter your User ID on the next page. This unique identifier helps us monitor your progress without compromising your privacy.",
     "Verification": ""
+  },
+  "PromptTemplate": {
+    "Find Your perfect TV features": "I primarily use my TV for [viewing needs, e.g., movies, sports, gaming]. What features or functions should I look for in a TV to enhance my viewing experience?",
+    "Explore TV Brands & Tech": "I'm interested in learning about [Brand/Technology/Feature]. Could you provide information on the latest trends and what makes [Brand/Technology/Feature] stand out?",
+    "Ask for Recommendations": "I'm looking for a television that suits [specific preference, e.g., gaming, streaming, etc.] within a [mention your budget] budget. Can you recommend some options?",
+    "Request more Details": "Can you provide detailed specifications for [specific television model]? I'm interested in [specific aspects, e.g., picture quality, connectivity options, etc.].",
+    "Compare TV Models": "I'm trying to decide between [Television Model A] and [Television Model B]. Can you offer a comparative analysis focusing on [specific criteria, e.g., price, performance, features]?",
+    "Seek User Reviews": "I'm considering purchasing [specific television model]. Can you summarize what users are saying about it, especially regarding [aspect of interest, e.g., durability, user interface]?"
   }
 }
 
