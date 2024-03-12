@@ -14,7 +14,8 @@ let userRouter = require('./routes/user');
 let app = express();
 
 const corsOptions = {
-  origin: 'http://shopulse.com.s3-website-ap-northeast-1.amazonaws.com'
+  origin: 'http://shopulse.com.s3-website-ap-northeast-1.amazonaws.com',
+  origin: 'http://localhost:5173'
 };
 app.use(cors(corsOptions));
 
