@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useRef, useContext, useEffect } from 'react'
 import FeatherIcon from 'feather-icons-react'
+import Zoom from 'react-medium-image-zoom'
 import Markdown from 'react-markdown'
 import ProfileImage from './ProfileImage'
 
@@ -133,12 +134,14 @@ function Image(props){
   const name = image.name || '';
 
   return(
-    <div className={`snap-center rounded-xl border-[1px] border-primary w-72 min-w-72 h-52 mb-2 relative`}>
-      <img src={image.image} alt={image.name} className='w-full h-full px-3 pt-4 pb-7 object-contain'/>
-      <span className='absolute w-full bottom-0 text-sm rounded-b-[11px] text-primary font-nunito font-bold ps-2 py-[2px] truncate'>
-        {name}
-      </span>
-    </div>
+    <Zoom>
+      <div className={`snap-center rounded-xl border-[1px] border-primary w-72 min-w-72 h-52 mb-2 relative`}>
+          <img src={image.image} alt={image.name} className='w-full h-full px-3 pt-4 pb-7 object-contain'/>
+        <span className='absolute w-full bottom-0 text-sm rounded-b-[11px] text-primary font-nunito font-bold ps-2 py-[2px] truncate'>
+          {name}
+        </span>
+      </div>
+    </Zoom>
   )
 }
 

@@ -2576,6 +2576,11 @@ react-markdown@^9.0.1:
     unist-util-visit "^5.0.0"
     vfile "^6.0.0"
 
+react-medium-image-zoom@^5.1.10:
+  version "5.1.10"
+  resolved "https://registry.yarnpkg.com/react-medium-image-zoom/-/react-medium-image-zoom-5.1.10.tgz#afe32abb5f86ccd0b484fce92d06a86aab63fc14"
+  integrity sha512-sgadFY5yH0sEz5lVs9NubiwbVrtUeKnH9YdzXYv+cblrP8WXj2TSyT6J3sPw0pM5dGKbpjXjePye+42yWV4OSg==
+
 react-router-dom@^6.22.1:
   version "6.22.1"
   resolved "https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.22.1.tgz"

@@ -29,9 +29,6 @@ export default {
         'dark-grey': '#727272',
         'turkey-blue': '#388697'
       },
-      backgroundImage: {
-        'login-background': "url('/src/assets/login-background.png')",
-      },
       boxShadow: {
         'short-cut-button': '0px 3px 21px 5px rgba(0,0,0,0.1);',
       },

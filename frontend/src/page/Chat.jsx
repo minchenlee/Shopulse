@@ -11,7 +11,7 @@ import Message from '../components/Chat/Message';
 import Modal from '../components/modals/Modal';
 import LoginModal from '../components/modals/LoginModal';
 
-import {useCursorInside} from '../hooks/useCursorInside';
+import { useCursorInside } from '../hooks/useCursorInside';
 import { useUserSession } from '../context/UserSessionContext';
 import { fetchData, postData, deleteData } from '../utils/api';
 
