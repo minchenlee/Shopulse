@@ -172,6 +172,7 @@ router.post('/messages', async (req, res) => {
             result.output = JSON.parse(result.output);
             return result;
           });
+          
           // console.log(actionResult[0].output)
 
           // Before submitting the tool outputs, iterate through the result_list and
@@ -263,8 +264,8 @@ router.post('/messages', async (req, res) => {
               // should be less than 100 characters
               if (result.tool_call_name === 'filter_products') {
                 metaData.product_name_list = JSON.stringify(result.output.map(product => {
-                  if (product.productName.length > 100) {
-                    return product.productName.substring(0, 100);
+                  if (product.productName.length > 70) {
+                    return product.productName.substring(0, 70);
                   }
                   return product.productName;
                 }));
@@ -514,8 +515,6 @@ async function actions(tool_calls) {
       results_list.push(result);
     }
   }
-
-  // console.log(results_list);
   return results_list;
 }
 
@@ -543,8 +542,7 @@ async function callProductAPI(function_call) {
 
     // call the API
     const response = await fetch(request_url);
-    const data = await response.json();
-  
+    const data = await response.json();  
     return data;
   }
 

@@ -139,7 +139,12 @@ router.get('/search', validateSearchParams, async (req, res) => {
 });
 
 router.get('/filter', validateSearchParams, async (req, res) => {
-  const { limit, pagination, minPrice, maxPrice, brand, screenType, resolution, refreshRate, screenSize, connectivity, smartTVPlatform, supportedService } = req.query;
+  let { limit, pagination } = req.query;
+  const { minPrice, maxPrice, brand, screenType, resolution, refreshRate, screenSize, connectivity, smartTVPlatform, supportedService, features, sortBy } = req.query;
+
+  if (!limit) {
+    limit = 3;
+  }
 
   try {
     let aggregationPipeline = [];
@@ -161,7 +166,6 @@ router.get('/filter', validateSearchParams, async (req, res) => {
             'productSpec.Display Technology', 
             'productSpec.Television Type'
           ],
-          fuzzy: {}
         }
       }] : []),
       ...(resolution ? [{
@@ -213,13 +217,24 @@ router.get('/filter', validateSearchParams, async (req, res) => {
           fuzzy: {}
         }
       }] : []),
+      ...(features ? [{
+        text: {
+          query: features,
+          path: [
+            'productFeatures',
+            'productSpec.Features'
+          ],
+          fuzzy: {}
+        }
+      }] : []),
     ];
 
     // Only add the $search stage if there are conditions to evaluate
     if (shouldClauses.length > 0) {
       const searchStage = {
         $search: {
-          ...(pagination ? { searchAfter: pagination } : {}),
+          // the pagination will implement in applciation level, not in the mongodb level
+          // ...(pagination ? { searchAfter: pagination } : {}),
           compound: {
             should: shouldClauses
           }
@@ -228,40 +243,154 @@ router.get('/filter', validateSearchParams, async (req, res) => {
       aggregationPipeline.push(searchStage);
     }
 
+    // Check if the seachStage is processed
+    let score;
+    if (!pagination) {
+      pagination = 1;
+    } else {
+      pagination = parseInt(pagination) + 1;
+    }
+
+    if (shouldClauses.length !== 0 && sortBy) {
+      score = { $meta: 'searchScore' };
+    }
+
+
     // Add the match stage for price filtering if minPrice or maxPrice are provided
-    if (minPrice || maxPrice) {
+    if (minPrice && !maxPrice) {
       aggregationPipeline.push({
         $match: {
-          ...(minPrice && { productPrice: { $gte: parseInt(minPrice) } }),
-          ...(maxPrice && { productPrice: { $lte: parseInt(maxPrice) } }),
+          productPrice: { $gte: parseInt(minPrice) }
         }
       });
     }
 
+    if (maxPrice && !minPrice) {
+      aggregationPipeline.push({
+        $match: {
+          productPrice: { $lte: parseInt(maxPrice) }
+        }
+      });
+    }
+
+    if (minPrice && maxPrice) {
+      aggregationPipeline.push({
+        $match: {
+          productPrice: { $gte: parseInt(minPrice), $lte: parseInt(maxPrice) }
+        }
+      });
+    }
+
+    // Sort by product rating in descending order before grouping
+    if (sortBy === 'rating') {
+      aggregationPipeline.push({ $sort: { 'productReview.rating': -1 } });
+    }
+
+    if (sortBy === 'price') {
+      aggregationPipeline.push({ $sort: { productPrice: 1 } });
+    }
+
+    if (sortBy === 'popularity') {
+      aggregationPipeline.push({ $sort: { 'productReview.reviewCount': -1 } });
+    }
+
+    // If sortBy is provided, then no need to using group stage to distribute the products by brand
+    if (sortBy) {
+      aggregationPipeline.push({
+        $project: {
+          productName: 1,
+          productPrice: 1,
+          productShortSpec: 1,
+          productSpec: 1,
+          productFeatures: 1,
+          productImageList: 1,
+          score: { $ifNull: [ "$score", 0 ] },
+          paginationToken: { $literal: pagination }
+        }
+      });
+    } 
+
+    if (!sortBy) {
+      // Add a group stage to collect products by brand
+      aggregationPipeline.push({
+        $group: {
+          _id: '$productSpec.Brand',
+          products: {
+            $push: {
+              _id: '$_id',
+              productName: '$productName',
+              productPrice: '$productPrice',
+              productShortSpec: '$productShortSpec',
+              productSpec: '$productSpec',
+              productFeatures: '$productFeatures',
+              productImageList: '$productImageList',
+              score: score,
+              paginationToken: pagination
+            }
+          }
+        }
+      });
+
+      // Add a sort stage after grouping to sort the groups by brand in ascending order
+      aggregationPipeline.push({
+        $sort: { _id: 1 } // Sort by _id (brand) in ascending order
+      });
+    }
+
     // Add the limit and projection stages
-    aggregationPipeline.push({ "$limit": limit ? parseInt(limit) : 10 });
-    aggregationPipeline.push({
-      $project: {
-        productName: 1,
-        productPrice: 1,
-        productShortSpec: 1,
-        productSpec: 1,
-        productFeatures: 1,
-        productImageList: 1,
-        score: { $meta: 'searchScore' },
-        paginationToken: { $meta: 'searchSequenceToken' }
+    aggregationPipeline.push({ "$limit": limit ? parseInt(limit) * 5 : 50 });
+    // console.log('aggregationPipeline:', aggregationPipeline);
+    // console.log(aggregationPipeline[1]['$match']);
+
+    let results;
+    if (sortBy) {
+      // Execute the aggregation pipeline
+      results = await productModel.aggregate(aggregationPipeline);
+    }
+
+    if (!sortBy) {
+      // Execute the aggregation pipeline
+      let groupResults = await productModel.aggregate(aggregationPipeline);
+      // console.log('groupResults:', groupResults);
+
+      // Flatten the group results into a single array
+      results = [];
+      let maxGroupSize = Math.max(...groupResults.map(group => group.products.length));
+      for (let i = 0; i < maxGroupSize; i++) {
+        groupResults.forEach(group => {
+          if (group.products[i]) { // Check if there is a product at index i
+            results.push(group.products[i]);
+          }
+        });
       }
-    });
+    }
 
-    // Execute the aggregation pipeline
-    let results = await productModel.aggregate(aggregationPipeline);
+    // Remove the result before the pagination token
+    if (pagination) {
+      results = results.slice(parseInt(pagination));
+    }
 
-    // product 的 prodcutFeatures 和 productDetail 是 json string，要轉成 object
+    // The product's prodcutFeatures and productDetail are json string, need to convert to object
+    // For now, the filtering api will not contain productDetail, so no need to parse it
     results = results.map(result => {
       result.productFeatures = JSON.parse(result.productFeatures);
       // result.productDetail = JSON.parse(result.productDetail);
       return result;
     });
+
+    // May reconsider the following logic, cause the threshold is differ from each search
+    // Filter out those score is under 0.05, if the search stage is processed
+    // if (shouldClauses.length !== 0) {
+    //   results = results.filter(result => result.score > 0.5);
+    // }
+
+    // Add the limit after the aggregation  (if limit is provided)
+    if (limit) {
+      // console.log(pagination, pagination + parseInt(limit));
+      results = results.slice(pagination, pagination + parseInt(limit));
+    }
+
+    // console.log('results:', results);
 
     // convert results to JSON string
     res.send(results);
@@ -308,6 +437,5 @@ router.get('/:productId', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
 
 module.exports = router;
