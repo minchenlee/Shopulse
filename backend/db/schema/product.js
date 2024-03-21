@@ -35,7 +35,7 @@ const productSchema = new Schema({
   productDetail: String,
   productSpec: {
     type: Map,
-    of: String // Or a more specific type/schema if applicable
+    of: Schema.Types.Mixed
   },
   productReview: productReviewSummarySchema
 });
