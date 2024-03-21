@@ -3,7 +3,7 @@ require('dotenv').config({path: '../.env'})
 const mongoose = require('mongoose');
 const { productModel } = require('./model');
 
-const filePath = '../result/formattedProductInfo.json';
+const filePath = '../result/0321formattedProductInfo.json';
 
 try {
   main();

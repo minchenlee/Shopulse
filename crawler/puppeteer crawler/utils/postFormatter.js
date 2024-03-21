@@ -1,6 +1,6 @@
 const fs = require('fs');
 const filePath = '../result/patchedProductInfo.json';
-const savingFilePath = '../result/formattedProductInfo.json';
+const savingFilePath = '../result/0321formattedProductInfo.json';
 
 
 try {
@@ -15,12 +15,11 @@ function main(){
   // 讀取 json file
   const jsonData = readJsonFile(filePath);
   const mainKeysList = Object.keys(jsonData);
-
   for (const mainKey of mainKeysList) {
     const productInfo = jsonData[mainKey];
     productInfo['productPrice'] = formatProductPrice(productInfo['productPrice']);
     productInfo['productShortSpec'] = formatProductShortSpec(productInfo['productShortSpec']);
-    productInfo['productFeactures'] = formatProductFeactures(productInfo['productFeactures']);
+    productInfo['productFeatures'] = formatProductFeatures(productInfo['productFeatures']);
     productInfo['productDetail'] = formatProductDetail(productInfo['productDetail']);
     productInfo['productReview'] = formatProductReview(productInfo['productReview']);
     productInfo['productSpec'] = formatProductSpec(productInfo['productSpec']);
@@ -48,13 +47,13 @@ function formatProductShortSpec(shortSpec) {
 
 // spec formatting
 function formatProductSpec(spec) {
-  spec['Screen Size'] = Math.round(parseFloat(spec['Screen Size'].replace(/[^\d.]/g, ''))) + '\"';
+  spec['Screen Size'] = Math.round(parseFloat(spec['Screen Size'].replace(/[^\d.]/g, '')));
   return spec;
 }
 
 
 // features formatting
-function formatProductFeactures(features) {
+function formatProductFeatures(features) {
   const keysList = Object.keys(features);
   for (const key of keysList) {
     // 如果 key 包含 '.' 把 '.' 換成 ','
