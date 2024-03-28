@@ -8,6 +8,7 @@ const UserSessionContext = createContext();
 
 // Context provider component
 export function UserSessionProvider({ children }) {
+  // CUI state
   const [userID, setUserID] = useState(null);
   const [currentThreadID, setCurrentThreadID] = useState('');
   const [threadsList, setThreadsList] = useState({});
@@ -17,6 +18,74 @@ export function UserSessionProvider({ children }) {
   const [messageStatus, setMessageStatus] = useState('completed');
   const [userInput, setUserInput] = useState('');
 
+  //GUI state
+  const [productDataList, setProductDataList] = useState();
+  const [isLoadingData, setIsLoadingData] = useState(false);
+  const [hasResult, setHasResult] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // General functions
+  // Login function
+  const login = async(userID) => {
+    setUserID(userID);
+
+    // save the user ID to the local storage
+    const localStorageData = {
+      userID: userID,
+    };
+    localStorage.setItem('SHOPULSE', JSON.stringify(localStorageData));
+
+    try {
+      setIsLoadingThread(true);
+
+      let response;
+      let threads;
+      try {
+        // check if the user has a thread
+        response = await fetchData('/chat/threads?userId=' + userID);
+        threads = response.threads;
+        if (threads.length !== 0) {
+          // sort the threads by updateAt
+          threads.sort((a, b) => {
+            return new Date(b.updatedAt) - new Date(a.updatedAt);
+          }, []);
+          setThreadsList(threads);
+          setCurrentThreadID(threads[0].threadId);
+          // console.log(threads);
+          return;
+        }
+      } catch (error) {
+        // if the user is not found, just skip the error
+        // the user will be created in the next step
+        console.log('New user, creating a new thread');
+      }
+
+      // if the user doesn't have a thread, create a new thread
+      let responseData = await postData('/chat/threads', { userId: userID });
+      const threadID = responseData.threadId;
+      setCurrentThreadID(threadID);
+    } catch (error) {
+      console.log(error);
+      toast.error(error, {
+        className: 'bg-white bg-opacity-70 font-russoOne text-primary rounded-xl border-grey border-[1px]',
+        position: 'top-center',
+        autoClose: false,
+        hideProgressBar: true,
+        closeButton: true,
+      });
+    }
+  };
+
+  // Logout function
+  const logout = () => {
+    setUserID('');
+    setThreadsList({});
+    setCurrentMessages({});
+    setCurrentThreadID(null);
+    // Clean up user data and tokens
+  };
+
+  // CUI useEffect
   // When the current thread changes, connect to the EventSource
   // and retrieve the messages of the current thread
   useEffect(() => {
@@ -47,7 +116,7 @@ export function UserSessionProvider({ children }) {
       eventSource.close();
       toast.error('Failed to connect to the server', {
         className: 'bg-white backdrop-blur-lg bg-opacity-70 font-russoOne text-primary rounded-xl border-grey border-[1px]',
-        position: "top-center",
+        position: 'top-center',
         autoClose: false,
         hideProgressBar: true,
         closeButton: true,
@@ -78,64 +147,32 @@ export function UserSessionProvider({ children }) {
   }, [currentMessages]);
 
 
-  // Login function
-  const login = async(userID) => {
-    setUserID(userID);
-
-    // save the user ID to the local storage
-    const localStorageData = {
-      userID: userID,
-    };
-    localStorage.setItem('SHOPULSE', JSON.stringify(localStorageData));
-
-    try {
-      setIsLoadingThread(true);
-
-      // check if the user has a thread
-      const response = await fetchData('/chat/threads?userId=' + userID);
-      const threads = response.threads;
-
-      if (threads.length !== 0) {
-        // sort the threads by updateAt
-        threads.sort((a, b) => {
-          return new Date(b.updatedAt) - new Date(a.updatedAt);
-        }, []);
-        setThreadsList(threads);
-        setCurrentThreadID(threads[0].threadId);
-        // console.log(threads);
-        return;
-      }
-
-      // if the user doesn't have a thread, create a new thread
-      let responseData = await postData('/chat/threads', { userId: userID });
-      const threadID = responseData.threadId;
-      setCurrentThreadID(threadID);
-    } catch (error) {
-      console.log(error);
-      toast.error(error, {
-        className: 'bg-white bg-opacity-70 font-russoOne text-primary rounded-xl border-grey border-[1px]',
-        position: "top-center",
-        autoClose: false,
-        hideProgressBar: true,
-        closeButton: true,
-      });
+  // GUI useEffect
+  // When the productDataList changes, check if there is any result
+  useEffect(() => {
+    // console.log(productDataList);
+    if (productDataList && productDataList.length > 0) {
+      setHasResult(true);
+    } else {
+      setHasResult(false);
     }
-  };
 
-  // Logout function
-  const logout = () => {
-    setUserID('');
-    setThreadsList({});
-    setCurrentMessages({});
-    setCurrentThreadID(null);
-    // Clean up user data and tokens
-  };
+    if (isLoadingData) {
+      setHasResult(true);
+    }
+
+  }, [productDataList, isLoadingData]);
+
+
+
 
   return (
     <UserSessionContext.Provider value={{ 
+      // General states
       userID,
       login, 
       logout,
+      // CUI states
       currentThreadID,
       threadsList,
       isLoadingThread,
@@ -148,6 +185,15 @@ export function UserSessionProvider({ children }) {
       setIsLoadingThread,
       updateThreadsList,
       setUserInput,
+      // GUI states
+      productDataList,
+      isLoadingData,
+      hasResult,
+      searchQuery,
+      setProductDataList,
+      setIsLoadingData,
+      setHasResult,
+      setSearchQuery,
       }}>
       {children}
     </UserSessionContext.Provider>
