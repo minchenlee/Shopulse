@@ -10,7 +10,7 @@ function validateSearchParams(req, res, next) {
 
   // Perform your existing validations here
   // Adjusted to use req.query directly and structured for middleware usage
-  const { keyword, limit, minPrice, maxPrice, brand, screenType, resolution, refreshRate, screenSize, connectivity, smartTVPlatform, supportedService, sortBy } = params;
+  const { keyword, limit, minPrice, maxPrice, minScreenSize, maxScreenSize, brand, screenType, resolution, refreshRate, connectivity, smartTVPlatform, supportedService, sortBy, fullDetails } = params;
 
   if (!keyword && !forFilter) {
     return res.status(400).send({ error: 'Missing parameter: keyword is required.' });
@@ -31,14 +31,34 @@ function validateSearchParams(req, res, next) {
     return res.status(400).send({ error: 'Invalid parameter: minPrice and maxPrice must be numbers.' });
   }
 
+  // minPrice must be less than or equal to maxPrice
+  if (parseInt(minPrice) > parseInt(maxPrice)) {
+    return res.status(400).send({ error: 'Invalid parameter: minPrice must be less than or equal to maxPrice.' });
+  }
+
+  // minSreenSize and maxScreenSize validation
+  if ((minScreenSize && isNaN(parseInt(minScreenSize))) || (maxScreenSize && isNaN(parseInt(maxScreenSize)))) {
+    return res.status(400).send({ error: 'Invalid parameter: minScreenSize and maxScreenSize must be numbers.' });
+  } 
+
+  // minScreenSize must be less than or equal to maxScreenSize
+  if (parseInt(minScreenSize) > parseInt(maxScreenSize)) {
+    return res.status(400).send({ error: 'Invalid parameter: minScreenSize must be less than or equal to maxScreenSize.' });
+  }
+
   // sortBy validation
   if (sortBy && !['price', 'rating', 'popularity'].includes(sortBy)) {
     return res.status(400).send({ error: 'Invalid parameter: sortBy must be one of "price", "rating", or "popularity".' });
   }
 
+  // fullDetails validation
+  if (fullDetails && fullDetails !== 'true' && fullDetails !== 'false') {
+    return res.status(400).send({ error: 'Invalid parameter: fullDetails must be a boolean.' });
+  }
+
   // filter parameters validation
   // brand, screenType, resolution, refreshRate, screenSize, connectivity, smartTVPlatform, supportedService validation
-  const supportedFilterParams = ['brand', 'screenType', 'resolution', 'refreshRate', 'screenSize', 'connectivity', 'smartTVPlatform', 'supportedService', 'features', 'sortBy'];
+  const supportedFilterParams = ['brand', 'screenType', 'resolution', 'refreshRate', 'connectivity', 'smartTVPlatform', 'supportedService', 'features'];
   for (let param of supportedFilterParams) {
     if (params[param] && typeof params[param] !== 'string') {
       return res.status(400).send({ error: `Invalid parameter: ${param} must be a string.` });
@@ -51,7 +71,7 @@ function validateSearchParams(req, res, next) {
   }
 
   // Unsupported parameters validation
-  const supportedParams = ['pagination', 'keyword', 'limit', 'minPrice', 'maxPrice', ...supportedFilterParams];
+  const supportedParams = ['pagination', 'keyword', 'limit', 'minPrice', 'maxPrice', 'minScreenSize', 'maxScreenSize', 'sortBy', 'fullDetails', ...supportedFilterParams];
   const unsupportedParams = Object.keys(params).filter(param => !supportedParams.includes(param));
   if (unsupportedParams.length > 0) {
     return res.status(400).send({ error: `Unsupported parameter(s): ${unsupportedParams.join(', ')}.` });
