@@ -45,6 +45,15 @@
         ]
       },
       {
+        "title": "Refresh Rate",
+        "type": "multiple",
+        "options": [
+          { "name": "60Hz", "value": "60" },
+          { "name": "120Hz", "value": "120" },
+          { "name": "144Hz", "value": "144" }
+        ]
+      },
+      {
         "title": "Price",
         "type": "single",
         "options": [
@@ -79,12 +88,12 @@
         ]
       },
       {
-        "title": "Supported Services",
+        "title": "Supported Service",
         "type": "multiple",
         "options": [
           { "name": "Browser", "value": "browser" },
-          { "name": "Google TV", "value": "google" },
-          { "name": "Apple TV+", "value": "apple" },
+          { "name": "Google TV", "value": "google tv" },
+          { "name": "Apple TV+", "value": "apple tv" },
           { "name": "Prime Video", "value": "prime video" },
           { "name": "Disney+", "value": "disney" },
           { "name": "Hulu", "value": "hulu" },

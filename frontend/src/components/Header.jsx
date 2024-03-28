@@ -7,10 +7,12 @@ import Searchbar from './gui/Searchbar.jsx';
 
 function Header() {
   return (
-  <div className='h-[78px] w-screen z-30 ps-8 p-4 flex items-center justify-start bg-white sticky top-0 border-primary border-b-[1px]'>
-    <span className='shadow-md rounded-full'>
+  <div className='h-[78px] w-full z-30 ps-8 p-4 flex items-center justify-start bg-white sticky top-0 border-primary border-b-[1px]'>
+    <Link
+      to='/gui'
+      className='shadow-md rounded-full'>
       <Logo/>
-    </span>
+    </Link>
 
     <Searchbar/>
   </div>
