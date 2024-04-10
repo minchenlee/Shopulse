@@ -309,7 +309,6 @@ router.get('/filter', validateSearchParams, async (req, res) => {
             'productSpec.Display Technology', 
             'productSpec.Television Type'
           ],
-          fuzzy: {}
         }
       }] : []),
       ...(resolution ? [{

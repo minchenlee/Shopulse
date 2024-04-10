@@ -30,7 +30,7 @@ function validateSearchParams(req, res, next) {
   if ((minPrice && isNaN(parseFloat(minPrice))) || (maxPrice && isNaN(parseFloat(maxPrice)))) {
     return res.status(400).send({ error: 'Invalid parameter: minPrice and maxPrice must be numbers.' });
   }
-
+  
   // minPrice must be less than or equal to maxPrice
   if (parseInt(minPrice) > parseInt(maxPrice)) {
     return res.status(400).send({ error: 'Invalid parameter: minPrice must be less than or equal to maxPrice.' });

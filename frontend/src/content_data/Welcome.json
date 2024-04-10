@@ -1,0 +1,83 @@
+{
+  "Welcoming": {
+    "Welcome to Our Research Experiment!": "Thank you for your interest and willingness to participate in our study. Your contribution is invaluable to us and plays a significant role in advancing research. We appreciate your time and effort in helping us explore important questions and uncover new knowledge.",
+    "Participant Guidance for the Task": "Your task is to find a product that matches the context we provide. You have 12 minutes to complete this task. After completing the task, you'll answer questions about the product to assess your performance. Your answers will affect your final reward. Though details of these questions remain undisclosed, extensive interaction with the interface will aid in responding effectively.",
+    "Verification": ""
+  },
+  "GuiWelcome": [
+    {
+      "title": "Welcome to Our Research Experiment!", 
+      "content": "Thank you for participating in our study. Your contribution is crucial for advancing our research. We value your time and effort in this exploration.",
+      "image": "src/assets/undraw_experience_design_re_dmqq.svg"
+    },
+    {
+      "title": "Task Instructions", 
+      "content": " 1. Your task is to **find a product that matches the scenario** we provide. \n 2. You will have **12 minutes** to complete the task. \n 3. You can use external search engines, websites to gather information to complete the task. \n 4. You **should not use any generative models or AI-based tools to complete the task**, e.g. ChatGPT, BingChat, Gemini, Claude, etc."
+    },
+    {
+      "title": "Task Instructions",
+      "content": "5. After completing the task, you'll answer questions about the product to assess your performance. **Your answers will affect your final reward**. Though details of these questions remain undisclosed, extensive interaction with the system will aid in responding effectively, try to **clarify why you chose the product and how it fits the scenario**."
+    },
+    {
+      "title": "Scenario",
+      "content": "### Here is the scenario:\n\n ```Your old TV is on its last legs, constantly glitching and cutting out. You've got $1,300 to upgrade, and any savings would be appreciated. Your living room is ready for a new centerpiece. The distance from the stand to the couch is about 8 feet(2.5 meters), and while the room has good lighting, it often washes out the picture on your current set. Streaming shows and movies is a daily ritual, so you need a TV that will do that content justice.```"
+    },
+    {
+      "title": "Verification", 
+      "content": "",
+      "image": "src/assets/undraw_secure_login_pdn4.svg"
+    }
+  ],
+  "GuiInstruction": [
+    {
+      "title": "Task Instructions", 
+      "content": " 1. Your task is to **find a product that matches the scenario** we provide. \n 2. You will have **12 minutes** to complete the task. \n 3. You can use external search engines, websites to gather information to complete the task. \n 4. You **should not use any generative models or AI-based tools to complete the task**, e.g. ChatGPT, BingChat, Gemini, Claude, etc."
+    },
+    {
+      "title": "Task Instructions",
+      "content": "5. After completing the task, you'll answer questions about the product to assess your performance. **Your answers will affect your final reward**. Though details of these questions remain undisclosed, extensive interaction with the system will aid in responding effectively, try to **clarify why you chose the product and how it fits the scenario**."
+    },
+    {
+      "title": "Scenario",
+      "content": "### Here is the scenario:\n\n ```Your old TV is on its last legs, constantly glitching and cutting out. You've got $1,300 to upgrade, and any savings would be appreciated. Your living room is ready for a new centerpiece. The distance from the stand to the couch is about 8 feet(2.5 meters), and while the room has good lighting, it often washes out the picture on your current set. Streaming shows and movies is a daily ritual, so you need a TV that will do that content justice.```"
+    }
+  ],
+  "ChatWelcome": [
+    {
+      "title": "Welcome to Our Research Experiment!", 
+      "content": "Thank you for participating in our study. Your contribution is crucial for advancing our research. We value your time and effort in this exploration.",
+      "image": "src/assets/undraw_experience_design_re_dmqq.svg"
+    },
+    {
+      "title": "Task Instructions", 
+      "content": " 1. Your task is to **find a product that matches the scenario** we provide. \n 2. You will have **12 minutes** to complete the task. \n 3. You can ask questions, search for products, compare features, or seek recommendations from the system to complete the task. \n 4. You **should not using any external resources or websites to complete the task.** Make sure to engage with the system effectively to gather the necessary information."
+    },
+    {
+      "title": "Task Instructions",
+      "content": "5. After completing the task, you'll answer questions about the product to assess your performance. **Your answers will affect your final reward**. Though details of these questions remain undisclosed, extensive interaction with the system will aid in responding effectively, try to **clarify why you chose the product and how it fits the scenario**."
+    },
+    {
+      "title": "Scenario",
+      "content": "### Here is the scenario:\n\n ```Your old TV is on its last legs, constantly glitching and cutting out. You've got $1,300 to upgrade, and any savings would be appreciated. Your living room is ready for a new centerpiece. The distance from the stand to the couch is about 8 feet(2.5 meters), and while the room has good lighting, it often washes out the picture on your current set. Streaming shows and movies is a daily ritual, so you need a TV that will do that content justice.```"
+    },
+    {
+      "title": "Verification", 
+      "content": "",
+      "image": "src/assets/undraw_secure_login_pdn4.svg"
+    }
+  ],
+  "ChatInstruction": [
+    {
+      "title": "Task Instructions", 
+      "content": " 1. Your task is to **find a product that matches the scenario** we provide. \n 2. You will have **12 minutes** to complete the task. \n 3. You can ask questions, search for products, compare features, or seek recommendations from the system to complete the task. \n 4. You **should not using any external resources or websites to complete the task.** Make sure to engage with the system effectively to gather the necessary information."
+    },
+    {
+      "title": "Task Instructions",
+      "content": "5. After completing the task, you'll answer questions about the product to assess your performance. **Your answers will affect your final reward**. Though details of these questions remain undisclosed, extensive interaction with the system will aid in responding effectively, try to **clarify why you chose the product and how it fits the scenario**."
+    },
+    {
+      "title": "Scenario",
+      "content": "### Here is the scenario:\n\n ```Your old TV is on its last legs, constantly glitching and cutting out. You've got $1,300 to upgrade, and any savings would be appreciated. Your living room is ready for a new centerpiece. The distance from the stand to the couch is about 8 feet(2.5 meters), and while the room has good lighting, it often washes out the picture on your current set. Streaming shows and movies is a daily ritual, so you need a TV that will do that content justice.```"
+    }
+  ]
+}
