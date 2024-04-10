@@ -32,11 +32,6 @@
       "Are there any reviews for the Philips OLED 805?"
     ]
   },
-  "Welcoming": {
-    "Welcome to Our Research Experiment!": "Thank you for your interest and willingness to participate in our study. Your contribution is invaluable to us and will help advance our understanding of [topic].",
-    "Please Begin by Verifying Your Participation": "To maintain our study's integrity and validate your participation, please enter your User ID on the next page. This unique identifier helps us monitor your progress without compromising your privacy.",
-    "Verification": ""
-  },
   "PromptTemplate": {
     "Find Your perfect TV features": "I primarily use my TV for [viewing needs, e.g., movies, sports, gaming]. What features or functions should I look for in a TV to enhance my viewing experience?",
     "Explore TV Brands & Tech": "I'm interested in learning about [Brand/Technology/Feature]. Could you provide information on the latest trends and what makes [Brand/Technology/Feature] stand out?",

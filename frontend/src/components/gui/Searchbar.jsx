@@ -18,13 +18,21 @@ function Searchbar() {
     navigate('/gui' + queryString);
   }
 
+  const handleKeyDown = (e) => {
+    // Check if the pressed key is Enter
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
-    <div className='ms-8  w-1/3 max-w-[480px] font-nunito font-semibold relative'>
+    <div className='step-one ms-8  w-1/3 max-w-[480px] font-nunito font-semibold relative'>
       <input 
       type='text'
       placeholder='Search' 
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
+      onKeyDown={handleKeyDown}
       className='w-full peer bg-white border-[1px] border-primary rounded-2xl p-2 focus:outline-none focus:ring-2 focus:ring-silver transition-all duration-300 placeholder-primary placeholder:font-nunito placeholder:text-grey placeholder:font-bold'/>
       <button
       onClick={() => {

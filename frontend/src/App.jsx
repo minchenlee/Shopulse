@@ -9,6 +9,7 @@ import Layout from './layout/Layout'
 import ChatPage from './page/Chat'
 import GUIPage from './page/Gui'
 import GUIProductDetail from './page/GuiProductDetail'
+import HybridPage from './page/Hybrid'
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,12 @@ const router = createBrowserRouter([
     children: [
       { path: '', element: <GUIPage/>},
       { path: 'products/:productId', element: <GUIProductDetail/>},
+    ]
+  },
+  {
+    path: '/hybrid',
+    children: [
+      { path: '', element: <HybridPage/>},
     ]
   }
 ])

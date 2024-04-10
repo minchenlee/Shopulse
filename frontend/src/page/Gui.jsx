@@ -1,23 +1,29 @@
-import { useState, useRef, useContext, useEffect, useMemo } from 'react'
+import { useState, useRef, useContext, useEffect, useMemo, memo } from 'react'
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react'
 import { ToastContainer, toast } from 'react-toastify';
+import Joyride from 'react-joyride';
 import {dotPulse} from 'ldrs'
 dotPulse.register()
 
-import { useUserSession } from '../context/UserSessionContext';
 import ProductCard from '../components/gui/ProductCard';
+import LoginModal from '../components/modals/LoginModal';
+import TimesUpModal from '../components/modals/TimesUpModal';
+import InstructionModal from '../components/modals/InstructionModal';
+
 import GuiContent from '../content_data/GUI.json'
 import DummyData from '../dummy_data/filterProduct.json'
+import { useUserSession } from '../context/UserSessionContext';
 import { fetchData } from '../utils/api';
 // console.log(FilteringOptionList)
 
 function GUIPage() {
-  const { productDataList, setProductDataList, isLoadingData, setIsLoadingData, hasResult, setHasResult, setSearchQuery} = useUserSession();
+  const { productDataList, setProductDataList, isLoadingData, setIsLoadingData, hasResult, setHasResult, setSearchQuery, isLoginModalOpen, setIsLoginModalOpen, isTourStart, setIsTourStart, timerActive, setTimerActive, isInstructionModalOpen, setIsInstructionModalOpen} = useUserSession();
   const location = useLocation();
   const category = GuiContent.mainPage.Category;
   const brandList = GuiContent.mainPage.Category.Brand;
   const screenTypeList = GuiContent.mainPage.Category.ScreenType;
+  const [hasNoFilter, setHasNoFilter] = useState(true);
 
   const getProductDataList = async (queryString) => {
     let data;
@@ -31,48 +37,125 @@ function GUIPage() {
     }
 
     setProductDataList(data);
+    // back to the top of the page
     setTimeout(() => {
+      window.scrollTo(0, 0);
       setIsLoadingData(false);
     }, 300);
   }
 
   useEffect(() => {
+    const localStorage = JSON.parse(window.localStorage.getItem('SHOPULSE')) || {};
+    const userID = localStorage.userID;
+
     // When the query string changes, fetch the product data list
     let queryString = location.search;
     if (queryString !== '') {
-      queryString += '&limit=16&fullDetails=false';
+      queryString += '&limit=16&fullDetails=false&userId=' + userID;
+      setHasNoFilter(false);
     } else {
-      queryString = '?limit=16&fullDetails=false';
+      queryString = '?limit=16&fullDetails=false&userId=' + userID;
       setSearchQuery('');
+      setTimeout(() => {
+        setHasNoFilter(true);
+      }, 300);
     }
 
     getProductDataList(queryString);
   }, [location]);
 
+
+  // Reset the tour when the joyride is completed
+  const handleReset = (data) => {
+    // console.log(data);
+    if (data.action === 'reset') {
+      setIsTourStart(false);
+    }
+    
+    if (data.action === 'stop') {
+      if (!timerActive) {
+        setTimerActive(true);
+      }
+    }
+  }
+
+
   return (
-    <div className='min-h-[calc(100vh-78px)] min-w-screen'>
+    <div className='min-h-[calc(100vh-78px)] min-w-screen relative'>
       <FilteriingSidebar 
       setProductDataList={setProductDataList}
       setIsLoadingData={setIsLoadingData}
+      className='step-two'
       />
       {hasResult ? 
         <div className='ms-[234px] ps-8 pt-4 space-y-16 pb-12'>
-          {/* <CategoryList title='By brand' type='brand' categoryList={brandList}/>
-          <CategoryList title='By screen type' type='screentype' categoryList={screenTypeList}/> */}
-          {isLoadingData ? 
-          <LoadingIndicator/> 
-          :
-          <ResultList/>
+          { hasNoFilter ?
+            <>
+              <CategoryList title='By brand' type='brand' categoryList={brandList}/>
+              <CategoryList title='By screen type' type='screentype' categoryList={screenTypeList}/>
+              <SortProductList query='&minPrice=600' title='Popular'/>
+              <SortProductList query='&sortBy=rating&maxPrice=650' title='On Budget'/>
+            </>
+            :
+            <>
+            {isLoadingData ? 
+            <LoadingIndicator/> 
+            :
+            <ResultList/>
+            }
+            </>
           }
         </div>
       :
         <NoResult/>
       }
+      <ToastContainer/>
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+      <InstructionModal/>
+      <TimesUpModal/>
+      <Joyride 
+        steps={steps}
+        run={isTourStart}
+        continuous={true}
+        hideCloseButton={true}
+        disableCloseOnEsc={true}
+        disableOverlayClose={true}
+        callback={handleReset}
+        spotlightPadding={4}
+        styles={{
+          options: {
+            primaryColor: '#343434',
+            textColor: '#343434',
+            zIndex: 1000,
+            spotlightShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
+          },
+          tooltip: {
+            borderRadius: 15,
+            fontFamily: 'Nunito',
+            fontSize: '1rem',
+          },
+          tooltipContainer: {
+            textAlign: 'left',
+          },
+          tooltipContent: {
+            padding: '10px 10px',
+          },
+          tooltipFooter: {
+            marginTop: 0,
+          },
+          buttonNext: {
+            borderRadius: 10,
+            padding: '10px 20px',
+            margin: '0 0 0 10px',
+          },
+        }}
+      />
     </div>
   )
 }
 
-function CategoryList(props) {
+
+const CategoryList = memo(function CategoryList(props) {
   const title = props.title;
   const categoryList = props.categoryList;
   const type = props.type;
@@ -97,7 +180,7 @@ function CategoryList(props) {
       <div className='invisible scale-[0.5]'></div>
     </div>
   )
-}
+});
 
 
 function CategoryCard(props) {
@@ -133,7 +216,47 @@ function CategoryCard(props) {
 }
 
 
-function ResultList(props) {
+const SortProductList = memo(function SortProductList(props) {
+  const title = props.title;
+  const query = props.query
+
+  const [productDataList, setProductDataList] = useState([]);
+  const getProductDataList = async () => {
+    const productDataList = await fetchData(`/products/filter?limit=4&fullDetails=false${query}`);
+    setProductDataList(productDataList);
+  }
+
+
+  useEffect(() => {
+    getProductDataList();
+  }, []);
+
+  if (productDataList.length === 0) {
+    return;
+  }
+
+  return (
+    <div className='flex flex-col items-start'>
+      <h2 className='w-full text-primary font-russoOne text-xl'>{title}</h2>
+      <div className='flex flex-row items-center justify-center space-x-4 w-full 2xl:w-2/3'>
+        {productDataList.map((product) => {
+          return <ProductCard
+          key={product._id}
+          productId={product._id}
+          productImageList={product.productImageList}
+          productName={product.productName}
+          productPrice={product.productPrice}
+          productRating={product.productRating}
+          productReviewCount={product.productReviewCount}
+          />
+        })}
+      </div>
+    </div>
+  )
+});
+
+
+function ResultList() {
   const { productDataList, setProductDataList, isLoadingData, setIsLoadingData } = useUserSession();
   return(
     <div className='flex flex-col items-center'>
@@ -167,8 +290,9 @@ function PageSelector(props) {
   const urlParams = new URLSearchParams(queryString);
   const pagination = parseInt(urlParams.get('pagination')) || 0;
   const [currentPage, setCurrentPage] = useState(pagination);
+  const [isNextPageHasProduct, setIsNextPageHasProduct] = useState(false);
 
-  const handleNextPage = () => {
+  const handleNextPage = async() => {
     const nextPage = currentPage + 1;
     setCurrentPage(nextPage);
     queryString = queryString.replace(/[?&]pagination=\d+&?/g, '');
@@ -196,6 +320,35 @@ function PageSelector(props) {
     navigate(queryString);
   };
 
+  // Check if there is a next page
+  const hasNextPage = async () => {
+    let nextPageData;
+    const nextPage = currentPage + 1;
+    let nextQueryString = queryString.replace(/pagination=\d+&?/g, '');
+
+  
+    if (nextQueryString === '') {
+      nextQueryString = `?pagination=${nextPage}`;
+    } else {
+      nextQueryString += `&pagination=${nextPage}`;
+    }
+  
+    if (queryString.includes('keyword=')) {
+      nextPageData = await fetchData('/products/search' + nextQueryString + '&limit=16&fullDetails=false');
+    } else {
+      nextPageData = await fetchData('/products/filter' + nextQueryString + '&limit=16&fullDetails=false');
+    }
+
+    return nextPageData.length > 0;
+  };
+
+  useEffect(() => {
+    hasNextPage().then((result) => {
+      setIsNextPageHasProduct(result);
+    });
+  }, [currentPage]);
+  
+
   return(
     <div className='pe-8 mt-12 flex flex-row items-center justify-center text-xl space-x-4'>
       <button 
@@ -208,7 +361,7 @@ function PageSelector(props) {
       <p className='text-lg text-center w-10 leading-none text-primary font-russoOne'>{currentPage + 1}</p>
       <button 
       className='w-8 h-8 bg-secondary rounded-full flex items-center justify-center disabled:opacity-30'
-      disabled={productDataList.length < 16}
+      disabled={productDataList.length < 16 || !isNextPageHasProduct}
       onClick={handleNextPage}
       >
         <FeatherIcon icon='chevron-right' className='text-primary' size="24px" strokeWidth={4}/>
@@ -221,10 +374,16 @@ function PageSelector(props) {
 function NoResult() {
   return (
     <div className='ms-[234px] flex flex-col justify-center items-center min-h-[calc(100vh-78px)]'>
-      <h1 className='mb-24 w-full text-center text-primary font-russoOne text-2xl'>
+      <h1 className='mb-4 w-full text-center text-primary font-russoOne text-2xl'>
         No Results... <br/>
         Try a different filter
       </h1>
+      {/* guild user back to previous page */}
+      <button
+      onClick={() => window.history.back()}
+      className='mb-24 bg-secondary border-primary border-[1px] rounded-full px-8 py-2 text-primary font-russoOne text-xl hover:scale-105 hover:shadow-sm duration-300'>
+        Back
+      </button>
       <div className=''>
         <img 
         src='/src/assets/undraw_taken_re_yn20.svg' 
@@ -249,7 +408,8 @@ function LoadingIndicator(){
 }
 
 
-function FilteriingSidebar(props) {
+const FilteriingSidebar = memo(function FilteriingSidebar(props) {
+  const className = props.className;
   const FilteringOptionList = GuiContent.mainPage.FilteringOptionList;
   const navigate = useNavigate();
   const resetFilter = () => {
@@ -257,8 +417,8 @@ function FilteriingSidebar(props) {
     navigate(newUrl, { replace: true });
   }
 
-  return (
-    <div className='pt-4 ps-8 fixed h-screen w-[234px] border-e-[1px] border-primary overflow-scroll no-scrollbar pb-24'>
+  return(
+    <div className={`${className} pt-4 ps-8 fixed h-screen w-[234px] border-e-[1px] border-primary overflow-scroll no-scrollbar pb-24`}>
       <div className='flex flex-row items-center mb-4'>
         <h1 className='text-primary font-russoOne text-xl'>Filter</h1>
         <button
@@ -279,7 +439,7 @@ function FilteriingSidebar(props) {
       })}
     </div>
   )
-}
+});
 
 
 function FilteringSubset(props) {
@@ -584,5 +744,33 @@ const processRangeValue = (parameterKey, optionValue, queryDict) => {
   isProcessed = true;
   return queryDict, isProcessed;
 }
+
+
+// React Joyride steps
+const steps = [
+  {
+    target: '.step-one',
+    content: 'This is a search bar, you can type keyword here to search for products.',
+    disableBeacon: true,
+  },
+  {
+    target: '.step-two',
+    content: 'Here you can select filters to narrow down your search results.',
+    placement: 'right',
+    disableScrolling: true,
+  },
+  {
+    target: '.step-five',
+    content: 'View the task instructions and scenario here.',
+  },
+  {
+    target: '.step-six',
+    content: 'Launch the interactive website tour for a quick walkthrough.',
+  },
+  {
+    target: '.step-seven',
+    content: 'Track your task time here, don\'t worry, it will start after you finish this tour.',
+  },
+]
 
 export default GUIPage;

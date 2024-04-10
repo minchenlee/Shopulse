@@ -32,6 +32,15 @@ export default {
       boxShadow: {
         'short-cut-button': '0px 3px 21px 5px rgba(0,0,0,0.1);',
       },
+      animation: {
+        'breathe-scale': 'breathe-scale 4s infinite',
+      },
+      keyframes: {
+        'breathe-scale': {
+          '0%, 100%': { opacity: 2 },
+          '50%': { opacity: 0.5 },
+        },
+      },
     },
   },
   plugins: [],

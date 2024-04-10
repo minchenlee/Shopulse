@@ -6,13 +6,18 @@ import Zoom from 'react-medium-image-zoom'
 import {dotPulse} from 'ldrs'
 dotPulse.register()
 
+import { useUserSession } from '../context/UserSessionContext'
+import TimesUpModal from '../components/modals/TimesUpModal';
+import InstructionModal from '../components/modals/InstructionModal';
 import ProductCard from '../components/gui/ProductCard'
 import { StarRow, Star, HollowStar} from '../components/gui/Star'
+import StatisticBlock from '../components/gui/StatisticBlock'
 import { fetchData } from '../utils/api';
 
 
 
 function GUIProductDetail() {
+  const { userID } = useUserSession();
   const { productId } = useParams();
   const [productData, setProductData] = useState(false);
   const [similarProducts, setSimilarProducts] = useState([]);
@@ -21,7 +26,7 @@ function GUIProductDetail() {
   const retrieveProductData = async () => {
     try {
       setIsLoading(true);
-      const productData = await fetchData(`/products/${productId}`);
+      const productData = await fetchData(`/products/${productId}?userId=${userID}`);
       const similarProducts = await getSimilarProducts(productData, productId);
       setProductData(productData);
       setSimilarProducts(similarProducts);
@@ -68,6 +73,9 @@ function GUIProductDetail() {
           />
         </div>
       </div>
+      <ToastContainer/>
+      <TimesUpModal/>
+      <InstructionModal/>
     </div>
   )
 }
@@ -254,9 +262,9 @@ function SimilarProducts(props){
   }
 
   return(
-    <div className='flex flex-col text-primary font-nunito overflow-scroll'>
+    <div className='flex flex-col text-primary font-nunito overflow-clip'>
       <h3 className='text-xl font-extrabold mb-6'>Similar products</h3>
-      <div className='flex flex-row gap-4'>
+      <div className='flex flex-row lg:flex-nowrap flex-wrap justify-center items-center px-20 gap-y-12'>
         {similarProducts.map((product, index) => {
           return(
             <ProductCard 
@@ -422,55 +430,6 @@ function CustomerReview(props){
         />
         <ReviewList reviewList={reviewList}/>
       </div>
-    </div>
-  )
-}
-
-function StatisticBlock(props){
-  const rating = props.rating;
-  const reviewCount = props.reviewCount;
-  const ratingDistributionList = props.ratingDistributionList;
-
-  return(
-    <div className='h-100vh relative'>
-      <div className='flex flex-col space-y-4 sticky top-[calc(78px+1rem)]'>
-        <p className='text-2xl font-extrabold leading-none'>
-          {rating} out of 5
-        </p>
-        <div className='flex flex-row items-center'>
-          <StarRow rating={rating}/>
-          <div className='ms-4'>
-            {reviewCount} ratings
-          </div>
-        </div>
-        <RatingDistribution ratingDistributionList={ratingDistributionList}/>
-      </div>
-    </div>
-  )
-}
-
-
-function RatingDistribution(props){
-  const ratingDistributionList = props.ratingDistributionList;
-  return (
-    <div className='flex flex-col'>
-      {ratingDistributionList.map((ratingDistribution, index) => {
-        return(
-          <div key={index} className='flex flex-row items-center mb-1'>
-            <div className='w-1/4'>
-              {ratingDistribution.rating}
-            </div>
-            <div className='w-3/4'>
-              <div className='w-full bg-gray-200 h-3 rounded-full'>
-                <div
-                className='bg-primary h-3 rounded-full' 
-                style={{width: `${parseInt(ratingDistribution.count)}%`}}
-                />
-              </div>
-            </div>
-          </div>
-        )
-      })}
     </div>
   )
 }
