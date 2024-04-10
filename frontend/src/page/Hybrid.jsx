@@ -6,7 +6,6 @@ import Joyride from 'react-joyride';
 
 import Logo from '../svg/logo'
 import Threads from '../components/Chat/Threads';
-import Message from '../components/Chat/Message';
 import Modal from '../components/modals/Modal';
 import LoginModal from '../components/modals/LoginModal';
 import TimesUpModal from '../components/modals/TimesUpModal';
@@ -21,20 +20,30 @@ import { useCursorInside } from '../hooks/useCursorInside';
 import { useUserSession } from '../context/UserSessionContext';
 import { fetchData, postData, deleteData } from '../utils/api';
 
-function ChatPage(){
+function HybridPage(){
   const { userID, threadsList, setCurrentThreadID, isLoadingThread, setIsLoadingThread, isLoginModalOpen, setIsLoginModalOpen, isTourStart, setIsTourStart, timerActive, setTimerActive} = useUserSession();
 
   // control modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
+  // control whether the Buffer is shown
+  const [isBufferShown, setIsBufferShown] = useState(false);
+  let userInputWidth = isBufferShown ? 'w-3/4 ps-40' : 'w-full';
+  
   // Reset the tour when the joyride is completed
   const handleReset = (data) => {
+    // console.log(data);
     if (data.action === 'reset') {
       setIsTourStart(false);
     }
 
+    if (data.index === 6) {
+      setIsBufferShown(true);
+    }
+
     if (data.action === 'stop') {
+      setIsBufferShown(false);
       if (!timerActive) {
         setTimerActive(true);
       }
@@ -42,35 +51,35 @@ function ChatPage(){
   }
 
   return (
-    <div className='h-screen min-w-screen overflow-hidden'>
+    <div className='h-screen min-w-screen overflow-hidden relative'>
+      <div className='z-50 absolute top-[18px] right-4'>
+        <Timer/>
+      </div>
       <div className='h-full w-full flex flex-row relative'>
-        <div className='z-40 absolute top-[18px] right-4'>
-          <Timer/>
-        </div>
         <div className='absolute z-30 w-full h-16 bg-white bg-opacity-65 backdrop-blur-[6px]'/>
         <div className='absolute z-30 h-full ps-8 pt-4 flex flex-col items-start'>
           <span className='shadow-md rounded-full'>
             <Logo/>
           </span>
-          <div className='mt-8 flex flex-col items-start space-y-3'>
+          <div className='w-40 mt-8 flex flex-col items-start space-y-3'>
             <NavButton text='how to ask?' onclick={toggleModal} className='step-one'/>
             <NavButton text='new chat' onclick={() => createNewThread(userID, threadsList, setCurrentThreadID, setIsLoadingThread)} className='step-two'/>
             <HistoryButton 
-              text='history' 
-              isLoadingThread={isLoadingThread}
-              setIsLoadingThread={setIsLoadingThread}
-              className='step-three'
+            text='history' 
+            isLoadingThread={isLoadingThread}
+            setIsLoadingThread={setIsLoadingThread}
+            className='step-three'
             />
           </div>
         </div>
         {isLoadingThread && <LoadingIndicator/>}
-        <Threads/>
-        <div className='absolute z-40 inset-x-3 bottom-0 backdrop-blur-md pb-4'>
+        <Threads isForHybrid={true} isBufferShown={isBufferShown} setIsBufferShown={setIsBufferShown}/>
+        <div className={`${userInputWidth} absolute z-40 bottom-0 backdrop-blur-md pb-4 duration-500`}>
           <UserInput className='step-four'/>
         </div>
       </div>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)}/>
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
       <TimesUpModal/>
       <InstructionModal/>
       <ToastContainer/>
@@ -145,6 +154,7 @@ const createNewThread = async(userID, threadsList, setCurrentThreadID, setIsLoad
   }
 }
 
+
 // React Joyride steps
 const steps = [
   {
@@ -176,7 +186,21 @@ const steps = [
     target: '.step-seven',
     content: 'Track your task time here, don\'t worry, it will start after you finish this tour.',
   },
+  {
+    target: '.step-eight',
+    content: 'Click here to open or close the Buffer, which is a space for you to store products you are interested in and access their details or reviews later.',
+  },
+  {
+    target: '.step-nine',
+    content: 'You can view the filtering condition that Max is using to recommend products to you here.',
+  },
+  {
+    target: '.step-ten',
+    content: 'You can view the products that Max has recommended to you here, and click on the button below to view more details or reviews.',
+  },
 ];
 
 
-export default ChatPage
+export default HybridPage
+
+

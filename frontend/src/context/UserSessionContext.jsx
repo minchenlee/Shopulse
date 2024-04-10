@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { fetchData, postData } from '../utils/api';
 const baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -24,16 +24,95 @@ export function UserSessionProvider({ children }) {
   const [hasResult, setHasResult] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Gereral state
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(true);  // control login modal
+  const [isInstructionModalOpen, setIsInstructionModalOpen] = useState(false);
+  const [isTimesUp, setIsTimesUp] = useState(false);
+  const [isTourStart, setIsTourStart] = useState(false);
+  const [timerActive, setTimerActive] = useState(false); // State to control timer activation
+  const [timeLeft, setTimeLeft] = useState(720);
+  // const [timeLeft, setTimeLeft] = useState(30); // For testing purpose
+  const storedTime = localStorage.getItem('SHOPULSE_TIMER');
+
+  // useRef
+  const textAreaRef = useRef(null);
+  const sendMessageButtonRef = useRef(null);
+  const lastMessageRef = useRef(null);
+
   // General functions
+  useEffect(() => {
+    if (storedTime) {
+      setTimerActive(true);
+      setTimeLeft(parseInt(storedTime));
+    }
+  }, [storedTime]);
+
+
+  useEffect(() => {
+    const localStorage = JSON.parse(window.localStorage.getItem('SHOPULSE')) || {};
+    if (Object.keys(localStorage).includes('userID')) {
+      setUserID(localStorage.userID);
+    }
+  }, []);
+
+  // Set up the timer
+  useEffect(() => {
+    let interval;
+    if (timerActive) { // Only set up the timer if timerActive is true
+      interval = setInterval(() => {
+        setTimeLeft((prevTimeLeft) => {
+          const newTimeLeft = prevTimeLeft - 1;
+          // console.log('time left:', newTimeLeft);
+          if (newTimeLeft <= 0) {
+            localStorage.removeItem('SHOPULSE_TIMER');
+            localStorage.setItem('SHOPULSE_IS_TIMES_UP', 'true');
+            clearInterval(interval); // Stop the interval when time is up
+            setTimerActive(false); // Set the timerActive to false
+            return 0;
+          }
+          localStorage.setItem('SHOPULSE_TIMER', newTimeLeft.toString());
+          return newTimeLeft;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [timerActive]);
+
+
+  // Call the toast when the time is up
+  useEffect(() => {
+    if (timeLeft === 0) {
+      setIsTimesUp(true);
+    }
+  }, [timeLeft]);
+
+
   // Login function
   const login = async(userID) => {
     setUserID(userID);
 
     // save the user ID to the local storage
-    const localStorageData = {
-      userID: userID,
-    };
-    localStorage.setItem('SHOPULSE', JSON.stringify(localStorageData));
+    const localStorage = JSON.parse(window.localStorage.getItem('SHOPULSE')) || {};
+
+    if (!Object.keys(localStorage).includes('userID')) {
+      localStorage.userID = userID;
+      window.localStorage.setItem('SHOPULSE', JSON.stringify(localStorage));
+
+      // start the tour
+      setIsTourStart(true);
+    }
+
+
+
+    // Check the current path, if is chat, get the thread
+    // if is gui, return
+    const path =  location.pathname;
+    if (path.includes('gui')) {
+      console.log('GUI page, skipping thread');
+      return;
+    }
+
 
     try {
       setIsLoadingThread(true);
@@ -84,6 +163,18 @@ export function UserSessionProvider({ children }) {
     setCurrentThreadID(null);
     // Clean up user data and tokens
   };
+
+  useEffect(() => {
+    // Gerneral state
+    if (localStorage.getItem('SHOPULSE') !== null) {
+      const userID = JSON.parse(localStorage.getItem('SHOPULSE')).userID;
+      if (userID !== null) {
+        login(userID);
+        setIsLoginModalOpen(false);
+      }
+    }
+  }, [location]);
+
 
   // CUI useEffect
   // When the current thread changes, connect to the EventSource
@@ -170,8 +261,20 @@ export function UserSessionProvider({ children }) {
     <UserSessionContext.Provider value={{ 
       // General states
       userID,
+      isLoginModalOpen,
+      isInstructionModalOpen,
+      isTimesUp,
+      isTourStart,
+      timerActive,
+      timeLeft,
+      setIsLoginModalOpen,
+      setIsInstructionModalOpen,
       login, 
       logout,
+      setIsTimesUp,
+      setIsTourStart,
+      setTimerActive,
+      setTimeLeft,
       // CUI states
       currentThreadID,
       threadsList,
@@ -194,6 +297,10 @@ export function UserSessionProvider({ children }) {
       setIsLoadingData,
       setHasResult,
       setSearchQuery,
+      // useRef
+      textAreaRef,
+      sendMessageButtonRef,
+      lastMessageRef,
       }}>
       {children}
     </UserSessionContext.Provider>

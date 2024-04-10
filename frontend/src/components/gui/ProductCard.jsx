@@ -29,7 +29,7 @@ function ProductCard(props) {
           <img
             src={productHeroImage}
             alt={productName}
-            className='w-full object-contain md:h-48 2xl:h-72 py-4 bg-[#ffffff]'
+            className='w-full rounded-xl px-4 object-contain md:h-48 2xl:h-72 py-4 bg-[#ffffff]'
           />
           <div className='mt-3 font-nunito'>
             <div className='flex flex-row items-center text-xl font-bold mb-1'>

@@ -6,64 +6,39 @@ import Markdown from 'react-markdown'
 import textContent from '../../content_data/Welcome.json';
 import { toast } from 'react-toastify';
 
-// Modal Component
-function LoginModal (props) {
-  const { login } = useUserSession();
+export default function InstructionModal () {
+  const {isInstructionModalOpen, setIsInstructionModalOpen} = useUserSession();
   const [index, setIndex] = useState(0);
   const [slowClose, setSlowClose] = useState(false);
-  const { isOpen, onClose } = props;
-  const [isAgree, setIsAgree] = useState(false);
+  const [isAgree, setIsAgree] = useState(true);
 
   // get the path to check is at the gui page
   const path = window.location.pathname;
-  const isGuiPage = path.includes('gui');
-
-  // state for the user ID
-  const [userID, setUserID] = useState('');
+  let isGuiPage;
+  if (path.includes('gui')) {
+    isGuiPage = true;
+  }
 
   // closing the modal
   const handleClosing = () => {
-    if (isOpen) {
-      onClose();
+    if (isInstructionModalOpen) {
+      setIsInstructionModalOpen(false);
       setTimeout(() => setSlowClose(false), 500);
-    }
-  }
-
-  // when user submit the user ID
-  // check if the user ID is empty
-  const handleRegister = () => {
-    if (userID === '') {
-      toast.warning('User ID cannot be empty', {
-        className: 'bg-white bg-opacity-70 font-russoOne text-primary rounded-xl border-grey border-[1px]',
-        position: "top-center",
-        autoClose: 2500,
-        hideProgressBar: true,
-        closeButton: false,
-      })
-      return;
-    }
-
-    login(userID);
-    handleClosing();
-  }
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      handleRegister();
     }
   }
 
   useEffect(() => {
-    if (isOpen) {
+    if (isInstructionModalOpen) {
       setSlowClose(true);
     }
 
-    if (!isOpen) {
-      setTimeout(() => setSlowClose(false), 500);
+    if (!isInstructionModalOpen) {
+      setTimeout(() => {setSlowClose(false), setIndex(0)}, 500);
     }
-  }, [isOpen]);
+  }, [isInstructionModalOpen]);
 
-  const WelcomeList = isGuiPage ? textContent.GuiWelcome : textContent.ChatWelcome;
+
+  const WelcomeList = isGuiPage ? textContent.GuiInstruction : textContent.ChatInstruction;
   const updateIndex = (num) => {
     if (index + num < 0) {
       const newIndex = WelcomeList.length - 1;
@@ -72,7 +47,7 @@ function LoginModal (props) {
     }
 
     if (index + num >= WelcomeList.length) {
-      handleRegister();
+      handleClosing();
       return;
     }
 
@@ -81,15 +56,10 @@ function LoginModal (props) {
   }
 
   return (
-    <div className={`fixed z-50 inset-0 backdrop-blur-[5px] bg-primary bg-opacity-25 flex justify-center items-center transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'} ${!slowClose ? 'invisible': ''}`}>
+    <div className={`fixed z-50 inset-0 backdrop-blur-[5px] bg-primary bg-opacity-25 flex justify-center items-center transition-opacity duration-500 ${isInstructionModalOpen ? 'opacity-100' : 'opacity-0'} ${!slowClose ? 'invisible': ''}`}>
       <div className='w-[832px] bg-white backdrop-blur-md rounded-3xl relative bg-opacity-80 px-10 pt-8 pb-2'>
-        <TitleBar title={WelcomeList[index].title}/>
-        {index === WelcomeList.length - 1 
-        ? 
-        <RegisterForm userID={userID} setUserID={setUserID} handleKeyDown={handleKeyDown} image={WelcomeList[index].image}/>
-        :
+        <TitleBar title={WelcomeList[index].title} onClick={handleClosing}/>
         <Direction contentList={WelcomeList[index].content} image={WelcomeList[index].image} isAgree={isAgree} setIsAgree={setIsAgree}/>
-        }
         <div className='w-full flex flex-row items-center my-4'>
           <Button 
           title='' 
@@ -117,12 +87,14 @@ function LoginModal (props) {
 };
 
 
-
 function TitleBar(props){
-  const { title } = props;
+  const { title, onClick } = props;
   return(
     <div className='flex flex-row items-center justify-between mb-6'>
       <h2 className='text-2xl font-russoOne'>{title}</h2>
+      <button className='' onClick={onClick}>
+        <FeatherIcon icon='x' className='text-dark-grey px-[1px] hover:text-primary duration-300' size='32px' strokeWidth='3px'/>
+      </button>
     </div>
   )
 }
@@ -145,9 +117,9 @@ function Direction(props){
   };
 
   return(
-    <div className='min-h-[244px] flex flex-row justify-between w-full h-full items-start select-none'>
+    <div className='min-h-[244px] flex flex-row justify-between w-full h-full items-start'>
       { image && <img src={image} alt='image' className='w-[22rem] h-60'/> }
-      <div className='font-nunito font-semibold text-primary mb-3'>
+      <div className='font-nunito font-semibold text-primary mb-3 select-none'>
         <Markdown components={customParagraphRenderer}>
           {contentList}
         </Markdown>
@@ -206,31 +178,3 @@ function DotsIndicator({ length, currentIndex }) {
     </div>
   );
 }
-
-
-function RegisterForm(props){
-  const { userID, setUserID, handleKeyDown, image } = props;
-  const handleChange = (event) => {
-    setUserID(event.target.value);
-  }
-
-  return (
-    <div className='min-h-[244px] flex flex-row  justify-between text-xl font-russoOne'>
-      <img src={image} alt='image' className='w-[20rem] h-60'/>
-      <div className='h-auto me-10 flex flex-col space-y-4'>
-        <p className='text-primary px-4'>Please enter your Prolific ID</p>
-        <input 
-        type='text' 
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        value={userID}
-        placeholder='Prolific ID' 
-        className='w-auto h-12 bg-transparent focus:outline-none focus:ring-2 focus:ring-grey transition-all duration-300 focus:rounded-2xl border-b-2 border-grey px-4 text-lg'
-        />
-      </div>
-    </div>
-  )
-}
-
-
-export default LoginModal;
