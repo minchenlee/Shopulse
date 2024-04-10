@@ -1,0 +1,6 @@
+{"timestamp":"2024-04-10 12:11:43","method":"GET","url":"/chat/threads?userId=test","status":304,"responseTime":"111.283 ms","userId":"test"}
+{"timestamp":"2024-04-10 12:11:43","method":"GET","url":"/chat?threadId=thread_iD5R12zretctc9bFA8AxQCNo","status":200,"responseTime":"undefined ms"}
+{"timestamp":"2024-04-10 12:11:43","method":"GET","url":"/chat/threads?userId=test","status":304,"responseTime":"114.118 ms","userId":"test"}
+{"timestamp":"2024-04-10 12:11:44","method":"GET","url":"/chat/threads?userId=test","status":304,"responseTime":"82.146 ms","userId":"test"}
+{"timestamp":"2024-04-10 12:26:55","method":"GET","url":"/chat/threads?userId=test","status":200,"responseTime":"269.525 ms","contentLength":"377","userId":"test"}
+{"timestamp":"2024-04-10 12:26:55","method":"GET","url":"/chat/threads?userId=test","status":304,"responseTime":"80.219 ms","userId":"test"}

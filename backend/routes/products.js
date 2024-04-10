@@ -6,7 +6,7 @@ let router = express.Router();
 
 router.get('/search', validateSearchParams, async (req, res) => {
   let { limit, pagination } = req.query;
-  const { keyword, minPrice, maxPrice, minScreenSize, maxScreenSize, brand, screenType, resolution, refreshRate, connectivity, smartTVPlatform, supportedService, features, sortBy, fullDetails } = req.query;
+  const { features, minPrice, maxPrice, minScreenSize, maxScreenSize, brand, screenType, resolution, refreshRate, connectivity, smartTVPlatform, supportedService, sortBy, fullDetails } = req.query;
   // console.log('query:', keyword);
   
   if (!limit) {
@@ -20,10 +20,12 @@ router.get('/search', validateSearchParams, async (req, res) => {
       // Add a match stage for brand, screenType, resolution, refreshRate, priceRange, screenSize, connectivity, smartTVPlatform, supportedService
       ...[{
         text: {
-          query: keyword,
+          query: features,
           path: [
-            'productName', 
+            'productName',
+            'productSpec.Features',
           ],
+          fuzzy: {}
         }
       }],
       ...(brand ? [{
@@ -79,16 +81,6 @@ router.get('/search', validateSearchParams, async (req, res) => {
           path: [
             'productSpec.Streaming Services', 
             'productSpec.Virtual Assistant'
-          ],
-          fuzzy: {}
-        }
-      }] : []),
-      ...(features ? [{
-        text: {
-          query: features,
-          path: [
-            'productShortSpec.Special Feature',
-            'productSpec.Features'
           ],
           fuzzy: {}
         }
@@ -257,6 +249,8 @@ router.get('/search', validateSearchParams, async (req, res) => {
     // convert results to JSON string
     // res.send(JSON.stringify(results, null, 2));
 
+
+
     // Add the limit after the aggregation  (if limit is provided)
     if (limit) {
       const intLimit = parseInt(limit, 10);
@@ -279,7 +273,7 @@ router.get('/search', validateSearchParams, async (req, res) => {
 
 router.get('/filter', validateSearchParams, async (req, res) => {
   let { limit, pagination } = req.query;
-  const { minPrice, maxPrice, minScreenSize, maxScreenSize, brand, screenType, resolution, refreshRate, connectivity, smartTVPlatform, supportedService, features, sortBy, fullDetails } = req.query;
+  const { keyword, minPrice, maxPrice, minScreenSize, maxScreenSize, brand, screenType, resolution, refreshRate, connectivity, smartTVPlatform, supportedService, features, sortBy, fullDetails } = req.query;
 
   if (!limit) {
     limit = 3;
@@ -291,6 +285,16 @@ router.get('/filter', validateSearchParams, async (req, res) => {
     // Dynamically build the should array based on provided query parameters
     let mustClauses = [
       // Add a match stage for brand, screenType, resolution, refreshRate, priceRange, screenSize, connectivity, smartTVPlatform, supportedService
+      ...(keyword ? [{
+        text: {
+          query: keyword,
+          path: [
+            'productName',
+            'productSpec.Features',
+          ],
+          fuzzy: {}
+        }
+      }] : []),
       ...(brand ? [{
         text: {
           query: brand,
@@ -504,6 +508,8 @@ router.get('/filter', validateSearchParams, async (req, res) => {
             productSpec: 1,
             productFeatures: 1,
             productImageList: 1,
+            productRating: "$productReview.rating",
+            productReviewCount: "$productReview.reviewCount",
             score: { $ifNull: [ "$score", 0 ] },
             paginationToken: { $literal: pagination }
           }
@@ -540,6 +546,8 @@ router.get('/filter', validateSearchParams, async (req, res) => {
                 productSpec: '$productSpec',
                 productFeatures: '$productFeatures',
                 productImageList: '$productImageList',
+                productRating: "$productReview.rating",
+                productReviewCount: "$productReview.reviewCount",
                 score: score,
                 paginationToken: pagination
               }
@@ -622,11 +630,33 @@ router.get('/filter', validateSearchParams, async (req, res) => {
       }
     }
 
+    // Add filtering condition info into the results
+    let filteringCondition = {
+      features: features,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      minScreenSize: minScreenSize,
+      maxScreenSize: maxScreenSize,
+      brand: brand,
+      screenType: screenType,
+      resolution: resolution,
+      refreshRate: refreshRate,
+      connectivity: connectivity,
+      smartTVPlatform: smartTVPlatform,
+      supportedService: supportedService,
+      features: features,
+      sortBy: sortBy
+    };
+
+    // remove the empty fields
+    Object.keys(filteringCondition).forEach(key => filteringCondition[key] === undefined && delete filteringCondition[key]);
+
     // The product's prodcutFeatures and productDetail are json string, need to convert to object
     // For now, the filtering api will not contain productDetail, so no need to parse it
     results = results.map(result => {
       if (result.productFeatures) {
         result.productFeatures = JSON.parse(result.productFeatures);
+        result.filteringCondition = filteringCondition;
       }
       // result.productDetail = JSON.parse(result.productDetail);
       return result;
@@ -643,10 +673,18 @@ router.get('/filter', validateSearchParams, async (req, res) => {
       // console.log(startIndex, endIndex - 1); // endIndex - 1 because slice() is non-inclusive at the end.
       results = results.slice(startIndex, endIndex);
     }
+
+    // Check if result is empty, if it is, just return a array that contains the filtering condition
+    if (results.length === 0) {
+      const defaultObject = {
+        noResult: true,
+        filteringCondition: filteringCondition
+      };
+      results.push(defaultObject);
+    }
+
     
-
     // console.log('results:', results);
-
     // convert results to JSON string
     res.send(results);
   } catch (error) {
@@ -657,6 +695,14 @@ router.get('/filter', validateSearchParams, async (req, res) => {
 
 router.get('/:productId', async (req, res) => {
   const { productId } = req.params;
+  let { excludeReview } = req.query;
+  // if the excludeReview is not provided, set it to false
+  if (!excludeReview) {
+    excludeReview = false;
+  }
+
+  // Convert the string to boolean
+  excludeReview = excludeReview === 'true';
 
   // Validate productId (assuming it should be a non-empty string; adjust as needed)
   if (!productId) {
@@ -671,19 +717,38 @@ router.get('/:productId', async (req, res) => {
       return res.status(404).send('Not Found: Product does not exist');
     }
 
-    // Preparing the response object
-    const productDetails = {
-      id: product._id.toString(),
-      productName: product.productName,
-      productModelCode: product.productModelCode,
-      productPrice: product.productPrice,
-      productShortSpec: product.productShortSpec,
-      productFeatures: JSON.parse(product.productFeatures),
-      productImageList: product.productImageList,
-      productDetail: JSON.parse(product.productDetail),
-      productSpec: product.productSpec,
-      productReview: product.productReview
-    };
+    let productDetails;
+
+    // If excludeReview is true, exclude the productReview from the response
+    if (excludeReview) {
+      productDetails = {
+        id: product._id.toString(),
+        productName: product.productName,
+        productModelCode: product.productModelCode,
+        productPrice: product.productPrice,
+        productShortSpec: product.productShortSpec,
+        productFeatures: JSON.parse(product.productFeatures),
+        productImageList: product.productImageList,
+        productDetail: JSON.parse(product.productDetail),
+        productSpec: product.productSpec
+      };
+    } else {
+      // Preparing the response object
+      productDetails = {
+        id: product._id.toString(),
+        productName: product.productName,
+        productModelCode: product.productModelCode,
+        productPrice: product.productPrice,
+        productShortSpec: product.productShortSpec,
+        productFeatures: JSON.parse(product.productFeatures),
+        productImageList: product.productImageList,
+        productDetail: JSON.parse(product.productDetail),
+        productSpec: product.productSpec,
+        productReview: product.productReview
+      };
+    }
+
+    
 
     // Send the response
     res.setHeader('Content-Type', 'application/json');
@@ -693,5 +758,37 @@ router.get('/:productId', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+router.get('/:productId/reviews', async (req, res) => {
+  const { productId } = req.params;
+  // Validate productId (assuming it should be a non-empty string; adjust as needed)
+  if (!productId) {
+    return res.status(400).send('Bad Request: Missing or invalid productId');
+  }
+
+  try {
+    const product = await productModel.findById(productId);
+
+    // If no product found with the given ID
+    if (!product) {
+      return res.status(404).send('Not Found: Product does not exist');
+    }
+
+    // Preparing the response object
+    const productReview = {
+      id: product._id.toString(),
+      productName: product.productName,
+      productReview: product.productReview
+    };
+
+    // Send the response
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(productReview));
+  } catch (error) {
+    console.error(`Internal Server Error: ${error}`);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 
 module.exports = router;
