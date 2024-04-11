@@ -71,7 +71,7 @@ function validateSearchParams(req, res, next) {
   }
 
   // Unsupported parameters validation
-  const supportedParams = ['pagination', 'keyword', 'limit', 'minPrice', 'maxPrice', 'minScreenSize', 'maxScreenSize', 'sortBy', 'fullDetails', ...supportedFilterParams];
+  const supportedParams = ['userId', 'pagination', 'keyword', 'limit', 'minPrice', 'maxPrice', 'minScreenSize', 'maxScreenSize', 'sortBy', 'fullDetails', ...supportedFilterParams];
   const unsupportedParams = Object.keys(params).filter(param => !supportedParams.includes(param));
   if (unsupportedParams.length > 0) {
     return res.status(400).send({ error: `Unsupported parameter(s): ${unsupportedParams.join(', ')}.` });

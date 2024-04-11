@@ -143,7 +143,9 @@ router.post('/messages', async (req, res) => {
     let previousStatus = run.status;
 
     // Temporary save the action result
-    // action result will be provided to the frontend 
+    // action result is the output of the tool calls
+    // it is for organizing the metadata to modify the message, 
+    // so that the frontend can easily access the data.
     let actionResult = null;
 
     while (attempts < maxAttempts) {
@@ -183,21 +185,35 @@ router.post('/messages', async (req, res) => {
             // if the tool call is for the filter_products
             // the output will be an array of products
             if (result.tool_call_name === 'filter_products') {
-              delete result.tool_call_name;
-              result.output = result.output.map(output => {
-                if (output.productImageList) {
-                  delete output.productImageList;
-                }
-                return output;
-              });
+              // Check if the output is Array
+              if (Array.isArray(result.output)) {
+                delete result.tool_call_name;
+                result.output = result.output.map(output => {
+                  // The reason to delete the productImageList is to prevent the assistant
+                  // from sending the image URLs to the user, but the image URLs will be
+                  // stored in the metadata of the message, so the frontend can access the image URLs
+                  // and display the images,
+                  if (output.productImageList) {
+                    delete output.productImageList;
+                  }
+                  return output;
+                });
+              }
             }
             // if the tool call is for the get_product_details
             // the output will be a single product
-            if (result.tool_call_name === 'get_product_details') {
+            if (result.tool_call_name === 'get_product_details' || 'get_product_reviews') {
               delete result.tool_call_name;
               if (result.output.productImageList) {
                 delete result.output.productImageList;
                 // console.log('deleted productImageList');
+              }
+
+              // Modify the productReview to be a list of reviews
+              // remove the rating, review count and rating distribution
+              // They will be stored in the metadata of the message
+              if (result.output.productReview) {
+                result.output.productReview = result.output.productReview.reviewList;
               }
             }
 
@@ -225,15 +241,36 @@ router.post('/messages', async (req, res) => {
         await Promise.all(actionResult.map(async (result) => {
           // if the tool call is for the filter_products or get_product_details
           // modify the message to include the productImageList
-          const isProductToolCall = ["filter_products", "get_product_details"].includes(result.tool_call_name);
+          const isProductToolCall = ["filter_products", "get_product_details", "get_product_reviews"].includes(result.tool_call_name);
+          
+          // check if the result is a list
+          // if the result is a list, check if there is no result
+          let noResult = false;
+          if (Array.isArray(result.output)) {
+            noResult = Object.keys(result.output[0]).includes('noResult') ? result.output[0].noResult : false;
+          }
+
           if (isProductToolCall) {
             let productImageList = null;
 
             // if the tool call is for the filter_products
             // there contains multiple products in the output
-            if (result.tool_call_name === 'filter_products') {
+            if (result.tool_call_name === 'filter_products' && !noResult) {
               productImageList = result.output.map(product => product.productImageList[0]);
             }
+
+            // This will help display the condition when there is no result
+            if (result.tool_call_name === 'filter_products' && noResult) {
+              let metaData = {};
+              
+              // Add the filtering conditions to the metaData
+              Object.keys(result.output[0]).includes('filteringCondition') ? metaData.filtering_condition = JSON.stringify(result.output[0].filteringCondition) : {};
+
+              // modify the message
+              const messageId = messages.data[0].id;
+              await modifyMessage(threadId, messageId, metaData);
+            }
+              
 
             // if the tool call is for the get_product_details
             // there only contains a single product in the output
@@ -241,7 +278,8 @@ router.post('/messages', async (req, res) => {
               productImageList = result.output.productImageList;
             }
 
-            // the process will be the same for both filter_products and get_product_details
+            // If the productImageList is not empty, which means the product has images
+            // also means the tool call is for the filter_products or get_product_details
             if (productImageList) {
               // imageList may be too long, split every 5 images under a single key
               let imageList = [];
@@ -258,25 +296,59 @@ router.post('/messages', async (req, res) => {
 
               // add the tool call name to the metaData
               metaData.tool_call_name = result.tool_call_name;
-
-              // add the product name list to the metaData
-              // each of the product name should not be too long
-              // should be less than 100 characters
+              
               if (result.tool_call_name === 'filter_products') {
+                // Add the filtering conditions to the metaData
+                Object.keys(result.output[0]).includes('filteringCondition') ? metaData.filtering_condition = JSON.stringify(result.output[0].filteringCondition) : {};
+
+                // add the product name list to the metaData
+                // each of the product name should not be too long
+                // should be less than 100 characters
                 metaData.product_name_list = JSON.stringify(result.output.map(product => {
                   if (product.productName.length > 70) {
                     return product.productName.substring(0, 70);
                   }
                   return product.productName;
                 }));
+
+                // Add the product id list to the metaData
+                metaData.product_id_list = JSON.stringify(result.output.map(product => product._id));
+
+                // Add the product price list to the metaData
+                metaData.product_price_list = JSON.stringify(result.output.map(product => product.productPrice));
+
+                // Add the product rating list to the metaData
+                metaData.product_rating_list = JSON.stringify(result.output.map(product => product.productRating));
+
+                // Add the product review count list to the metaData
+                metaData.product_review_count_list = JSON.stringify(result.output.map(product => product.productReviewCount));
               }
 
               if (result.tool_call_name === 'get_product_details') {
                 metaData.product_name_list = JSON.stringify([result.output.productName]);
               }
 
-              // console.log(metaData);
+              // modify the message
+              const messageId = messages.data[0].id;
+              await modifyMessage(threadId, messageId, metaData);
+            }
 
+            // Get_product_reviews will have a separate process
+            if (result.tool_call_name === 'get_product_reviews') {
+              let metaData = {};
+              let review = result.output.productReview;
+              // Remove the reviewList
+              delete review.reviewList;
+
+              // Remove the rating's id, it is not needed
+              review.ratingDistributionList = review.ratingDistributionList.map(rating => {
+                delete rating.id;
+                return rating;
+              });
+
+              metaData.product_review = JSON.stringify(review);
+              metaData.tool_call_name = result.tool_call_name;
+              
               // modify the message
               const messageId = messages.data[0].id;
               await modifyMessage(threadId, messageId, metaData);
@@ -538,6 +610,7 @@ async function callProductAPI(function_call) {
 
       request_url += `${key}=${function_args[key]}&`;
     }
+    
     // console.log(request_url);
 
     // call the API
@@ -547,7 +620,18 @@ async function callProductAPI(function_call) {
   }
 
   if (function_name === 'get_product_details') {
-    let request_url = `http://localhost:${process.env.PORT || 3000}/products/${function_args.productId}`;
+    let request_url = `http://localhost:${process.env.PORT || 3000}/products/${function_args.productId}?excludeReview=true`;
+    // console.log(request_url);
+
+    // call the API
+    const response = await fetch(request_url);
+    const data = await response.json();
+  
+    return data;
+  }
+
+  if (function_name === 'get_product_reviews') {
+    let request_url = `http://localhost:${process.env.PORT || 3000}/products/${function_args.productId}/reviews`;
     // console.log(request_url);
 
     // call the API

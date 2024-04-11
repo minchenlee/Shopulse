@@ -3,7 +3,8 @@ let express = require('express');
 let cors = require('cors');
 let path = require('path');
 let cookieParser = require('cookie-parser');
-let logger = require('morgan');
+const morgan = require('morgan');
+const { consoleLogger, fileLogger } = require('./middleware/logger');
 
 let dbConnection = require('./db/connection');
 let indexRouter = require('./routes/index');
@@ -13,6 +14,7 @@ let userRouter = require('./routes/user');
 
 let app = express();
 
+// cors
 const corsOptions = {
   origin: ['http://shopulse.com.s3-website-ap-northeast-1.amazonaws.com', 'http://localhost:5173']
 };
@@ -25,7 +27,11 @@ dbConnection();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('dev'));
+// log to the console and to a file
+app.use(consoleLogger);  // log to the console
+app.use(fileLogger);    // log to a file
+// app.use(morgan('dev'));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
