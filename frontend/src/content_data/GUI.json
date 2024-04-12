@@ -1,0 +1,106 @@
+{
+  "mainPage": {
+    "Category": {
+      "Brand": [
+        { "name": "Samsung", "value": "samsung", "img": "samsung", "scale": 2},
+        { "name": "Sony", "value": "sony", "img": "sony", "scale": 2},
+        { "name": "LG", "value": "lg", "img": "lg", "scale": 1.7},
+        { "name": "Hisense", "value": "hisense", "img": "hisense", "scale": 1},
+        { "name": "TCL", "value": "tcl", "img": "tcl", "scale": 0.5}
+      ],
+      "ScreenType": [
+        { "name": "LED & LCD", "value": "led", "img": "led-lcd" },
+        { "name": "OLED", "value": "oled", "img": "oled" },
+        { "name": "QLED", "value": "qled", "img": "qled" }
+      ]
+    },
+    "FilteringOptionList": [
+      {
+        "title": "Brand",
+        "type": "multiple",
+        "options": [
+          { "name": "Samsung", "value": "samsung" },
+          { "name": "Sony", "value": "sony" },
+          { "name": "LG", "value": "lg" },
+          { "name": "TCL", "value": "tcl" },
+          { "name": "Hisense", "value": "hisense" }
+        ]
+      },
+      {
+        "title": "Screen Type",
+        "type": "multiple",
+        "options": [
+          { "name": "LED & LCD", "value": "led" },
+          { "name": "OLED", "value": "oled" },
+          { "name": "QLED", "value": "qled" }
+        ]
+      },
+      {
+        "title": "Resolution",
+        "type": "multiple",
+        "options": [
+          { "name": "8K", "value": "8k" },
+          { "name": "4K", "value": "4k" },
+          { "name": "1080p", "value": "1080p" }
+        ]
+      },
+      {
+        "title": "Refresh Rate",
+        "type": "multiple",
+        "options": [
+          { "name": "60Hz", "value": "60" },
+          { "name": "120Hz", "value": "120" },
+          { "name": "144Hz", "value": "144" }
+        ]
+      },
+      {
+        "title": "Price",
+        "type": "single",
+        "options": [
+          { "name": "Under $500", "value": {"minPrice": "0", "maxPrice": "500"}},
+          { "name": "$500 - $1000", "value": {"minPrice": "500", "maxPrice": "1000"} },
+          { "name": "$1000 - $2000", "value": {"minPrice": "1000", "maxPrice": "2000"} },
+          { "name": "$2000 - $3000", "value": {"minPrice": "2000", "maxPrice": "3000"} },
+          { "name": "Over $3000", "value": {"minPrice": "3000", "maxPrice": "9999999"} }
+        ]
+      },
+      {
+        "title": "Screen Size",
+        "type": "single",
+        "options": [
+          { "name": "32 Inches & Under", "value": {"minSize": "0", "maxSize": "32"} },
+          { "name": "33 to 43 Inches", "value": {"minSize": "33", "maxSize": "43"} },
+          { "name": "44 to 49 Inches", "value": {"minSize": "44", "maxSize": "49"} },
+          { "name": "55 to 59 Inches", "value": {"minSize": "55", "maxSize": "59"} },
+          { "name": "60 to 69 Inches", "value": {"minSize": "60", "maxSize": "69"} },
+          { "name": "70 Inches & Up", "value": {"minSize": "70", "maxSize": "999"} }
+        ]
+      },
+      {
+        "title": "Connectivity",
+        "type": "multiple",
+        "options": [
+          { "name": "Bluetooth", "value": "bluetooth" },
+          { "name": "HDMI", "value": "hdmi" },
+          { "name": "USB", "value": "usb" },
+          { "name": "USB-C", "value": "usb-c" },
+          { "name": "Wi-Fi", "value": "wifi" }
+        ]
+      },
+      {
+        "title": "Supported Service",
+        "type": "multiple",
+        "options": [
+          { "name": "Browser", "value": "browser" },
+          { "name": "Google TV", "value": "google tv" },
+          { "name": "Apple TV+", "value": "apple tv" },
+          { "name": "Prime Video", "value": "prime video" },
+          { "name": "Disney+", "value": "disney" },
+          { "name": "Hulu", "value": "hulu" },
+          { "name": "Netflix", "value": "netflix" },
+          { "name": "YouTube", "value": "youtube" }
+        ]
+      }
+    ]
+  }
+}
