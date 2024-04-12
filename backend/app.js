@@ -16,7 +16,7 @@ let app = express();
 
 // cors
 const corsOptions = {
-  origin: ['http://shopulse.com.s3-website-ap-northeast-1.amazonaws.com', 'http://localhost:5173']
+  origin: ['http://shopulse.com.s3-website-ap-northeast-1.amazonaws.com', 'http://localhost:5173', 'https://www.shopulse.shop'],
 };
 app.use(cors(corsOptions));
 
