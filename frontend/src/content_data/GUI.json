@@ -2,16 +2,16 @@
   "mainPage": {
     "Category": {
       "Brand": [
-        { "name": "Samsung", "value": "samsung", "img": "src/assets/brand_logo/samsung-logo.svg", "scale": 2},
-        { "name": "Sony", "value": "sony", "img": "src/assets/brand_logo/sony-logo.svg", "scale": 2},
-        { "name": "LG", "value": "lg", "img": "src/assets/brand_logo/lg-logo.svg", "scale": 1.7},
-        { "name": "Hisense", "value": "hisense", "img": "src/assets/brand_logo/hisense-logo.svg", "scale": 1},
-        { "name": "TCL", "value": "tcl", "img": "src/assets/brand_logo/tcl-logo.svg", "scale": 0.5}
+        { "name": "Samsung", "value": "samsung", "img": "samsung", "scale": 2},
+        { "name": "Sony", "value": "sony", "img": "sony", "scale": 2},
+        { "name": "LG", "value": "lg", "img": "lg", "scale": 1.7},
+        { "name": "Hisense", "value": "hisense", "img": "hisense", "scale": 1},
+        { "name": "TCL", "value": "tcl", "img": "tcl", "scale": 0.5}
       ],
       "ScreenType": [
-        { "name": "LED & LCD", "value": "led", "img": "src/assets/screen_type/led-lcd.png" },
-        { "name": "OLED", "value": "oled", "img": "src/assets/screen_type/oled.png" },
-        { "name": "QLED", "value": "qled", "img": "src/assets/screen_type/qled.png" }
+        { "name": "LED & LCD", "value": "led", "img": "led-lcd" },
+        { "name": "OLED", "value": "oled", "img": "oled" },
+        { "name": "QLED", "value": "qled", "img": "qled" }
       ]
     },
     "FilteringOptionList": [

@@ -5,6 +5,8 @@ import FeatherIcon from 'feather-icons-react';
 import Markdown from 'react-markdown'
 import textContent from '../../content_data/Welcome.json';
 import { toast } from 'react-toastify';
+import firstPic from '../../assets/undraw_experience_design_re_dmqq.svg'
+import lastPic from '../../assets/undraw_secure_login_pdn4.svg'
 
 // Modal Component
 function LoginModal (props) {
@@ -80,15 +82,22 @@ function LoginModal (props) {
     setIndex(newIndex);
   }
 
+  let image;
+  if (index === 0) {
+    image = firstPic;
+  } else if (index === WelcomeList.length - 1) {
+    image = lastPic;
+  }
+
   return (
     <div className={`fixed z-50 inset-0 backdrop-blur-[5px] bg-primary bg-opacity-25 flex justify-center items-center transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'} ${!slowClose ? 'invisible': ''}`}>
       <div className='w-[832px] bg-white backdrop-blur-md rounded-3xl relative bg-opacity-80 px-10 pt-8 pb-2'>
         <TitleBar title={WelcomeList[index].title}/>
         {index === WelcomeList.length - 1 
         ? 
-        <RegisterForm userID={userID} setUserID={setUserID} handleKeyDown={handleKeyDown} image={WelcomeList[index].image}/>
+        <RegisterForm userID={userID} setUserID={setUserID} handleKeyDown={handleKeyDown} image={image}/>
         :
-        <Direction contentList={WelcomeList[index].content} image={WelcomeList[index].image} isAgree={isAgree} setIsAgree={setIsAgree}/>
+        <Direction contentList={WelcomeList[index].content} image={image} isAgree={isAgree} setIsAgree={setIsAgree}/>
         }
         <div className='w-full flex flex-row items-center my-4'>
           <Button 
