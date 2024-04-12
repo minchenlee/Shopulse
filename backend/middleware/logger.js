@@ -60,6 +60,10 @@ const accessLogStream = rfs.createStream('access.log', {
 
 // Setup Morgan for file logging in JSON format
 const fileLogger = morgan((tokens, req, res) => {
+  if (tokens.url(req, res) === '/' && tokens.status(req, res) === '200') {
+    return false; // Skip logging for requests with "/" URL
+  }
+
   const logObject = {
     timestamp: tokens.date(req, res, 'iso'),
     method: tokens.method(req, res),
