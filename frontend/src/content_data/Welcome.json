@@ -7,8 +7,7 @@
   "GuiWelcome": [
     {
       "title": "Welcome to Our Research Experiment!", 
-      "content": "Thank you for participating in our study. Your contribution is crucial for advancing our research. We value your time and effort in this exploration.",
-      "image": "src/assets/undraw_experience_design_re_dmqq.svg"
+      "content": "Thank you for participating in our study. Your contribution is crucial for advancing our research. We value your time and effort in this exploration."
     },
     {
       "title": "Task Instructions", 
@@ -24,8 +23,7 @@
     },
     {
       "title": "Verification", 
-      "content": "",
-      "image": "src/assets/undraw_secure_login_pdn4.svg"
+      "content": ""
     }
   ],
   "GuiInstruction": [
@@ -45,8 +43,7 @@
   "ChatWelcome": [
     {
       "title": "Welcome to Our Research Experiment!", 
-      "content": "Thank you for participating in our study. Your contribution is crucial for advancing our research. We value your time and effort in this exploration.",
-      "image": "src/assets/undraw_experience_design_re_dmqq.svg"
+      "content": "Thank you for participating in our study. Your contribution is crucial for advancing our research. We value your time and effort in this exploration."
     },
     {
       "title": "Task Instructions", 
@@ -62,8 +59,7 @@
     },
     {
       "title": "Verification", 
-      "content": "",
-      "image": "src/assets/undraw_secure_login_pdn4.svg"
+      "content": ""
     }
   ],
   "ChatInstruction": [

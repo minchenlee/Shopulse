@@ -16,6 +16,27 @@ import DummyData from '../dummy_data/filterProduct.json'
 import { useUserSession } from '../context/UserSessionContext';
 import { fetchData } from '../utils/api';
 // console.log(FilteringOptionList)
+import ledImage from '../assets/screen_type/led-lcd.png'
+import oledImage from '../assets/screen_type/oled.png'
+import qledImage from '../assets/screen_type/qled.png'
+
+import samsungImage from '../assets/brand_logo/samsung-logo.svg'
+import sonyImage from '../assets/brand_logo/sony-logo.svg'
+import lgImage from '../assets/brand_logo/lg-logo.svg'
+import tclImage from '../assets/brand_logo/tcl-logo.svg'
+import hisenseImage from '../assets/brand_logo/hisense-logo.svg'
+
+const imageDict = {
+  'led-lcd': ledImage,
+  'oled': oledImage,
+  'qled': qledImage,
+  'samsung': samsungImage,
+  'sony': sonyImage,
+  'lg': lgImage,
+  'tcl': tclImage,
+  'hisense': hisenseImage,
+}
+
 
 function GUIPage() {
   const { productDataList, setProductDataList, isLoadingData, setIsLoadingData, hasResult, setHasResult, setSearchQuery, isLoginModalOpen, setIsLoginModalOpen, isTourStart, setIsTourStart, timerActive, setTimerActive, isInstructionModalOpen, setIsInstructionModalOpen} = useUserSession();
@@ -169,7 +190,7 @@ const CategoryList = memo(function CategoryList(props) {
           name={category.name} 
           value={category.value} 
           type={type}
-          img={category.img} 
+          img={imageDict[category.img]}
           key={category.value}
           scale={category.scale}
           />
