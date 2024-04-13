@@ -6,7 +6,7 @@ let router = express.Router();
 
 router.get('/search', validateSearchParams, async (req, res) => {
   let { limit, pagination } = req.query;
-  const { features, minPrice, maxPrice, minScreenSize, maxScreenSize, brand, screenType, resolution, refreshRate, connectivity, smartTVPlatform, supportedService, sortBy, fullDetails } = req.query;
+  const { keyword, minPrice, maxPrice, minScreenSize, maxScreenSize, brand, screenType, resolution, refreshRate, connectivity, smartTVPlatform, supportedService, sortBy, fullDetails } = req.query;
   // console.log('query:', keyword);
   
   if (!limit) {
@@ -20,7 +20,7 @@ router.get('/search', validateSearchParams, async (req, res) => {
       // Add a match stage for brand, screenType, resolution, refreshRate, priceRange, screenSize, connectivity, smartTVPlatform, supportedService
       ...[{
         text: {
-          query: features,
+          query: keyword,
           path: [
             'productName',
             'productSpec.Features',
