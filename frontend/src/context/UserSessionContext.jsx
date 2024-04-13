@@ -30,9 +30,12 @@ export function UserSessionProvider({ children }) {
   const [isTimesUp, setIsTimesUp] = useState(false);
   const [isTourStart, setIsTourStart] = useState(false);
   const [timerActive, setTimerActive] = useState(false); // State to control timer activation
-  const [timeLeft, setTimeLeft] = useState(720);
+  const taskTime = 720; // 12 minutes
+  const [timeLeft, setTimeLeft] = useState(taskTime); // State to control the time left
+  const [startTime, setStartTime] = useState(null);
   // const [timeLeft, setTimeLeft] = useState(30); // For testing purpose
   const storedTime = localStorage.getItem('SHOPULSE_TIMER');
+  const storedStartTime = localStorage.getItem('SHOPULSE_START_TIME');
 
   // useRef
   const textAreaRef = useRef(null);
@@ -41,11 +44,12 @@ export function UserSessionProvider({ children }) {
 
   // General functions
   useEffect(() => {
-    if (storedTime) {
+    if (storedTime && storedStartTime) {
       setTimerActive(true);
       setTimeLeft(parseInt(storedTime));
+      setStartTime(parseInt(storedStartTime));
     }
-  }, [storedTime]);
+  }, [storedTime, storedStartTime]);
 
 
   useEffect(() => {
@@ -58,27 +62,37 @@ export function UserSessionProvider({ children }) {
   // Set up the timer
   useEffect(() => {
     let interval;
-    if (timerActive) { // Only set up the timer if timerActive is true
+  
+    if (timerActive) {
+      if (!startTime) {
+        setStartTime(Date.now());
+        localStorage.setItem('SHOPULSE_START_TIME', Date.now().toString());
+      }
+
+      // using setInterval to update the time left every second
+      // but using Date.now() to get the precise time withouf affect by the browser's tab focus
       interval = setInterval(() => {
-        setTimeLeft((prevTimeLeft) => {
-          const newTimeLeft = prevTimeLeft - 1;
-          // console.log('time left:', newTimeLeft);
-          if (newTimeLeft <= 0) {
-            localStorage.removeItem('SHOPULSE_TIMER');
-            localStorage.setItem('SHOPULSE_IS_TIMES_UP', 'true');
-            clearInterval(interval); // Stop the interval when time is up
-            setTimerActive(false); // Set the timerActive to false
-            return 0;
-          }
+        const currentTime = Date.now();
+        const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+        const newTimeLeft = taskTime - elapsedTime;
+  
+        if (newTimeLeft <= 0) {
+          localStorage.removeItem('SHOPULSE_TIMER');
+          localStorage.removeItem('SHOPULSE_START_TIME');
+          localStorage.setItem('SHOPULSE_IS_TIMES_UP', 'true');
+          clearInterval(interval);
+          setTimerActive(false);
+          setTimeLeft(0);
+        } else {
           localStorage.setItem('SHOPULSE_TIMER', newTimeLeft.toString());
-          return newTimeLeft;
-        });
+          localStorage.setItem('SHOPULSE_START_TIME', startTime.toString());
+          setTimeLeft(newTimeLeft);
+        }
       }, 1000);
     }
-
+  
     return () => clearInterval(interval);
-  }, [timerActive]);
-
+  }, [timerActive, timeLeft, startTime]);
 
   // Call the toast when the time is up
   useEffect(() => {
