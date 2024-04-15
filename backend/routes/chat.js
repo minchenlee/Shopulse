@@ -81,6 +81,45 @@ router.get('/threads', validateUserId, async (req, res) => {
 });
 
 
+// GET /chat/threads/messages
+// retrive the messages of the thread
+router.get('/threads/messages', async (req, res) => {
+  const { threadId, simple } = req.query;
+
+  if (!threadId) {
+    return res.status(400).send({ error: 'Missing threadId' });
+  }
+
+  try {
+    const rawMessages = await getMessages(threadId);
+    let dataList = rawMessages.data;
+    // reverse the messages so that the latest message will be at the bottom
+    dataList.reverse();
+
+    dataList.map((data) => {
+      data.content = data.content[0].text.value;
+    });
+
+    if (simple) {
+      dataList = dataList.map((data) => {
+        return {
+          id: data.id,
+          role: data.role,
+          content: data.content,
+          metadata: data.metadata,
+        };
+      });
+    }
+
+    res.json(dataList);
+  } catch (error) {
+    console.error('Failed to retrieve messages:', error);
+    res.status(500).send({ error: 'Failed to retrieve messages' });
+  }
+});
+
+
+
 // POST /chat/threads
 // Create a new thread for a user
 router.post('/threads', async (req, res) => {
@@ -615,7 +654,16 @@ async function callProductAPI(function_call) {
 
     // call the API
     const response = await fetch(request_url);
-    const data = await response.json();  
+    let data = await response.json();  
+
+    // delete the productShortSpec from the product
+    // to reduce the text size
+    data.map((product) => {
+      delete product.productShortSpec;
+      return product;
+    });
+
+    // console.log(data);
     return data;
   }
 
@@ -625,19 +673,31 @@ async function callProductAPI(function_call) {
 
     // call the API
     const response = await fetch(request_url);
-    const data = await response.json();
-  
+    let data = await response.json();
+
+    // delete the productShortSpec and productDetail from the product
+    // to reduce the text size
+    delete data.productShortSpec;
+    delete data.productDetail;
+    // console.log(data);
     return data;
   }
-
+  
   if (function_name === 'get_product_reviews') {
     let request_url = `http://localhost:${process.env.PORT || 3000}/products/${function_args.productId}/reviews`;
     // console.log(request_url);
 
     // call the API
     const response = await fetch(request_url);
-    const data = await response.json();
-  
+    let data = await response.json();
+
+    // reduce the review length
+    data.productReview.reviewList.map((reviewObject) => {
+      reviewObject.review = reviewObject.review.substring(0, 850);
+      return reviewObject;
+    })
+
+    // console.log(data.productReview.reviewList);
     return data;
   }
 }
