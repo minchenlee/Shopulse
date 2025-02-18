@@ -13,6 +13,18 @@ router.get('/', async (req, res) => {
 });
 
 
+router.get('/statistic', async (req, res) => {
+  const userId = req.query.userId;
+  // get the thread ID for the user, send the request to the thread service
+  // to get the thread details
+  const response = await fetch(`http://localhost:3000/chat/threads?userId=${userId}`);
+  const threads = await response.json()
+  
+  console.log(threads);
+  res.status(200).send({ message: 'Statistic found'});
+});
+
+
 // Create a new user
 router.post('/', async (req, res) => {
   try {

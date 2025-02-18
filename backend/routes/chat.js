@@ -96,8 +96,17 @@ router.get('/threads/messages', async (req, res) => {
     // reverse the messages so that the latest message will be at the bottom
     dataList.reverse();
 
+    const convertToISO = (timestamp) => {
+      // Convert the timestamp to milliseconds
+      const date = new Date(timestamp * 1000);
+
+      // Format the date to a human-readable string
+      return date.toISOString();
+    }
+
     dataList.map((data) => {
       data.content = data.content[0].text.value;
+      data.created_at =  convertToISO(data.created_at);
     });
 
     if (simple) {
@@ -115,6 +124,129 @@ router.get('/threads/messages', async (req, res) => {
   } catch (error) {
     console.error('Failed to retrieve messages:', error);
     res.status(500).send({ error: 'Failed to retrieve messages' });
+  }
+});
+
+
+// GET /chat/threads/statistics
+// Get statistics for specific thread
+router.get('/threads/statistics', async (req, res) => {
+  const { threadId } = req.query;
+
+  if (!threadId) {
+    return res.status(400).send({ error: 'Missing threadId' });
+  }
+
+  try {
+    const rawMessages = await getMessages(threadId);
+    let dataList = rawMessages.data;
+
+    // If there are no messages, return 404 status
+    if (dataList.length === 0) {
+      return res.status(404).send({ error: 'No messages found for this thread' });
+    }
+
+    // reverse the messages so that the latest message will be at the bottom
+    dataList.reverse();
+
+    dataList.map((data) => {
+      data.content = data.content[0].text.value;
+    });
+
+    dataList = dataList.map((data) => {
+      return {
+        id: data.id,
+        role: data.role,
+        content: data.content,
+        metadata: data.metadata,
+        created_at: data.created_at,
+      };
+    });
+
+    // Count the number of messages
+    const messageCount = dataList.length;
+    const userMessageCount = dataList.filter((data) => data.role === 'user').length;
+    const assistantMessageCount = dataList.filter((data) => data.role === 'assistant').length;
+
+    // Count the word count of the messages
+    const wordCount = dataList.reduce((acc, data) => acc + data.content.split(' ').length, 0);
+    const userWordCount = dataList.filter((data) => data.role === 'user').reduce((acc, data) => acc + data.content.split(' ').length, 0);
+    const assistantWordCount = dataList.filter((data) => data.role === 'assistant').reduce((acc, data) => acc + data.content.split(' ').length, 0);
+
+    // Count the average word count per message
+    const avgWordCount = wordCount / messageCount;
+    const avgUserWordCount = userWordCount / userMessageCount;
+    const avgAssistantWordCount = assistantWordCount / assistantMessageCount;
+
+    // Count the number of messages with tool call metadata
+    const filterProductCount = dataList.filter((data) => data.metadata.tool_call_name === 'filter_products').length;
+    const getProductCount = dataList.filter((data) => data.metadata.tool_call_name === 'get_product_details').length;
+    const getProductReviewCount = dataList.filter((data) => data.metadata.tool_call_name === 'get_product_reviews').length;
+
+    // Count the duration of the conversation
+    const startTime = dataList[0].created_at;
+    const endTime = dataList[dataList.length - 1].created_at;
+    const duration = (endTime - startTime); // in seconds
+
+    // Count the average duration per message
+    const avgDuration = duration / messageCount;
+
+    // Caculate how long will user take to response the mesaage from the assistant
+    // The duration is caculated by the time difference between the assistant message and the user message
+    // If the user message is the first message, the duration will be 0
+    let userResponseTime = 0;
+    let userResponseTimeList = [];
+    for (let i = 1; i < dataList.length; i++) {
+      if (dataList[i].role === 'user') {
+        userResponseTime = dataList[i].created_at - dataList[i - 1].created_at;
+        userResponseTimeList.push(userResponseTime);
+      }
+    }
+
+    // Calculate the average response time of the user
+    let avgUserResponseTime = userResponseTimeList.reduce((acc, time) => acc + time, 0) / userResponseTimeList.length;
+    
+    if (userResponseTimeList.length === 0) {
+      avgUserResponseTime = 0;
+    }
+
+    // Caculate how long will assistant take to response the mesaage from the user
+    // The duration is caculated by the time difference between the user message and the assistant message
+    // If the assistant message is the first message, the duration will be 0
+    let assistantResponseTime = 0;
+    let assistantResponseTimeList = [];
+    for (let i = 1; i < dataList.length; i++) {
+      if (dataList[i].role === 'assistant') {
+        assistantResponseTime = dataList[i].created_at - dataList[i - 1].created_at;
+        assistantResponseTimeList.push(assistantResponseTime);
+      }
+    }
+
+    // Calculate the average response time of the assistant
+    const avgAssistantResponseTime = assistantResponseTimeList.reduce((acc, time) => acc + time, 0) / assistantResponseTimeList.length;
+
+    res.json({
+      messageCount,
+      userMessageCount,
+      assistantMessageCount,
+      wordCount,
+      userWordCount,
+      assistantWordCount,
+      avgWordCount,
+      avgUserWordCount,
+      avgAssistantWordCount,
+      filterProductCount,
+      getProductCount,
+      getProductReviewCount,
+      duration,
+      avgDuration,
+      avgUserResponseTime,
+      avgAssistantResponseTime,
+    });
+
+  } catch (error) {
+    console.error('Failed to retrieve statistics:', error);
+    res.status(500).send({ error: 'Failed to retrieve statistics' });
   }
 });
 
