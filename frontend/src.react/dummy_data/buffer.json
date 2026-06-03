@@ -1,0 +1,17 @@
+{
+	"productList": [
+		{
+			"image": "",
+			"id": "demo",
+			"name": "Demo Product",
+			"price": 0,
+			"rating": 0,
+			"reviewCount": 0,
+			"type": "product"
+		}
+	],
+	"demoCardContent": "This is a demo product, request the product through chat to see the actual product here.",
+	"filteringCondition": {
+		"condition": "none"
+	}
+}

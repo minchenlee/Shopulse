@@ -8,6 +8,48 @@
   all: revert;
 }
 
+/* L4.2 — modal markdown per-tag class parity (decision D4).
+   react-markdown injected these exact Tailwind classes per tag via the
+   `customParagraphRenderer` in InstructionModal/LoginModal (h3/p/ol/code).
+   `marked` has no per-tag class API, so the {@html} wrapper carries
+   `.markdown-modal` and we re-apply the same classes by descendant selector.
+   A distinct class (not `.markdown`) keeps it isolated from the chat Message
+   markdown (different classes, L5) and from the `.markdown > * { all: revert }`
+   reset above. */
+@layer components {
+  .markdown-modal h3 {
+    @apply text-lg font-bold mb-2;
+  }
+  .markdown-modal p {
+    @apply text-lg;
+  }
+  .markdown-modal ol {
+    @apply text-lg list-decimal list-outside ms-5 space-y-4;
+  }
+  .markdown-modal code {
+    @apply text-base font-normal p-1;
+  }
+
+  /* L5.1 — chat Message markdown per-tag class parity (decision D4).
+     React's Message wrapped <Markdown> in <div className='markdown'> and passed a
+     `customParagraphRenderer` (Message.jsx:35-39) that injected EXACTLY these
+     classes per tag: p → `my-1`, ul → `space-y-2`, li → `mt-2`. `marked` has no
+     per-tag class API, so re-apply them by descendant selector on the `.markdown`
+     wrapper. These sit AFTER the `.markdown > * { all: revert }` reset above so
+     the spacing re-applies on top of the UA-reverted tags (same as React, where
+     the reset + injected classes co-existed). Tags react-markdown did NOT class
+     (h1/h3/strong/…) keep the `all: revert` UA look. */
+  .markdown p {
+    @apply my-1;
+  }
+  .markdown ul {
+    @apply space-y-2;
+  }
+  .markdown li {
+    @apply mt-2;
+  }
+}
+
 
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari and Opera */

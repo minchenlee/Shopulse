@@ -1,0 +1,76 @@
+/* lib/tour.css
+ * L6.4 / decision D9 — reproduces React-Joyride's `styles` object as driver.js
+ * theme CSS. Joyride accepted these as a JS object; driver.js styles via CSS only,
+ * so every value the three pages passed is re-expressed here against driver.js v1.x's
+ * stable popover class names, scoped to the `.shopulse-tour` popoverClass set in
+ * lib/tour.js. Skipping this CSS = a visible tour restyle = a forbidden UX change.
+ *
+ * Joyride styles object (identical across Chat/Hybrid/Gui):
+ *   options.primaryColor      '#343434'  → Next button background
+ *   options.textColor         '#343434'  → popover text
+ *   options.zIndex            1000       → popover/overlay stacking
+ *   options.spotlightShadow   '0 0 15px rgba(0,0,0,0.5)' → spotlight ring shadow
+ *   tooltip.borderRadius      15         → popover corner radius
+ *   tooltip.fontFamily        'Nunito'
+ *   tooltip.fontSize          '1rem'
+ *   tooltipContainer.textAlign 'left'
+ *   tooltipContent.padding    '10px 10px'
+ *   tooltipFooter.marginTop   0
+ *   buttonNext.borderRadius   10
+ *   buttonNext.padding        '10px 20px'
+ *   buttonNext.margin         '0 0 0 10px'
+ */
+
+.driver-popover.shopulse-tour {
+  border-radius: 15px;              /* tooltip.borderRadius */
+  font-family: 'Nunito', sans-serif;/* tooltip.fontFamily */
+  font-size: 1rem;                  /* tooltip.fontSize */
+  color: #343434;                   /* options.textColor */
+  text-align: left;                 /* tooltipContainer.textAlign */
+}
+
+.driver-popover.shopulse-tour .driver-popover-description {
+  color: #343434;                   /* options.textColor */
+  padding: 10px 10px;               /* tooltipContent.padding */
+}
+
+.driver-popover.shopulse-tour .driver-popover-footer {
+  margin-top: 0;                    /* tooltipFooter.marginTop */
+}
+
+/* Next button === Joyride buttonNext (primaryColor bg, white text, the padding,
+ * radius and left margin). */
+.driver-popover.shopulse-tour .driver-popover-next-btn {
+  background-color: #343434;        /* options.primaryColor */
+  color: #F7F7F7;                   /* on-primary text (the app's white) */
+  text-shadow: none;
+  border: none;
+  border-radius: 10px;              /* buttonNext.borderRadius */
+  padding: 10px 20px;               /* buttonNext.padding */
+  margin: 0 0 0 10px;               /* buttonNext.margin */
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Joyride's Back button used the same primaryColor text on a plain bg. */
+.driver-popover.shopulse-tour .driver-popover-prev-btn {
+  color: #343434;                   /* options.primaryColor as text */
+  text-shadow: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Joyride's options.zIndex:1000 — driver.js defaults far higher; pin to 1000 so the
+ * stacking against the app's z-40/z-50 layers matches the React app exactly. */
+.driver-popover.shopulse-tour,
+.driver-overlay,
+.driver-stage {
+  z-index: 1000;
+}
+
+/* options.spotlightShadow '0 0 15px rgba(0,0,0,0.5)' — Joyride drew a shadow ring
+ * around the spotlit element. driver.js highlights via the SVG stage cutout; this
+ * box-shadow on the active element reproduces the same glow. */
+.driver-active-element {
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}

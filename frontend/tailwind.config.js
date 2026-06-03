@@ -3,7 +3,25 @@ export default {
   important: true,
   content: [
     './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,svelte}',
+  ],
+  // R8 / L6.2 — dynamic Tailwind class safelist. The React build leaked these via its
+  // JS-glob scan, but Svelte's interpolated `class` strings are NOT seen by the
+  // Tailwind content scanner, so without this safelist the utilities would not be
+  // emitted and the elements would render unstyled.
+  //
+  //  - scale-[…]: CategoryCard's brand-logo `scale-[{scale}]` (GUI.json brand scales
+  //    2 / 1.7 / 1 / 0.5). The hardcoded invisible divs cover 2/1.7/0.5, but scale-[1]
+  //    is ONLY reachable dynamically (Hisense=1) → must be listed explicitly.
+  //  - mb-0 / mb-20: gui/ProductCard's `mb-${bottomMargin}` (0 for similar products,
+  //    20 otherwise). Used in the Gui result grid AND GuiProductDetail's SimilarProducts.
+  safelist: [
+    'scale-[2]',
+    'scale-[1.7]',
+    'scale-[1]',
+    'scale-[0.5]',
+    'mb-0',
+    'mb-20',
   ],
   theme: {
     fontFamily: {
@@ -45,4 +63,3 @@ export default {
   },
   plugins: [],
 }
-

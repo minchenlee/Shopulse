@@ -1,0 +1,44 @@
+{
+  "type": "messages",
+  "data": {
+    "data": [
+      {
+        "id": "22",
+        "role": "assistant",
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "value": "Here are some affordable 4K TV options:\n\n1. Hisense 50-Inch Class R6 Series 4K UHD Smart Roku TV: This TV has a 50-inch screen size, 4K UHD resolution, and smart TV capabilities with Alexa compatibility. It's priced at $235.99.\n2. LG UHD UQ75 Series 70” (70UQ7590PUB, 2022): This TV has a 70-inch screen size, 4K UHD resolution, and smart TV capabilities with Google Assistant and Alexa compatibility. It's priced at $549.99.\n3. SAMSUNG 55-Inch Class QLED 4K Q60C Series Quantum HDR: This TV has a 55-inch screen size, 4K UHD resolution, and QLED technology with quantum HDR and dual LED. It's priced at $597.99.\n\nThese TVs offer great picture quality, smart TV capabilities, and affordable prices. However, please note that prices may vary depending on the retailer and availability."
+            }
+          }
+        ],
+        "metadata": {
+          "img_list_1": "[\"https://m.media-amazon.com/images/I/81UUAy76oOL._AC_SL1500_.jpg\",\"https://m.media-amazon.com/images/I/71sv8F9th3L._AC_SL1000_.jpg\",\"https://m.media-amazon.com/images/I/71bmtncxa+L._AC_SL1500_.jpg\"]",
+          "tool_call_name": "filter_products",
+          "product_id_list": "[\"4204cbb6-4e3f-4750-a8e5-a9b5ef621036\",\"284b20a9-2d27-4c26-8b60-23bf945fe736\",\"8e169a5a-289c-409b-8ab2-9ea87d3dcff0\"]",
+          "product_name_list": "[\"Hisense 50-Inch Class R6 Series 4K UHD Smart Roku TV with Alexa Compat\",\"LG UHD UQ75 Series 70” (70UQ7590PUB, 2022)\",\"SAMSUNG 55-Inch Class QLED 4K Q60C Series Quantum HDR, Dual LED, Objec\"]",
+          "product_price_list": "[235.99,549.99,597.99]",
+          "filtering_condition": "{\"maxPrice\":1000,\"minPrice\":200,\"resolution\":\"4K\"}",
+          "product_rating_list": "[4.5,5,4.8]",
+          "product_review_count_list": "[4217,2,1320]"
+        },
+        "created_at": "2026-06-03T14:03:40.863603+00:00"
+      },
+      {
+        "id": "21",
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": {
+              "value": "show me cheap 4K TVs"
+            }
+          }
+        ],
+        "metadata": {},
+        "created_at": "2026-06-03T14:03:38.606386+00:00"
+      }
+    ]
+  }
+}

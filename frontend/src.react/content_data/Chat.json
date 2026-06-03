@@ -1,0 +1,44 @@
+{
+  "howToAsk": {
+    "Tips": [
+      "Be specific about what you're looking for.",
+      "Mention any particular brands, sizes, features, or price ranges you're interested in.",
+      "Feel free to ask for comparisons between different models.",
+      "Ask for user reviews or ratings to get an idea of customer satisfaction.",
+      "If you're unsure, ask for recommendations based on your needs."
+    ],
+    "Consulting": [
+      "Can you help me choose the right TV for my living room?",
+      "I need advice on the best TV for gaming. Can you assist?",
+      "What should I consider when buying a new television?",
+      "Could you suggest a TV that's good for both movies and sports?"
+    ],
+    "Search/Filtering": [
+      "Show me all 4K TVs under $500.",
+      "I'm looking for a Samsung smart TV within a $700 budget. What are my options?",
+      "Can you find TVs that are 55 inches and above with HDR technology?",
+      "I need a list of the latest OLED televisions you have."
+    ],
+    "Product Detailing": [
+      "Tell me more about the LG CX OLED TV.",
+      "What are the features of the Sony Bravia X90J?",
+      "Can you provide details on the Samsung QLED Q80T's display quality?",
+      "I'd like to know the specifications of the Panasonic HZ2000."
+    ],
+    "Getting Reviews": [
+      "What are the customer reviews for the TCL 6-Series?",
+      "Can you show me the ratings and reviews for the Hisense H8G?",
+      "I want to see user feedback on the Vizio P-Series Quantum X.",
+      "Are there any reviews for the Philips OLED 805?"
+    ]
+  },
+  "PromptTemplate": {
+    "Find Your perfect TV features": "I primarily use my TV for [viewing needs, e.g., movies, sports, gaming]. What features or functions should I look for in a TV to enhance my viewing experience?",
+    "Explore TV Brands & Tech": "I'm interested in learning about [Brand/Technology/Feature]. Could you provide information on the latest trends and what makes [Brand/Technology/Feature] stand out?",
+    "Ask for Recommendations": "I'm looking for a television that suits [specific preference, e.g., gaming, streaming, etc.] within a [mention your budget] budget. Can you recommend some options?",
+    "Request more Details": "Can you provide detailed specifications for [specific television model]? I'm interested in [specific aspects, e.g., picture quality, connectivity options, etc.].",
+    "Compare TV Models": "I'm trying to decide between [Television Model A] and [Television Model B]. Can you offer a comparative analysis focusing on [specific criteria, e.g., price, performance, features]?",
+    "Seek User Reviews": "I'm considering purchasing [specific television model]. Can you summarize what users are saying about it, especially regarding [aspect of interest, e.g., durability, user interface]?"
+  }
+}
+
