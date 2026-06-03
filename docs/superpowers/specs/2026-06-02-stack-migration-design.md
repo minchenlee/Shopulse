@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-02
 **Branch:** `feat/backend`
-**Status:** Draft for review (no code written yet)
+**Status:** IMPLEMENTED — all 4 tracks committed on `feat/backend` (A 5e321d5, B a1ba713, C 32e4448, D 5099347) as of 2026-06-03. Remaining: live side-by-side QA + deploy. **Deviation:** Track C uses the OpenAI-compatible **Chat Completions API on Groq** (free), NOT the OpenAI Responses API — Assistants/Responses are OpenAI-proprietary and the OpenAI account was quota-dead. Thread export (§6.1a) was skipped (fresh start; Atlas decommissioned).
 
 > Designed autonomously per the user's instruction ("you decide, I check the result").
 > Validated by a 5-agent design workflow (4 subsystem designers + 1 adversarial staff-engineer review).
