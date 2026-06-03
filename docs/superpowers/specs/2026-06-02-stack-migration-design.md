@@ -212,10 +212,13 @@ Today the full transcript + reattached metadata live **only** inside OpenAI Assi
 ### 6.2 Sequencing — NOT big-bang
 
 Safe order, working system at every step:
-1. **Backend → Workers/Hono, keeping Assistants API + poll loop intact** (just `streamSSE` instead of the connection Map). Verify against the *old React frontend* via a tiny fetch-stream shim behind `postData('/chat/messages')`. Isolates "does Workers SSE work" from the other two changes.
-2. **Product ETL + `/products` + `/user` → Supabase** (read-only, parallel with step 1; verify by diff against Mongo).
-3. **Assistants → Responses API**, *after* the export script (6.1a) has run and verified. Metadata writes to Supabase. Frontend untouched (same frames + metadata keys).
-4. **React → Svelte last**, against the now-stable backend contract (transport already a fetch reader from step 1 → copies known-working logic).
+
+> **Sequencing correction (post-design, confirmed):** Mongoose/the Mongo driver **cannot run on Cloudflare Workers** (needs Node `net.Socket`/TLS that Workers' `connect()` doesn't satisfy — confirmed against MongoDB + Cloudflare docs). So the original "Workers backend keeping Mongo initially" is impossible: the Worker has no way to reach Mongo. The Supabase data layer therefore must land **before/with** the Workers move, not after. Revised order below. (The Assistants API itself is HTTP/fetch-based and *does* run on Workers, so "keep Assistants, move runtime" still holds for chat.)
+
+1. **Track A — Supabase data layer (Node, standalone).** Schema + `search_products`/`conversation_statistics` RPCs + one-time ETL + pure `(env,args)` data functions for products/user. Verify by **result-diffing against Mongo** in plain Node. Zero Worker/frontend risk. *This is the true unblock-everything foundation.*
+2. **Track B — Backend → Workers/Hono**, reading Supabase, **keeping Assistants API** for chat. `streamSSE` on the POST instead of the connection Map. Verify against the *old React frontend* via a tiny fetch-stream shim behind `postData('/chat/messages')`. Isolates "does Workers SSE work."
+3. **Track C — Assistants → Responses API**, *after* the export script (6.1a) has run and verified. Metadata writes to Supabase. Frontend untouched (same frames + metadata keys).
+4. **Track D — React → Svelte last**, against the now-stable backend contract (transport already a fetch reader → copies known-working logic).
 
 ### 6.3 Contract mismatches (reconciled here)
 
