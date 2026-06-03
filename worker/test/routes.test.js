@@ -51,6 +51,48 @@ describe('user routes', () => {
   });
 });
 
+describe('chat routes (shape only — no OpenAI)', () => {
+  // userId validation happens before any OpenAI call, so these never touch creds.
+  it('POST /chat/threads without userId is 400', async () => {
+    const res = await app.request('/chat/threads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    }, ENV);
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toBe('User ID is required');
+  });
+
+  it('GET /chat/threads without userId is 400', async () => {
+    const res = await app.request('/chat/threads', {}, ENV);
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toBe('User ID is required');
+  });
+
+  it('DELETE /chat/threads without userId/threadId is 400', async () => {
+    const res = await app.request('/chat/threads', { method: 'DELETE' }, ENV);
+    expect(res.status).toBe(400);
+  });
+
+  it('POST /chat/messages without threadId/message is 400 (no stream opened)', async () => {
+    const res = await app.request('/chat/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    }, ENV);
+    expect(res.status).toBe(400);
+  });
+
+  it('chat module is mounted (unknown /chat path is 404, not a routing crash)', async () => {
+    // Module imported cleanly (the import at the top of src/index.js would throw on
+    // any bad import); an unknown sub-path returns 404 rather than 500.
+    const res = await app.request('/chat/nope', {}, ENV);
+    expect(res.status).toBe(404);
+  });
+});
+
 describe('CORS', () => {
   it('reflects an allowed origin on preflight', async () => {
     const res = await app.request('/products/search?keyword=tv', {

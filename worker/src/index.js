@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { products } from './routes/products.js';
 import { users } from './routes/users.js';
+import { chat } from './routes/chat.js';
 
 const ALLOWED = ['http://localhost:5173', 'https://www.shopulse.xyz', 'https://shopulse.xyz'];
 
@@ -17,6 +18,6 @@ app.use('*', cors({
 app.get('/', (c) => c.text('shopulse-api ok'));
 app.route('/products', products);
 app.route('/user', users);
-// app.route('/chat', chat) — added in the chat-streaming chunk (Tasks 4-6)
+app.route('/chat', chat);
 
 export default app;

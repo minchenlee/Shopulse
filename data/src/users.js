@@ -33,3 +33,12 @@ export async function deleteThread(supabase, userId, conversationId) {
 export async function touchThread(supabase, conversationId) {
   await supabase.from('conversations').update({ last_active: new Date().toISOString() }).eq('id', conversationId);
 }
+
+// Bump last_active keyed on the OpenAI thread id (POST /chat/messages knows the thread id,
+// not the conversation row id, and has no userId in its body).
+export async function touchThreadByOpenaiId(supabase, openaiThreadId) {
+  await supabase
+    .from('conversations')
+    .update({ last_active: new Date().toISOString() })
+    .eq('openai_thread_id', openaiThreadId);
+}
