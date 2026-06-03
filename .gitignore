@@ -5,3 +5,6 @@ screen_shot
 # supabase local stack artifacts
 supabase/.temp
 supabase/.branches
+# worker
+worker/.dev.vars
+worker/.wrangler
