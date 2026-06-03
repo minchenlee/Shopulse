@@ -2,3 +2,6 @@
 .env
 node_modules
 screen_shot
+# supabase local stack artifacts
+supabase/.temp
+supabase/.branches
