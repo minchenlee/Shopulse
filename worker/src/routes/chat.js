@@ -6,31 +6,42 @@ import {
   getThreadsForUser,
   createThread,
   deleteThread,
-  touchThreadByOpenaiId,
+  touchThread,
 } from 'shopulse-data/src/users.js';
-import { supa, openai } from '../env.js';
+import { supa, openai, chatModel } from '../env.js';
+import { runChatCompletion, BudgetError } from '../chat/completions.js';
 import {
-  addMessageToThread,
-  runMessage,
-  checkRunStatus,
-  submitToolOutputs,
-  getMessages,
-} from '../chat/assistants.js';
-import { runToolCalls, splitToolResults } from '../chat/toolRunner.js';
+  insertUserMessage,
+  insertAssistantMessage,
+  listMessages,
+  toHistory,
+  getStatistics,
+} from '../chat/messagesStore.js';
+import { SYSTEM_PROMPT } from '../llm/systemPrompt.js';
+import { TOOLS } from '../llm/tools.js';
 
 export const chat = new Hono();
 
 const MAX_THREADS = 3;
-const POLL_INTERVAL_MS = 3000; // old chat.js used a 3s poll delay
 const PING_INTERVAL_MS = 20000; // CF tears down an idle stream ~100s; ping at 20s
 const WALL_CLOCK_BUDGET_MS = 80000; // hard abort before the ~100s CF edge kill (spec §4.2)
 
-// Find the conversation row whose openai_thread_id matches the OpenAI thread the
-// frontend keys off. The frontend works in OpenAI thread ids this track, so every
-// inbound threadId is an openai_thread_id and we translate to the conversation row
-// only where Supabase needs the row id (delete / touch).
-function findConversation(rows, openaiThreadId) {
-  return rows.find((r) => r.openai_thread_id === openaiThreadId) ?? null;
+// Shape Supabase message rows into the frame the frontend consumes: newest-first, each
+// message's content flattened into the OpenAI-style { content:[{type:'text',text:{value}}] }
+// envelope Threads.jsx reads (message.content[0].text.value, currentMessages.data.data[0]).
+function buildMessagesFrame(rows) {
+  return {
+    data: rows
+      .slice()
+      .reverse()
+      .map((r) => ({
+        id: String(r.id),
+        role: r.role,
+        content: [{ type: 'text', text: { value: r.content } }],
+        metadata: r.metadata ?? {},
+        created_at: r.created_at,
+      })),
+  };
 }
 
 // GET /chat/threads — list conversations for a user.
@@ -47,7 +58,9 @@ chat.get('/threads', async (c) => {
   }
 });
 
-// POST /chat/threads — create a conversation (max 3), backed by a fresh OpenAI thread.
+// POST /chat/threads — create a conversation (max 3). The conversation row IS the unit;
+// no OpenAI thread is created (openai_thread_id stays null). The frontend keys off the
+// returned conversation UUID.
 chat.post('/threads', async (c) => {
   const body = await c.req.json().catch(() => ({}));
   const userId = body.userId;
@@ -66,30 +79,22 @@ chat.post('/threads', async (c) => {
       return c.json({ error: 'Maximum number of threads reached: max 3 threads per user' }, 400);
     }
 
-    // create the OpenAI thread first, then record it in the conversations registry
-    const oaThread = await openai(c.env).beta.threads.create();
-    await createThread(sb, userId, { openaiThreadId: oaThread.id });
-
-    // frontend keys off the OpenAI thread id this track
-    return c.json({ threadId: `${oaThread.id}` });
+    const conv = await createThread(sb, userId, {});
+    return c.json({ threadId: `${conv.id}` });
   } catch (err) {
     console.error('Failed to create thread:', err?.message);
     return c.json({ error: 'Failed to process request' }, 500);
   }
 });
 
-// DELETE /chat/threads — remove the conversation row AND the OpenAI thread.
+// DELETE /chat/threads — remove the conversation row (messages cascade via FK).
 chat.delete('/threads', async (c) => {
   const userId = c.req.query('userId');
-  const threadId = c.req.query('threadId'); // openai_thread_id
+  const threadId = c.req.query('threadId'); // conversation UUID
   if (!userId || !threadId) return c.json({ error: 'Missing userId or threadId' }, 400);
 
   try {
-    const sb = supa(c.env);
-    const rows = await getThreadsForUser(sb, userId);
-    const conv = findConversation(rows, threadId);
-    if (conv) await deleteThread(sb, userId, conv.id);
-    await openai(c.env).beta.threads.del(threadId);
+    await deleteThread(supa(c.env), userId, threadId);
     return c.json({ success: true, message: `Thread ${threadId} deleted successfully` });
   } catch (err) {
     console.error('Failed to delete thread:', err?.message);
@@ -97,23 +102,29 @@ chat.delete('/threads', async (c) => {
   }
 });
 
-// GET /chat/threads/messages — fetch + reverse + flatten the OpenAI messages for a thread.
+// GET /chat/threads/messages — read Supabase (source of truth), newest-first, flattened.
 chat.get('/threads/messages', async (c) => {
-  const threadId = c.req.query('threadId');
+  const threadId = c.req.query('threadId'); // conversation UUID
   const simple = c.req.query('simple');
   if (!threadId) return c.json({ error: 'Missing threadId' }, 400);
 
   try {
-    const rawMessages = await getMessages(openai(c.env), threadId);
-    let dataList = rawMessages.data;
-    // reverse so the latest message is at the bottom (matches old chat.js)
-    dataList.reverse();
+    const rows = await listMessages(supa(c.env), threadId);
+    // newest-first to match the old route (which reversed an oldest-last OpenAI list)
+    let dataList = rows
+      .slice()
+      .reverse()
+      .map((r) => ({
+        id: String(r.id),
+        role: r.role,
+        content: [{ type: 'text', text: { value: r.content } }],
+        metadata: r.metadata ?? {},
+        created_at: r.created_at, // already ISO from timestamptz
+      }));
 
-    const convertToISO = (timestamp) => new Date(timestamp * 1000).toISOString();
-
+    // non-simple path flattens content to a string (old route's data.content = content[0]...)
     dataList.forEach((data) => {
       data.content = data.content[0].text.value;
-      data.created_at = convertToISO(data.created_at);
     });
 
     if (simple) {
@@ -132,21 +143,37 @@ chat.get('/threads/messages', async (c) => {
   }
 });
 
+// GET /chat/threads/statistics — conversation_statistics RPC (no JS recompute).
+chat.get('/threads/statistics', async (c) => {
+  const threadId = c.req.query('threadId'); // conversation UUID
+  if (!threadId) return c.json({ error: 'Missing threadId' }, 400);
+
+  try {
+    const stats = await getStatistics(supa(c.env), threadId);
+    if (!stats) return c.json({ error: 'No messages found for this thread' }, 404);
+    return c.json(stats);
+  } catch (err) {
+    console.error('Failed to retrieve statistics:', err?.message);
+    return c.json({ error: 'Failed to retrieve statistics' }, 500);
+  }
+});
+
 // POST /chat/messages — THE streaming handler.
-// Streams the POST: emits `runStatus` frames on each status change, then a single
-// final `messages` frame on its own body. Keep-alive `:ping` every ~20s; hard ~80s
-// wall-clock abort emitting `{type:'error'}`. Never throws out of the stream.
+// Runs the Groq Chat Completions tool loop, persists user + assistant rows to Supabase,
+// and emits a single final `messages` frame. Keep-alive `:ping` every ~20s; hard ~80s
+// wall-clock abort (including the final turn) emitting `{type:'error'}`. Never throws out
+// of the stream; the completion tail is guarded so nothing is persisted/emitted after abort.
 chat.post('/messages', async (c) => {
   const body = await c.req.json().catch(() => ({}));
-  const { threadId, message } = body;
+  const { threadId, message } = body; // threadId = conversation UUID
 
   if (!threadId || !message) {
     return c.json({ error: 'Missing threadId or message' }, 400);
   }
 
-  const oa = openai(c.env);
+  const client = openai(c.env);
+  const model = chatModel(c.env);
   const sb = supa(c.env);
-  const assistantId = c.env.OPENAI_ASSISTANT_ID;
 
   return streamSSE(c, async (stream) => {
     // raw SSE comment frame so CF doesn't tear down the idle stream
@@ -154,73 +181,58 @@ chat.post('/messages', async (c) => {
       stream.write(': ping\n\n').catch(() => {});
     }, PING_INTERVAL_MS);
 
-    // helper: emit a frame whose JSON payload carries the frontend `type`, and mirror
-    // it on the SSE `event` field. Frontend reads the JSON payload's `type`.
+    // emit a frame whose JSON payload carries the frontend `type`, mirrored on the SSE
+    // `event` field. Frontend reads the JSON payload's `type`.
     const emit = (type, data) => stream.writeSSE({ event: type, data: JSON.stringify({ type, data }) });
 
-    const startedAt = Date.now();
-    const budgetExceeded = () => Date.now() - startedAt > WALL_CLOCK_BUDGET_MS;
+    const deadline = Date.now() + WALL_CLOCK_BUDGET_MS;
 
     try {
-      await addMessageToThread(oa, threadId, message);
-      let run = await runMessage(oa, threadId, assistantId);
-      await emit('runStatus', run);
+      await emit('runStatus', { status: 'in_progress' });
 
-      let previousStatus = run.status;
-      // metadata accumulated from the tool calls of this run, reattached to the
-      // latest assistant message on the final `messages` frame.
-      let metadata = {};
+      // history = prior rows (oldest→newest); the engine adds the new user turn in-memory.
+      const priorRows = await listMessages(sb, threadId);
+      const history = toHistory(priorRows);
 
-      // poll loop — no maxAttempts cap, but a hard wall-clock budget (spec §4.2)
-      while (run.status !== 'completed' && run.status !== 'failed') {
-        // HARD ~80s wall-clock abort: don't hang until the ~100s CF edge kill.
-        if (budgetExceeded()) {
-          await emit('error', { message: `Processing timed out for thread ${threadId}` });
-          return;
-        }
+      // persist the user message row
+      await insertUserMessage(sb, threadId, message);
 
-        await stream.sleep(POLL_INTERVAL_MS);
-        run = await checkRunStatus(oa, threadId, run.id);
+      // run the Chat Completions tool loop (budget covers the final turn)
+      const { finalText, responseId, toolMetadata } = await runChatCompletion(client, {
+        model,
+        systemPrompt: SYSTEM_PROMPT,
+        tools: TOOLS,
+        history,
+        userMessage: message,
+        sb,
+        deadline,
+      });
 
-        if (run.status !== previousStatus) {
-          await emit('runStatus', run);
-          previousStatus = run.status;
-        }
-
-        if (run.status === 'requires_action') {
-          const toolCalls = run.required_action.submit_tool_outputs.tool_calls;
-          const rawResults = await runToolCalls(sb, toolCalls);
-          const { modelOutputs, metadata: runMetadata } = splitToolResults(rawResults);
-          metadata = { ...metadata, ...runMetadata };
-          run = await submitToolOutputs(oa, threadId, run.id, modelOutputs);
-          previousStatus = run.status;
-        }
+      // guarded tail: only persist + emit if we did NOT blow the budget.
+      if (Date.now() > deadline) {
+        await emit('error', { message: `Processing timed out for thread ${threadId}` });
+        return;
       }
 
-      if (run.status === 'completed') {
-        // POST /messages only knows the OpenAI thread id (no conversation row id, no userId
-        // in its body), so bump last_active keyed on openai_thread_id.
-        await touchThreadByOpenaiId(sb, threadId);
-        const messages = await getMessages(oa, threadId);
+      await insertAssistantMessage(sb, threadId, {
+        content: finalText,
+        metadata: toolMetadata,
+        toolCallName: toolMetadata.tool_call_name ?? null,
+        responseId,
+      });
+      await touchThread(sb, threadId);
 
-        // Reattach the product metadata to the latest assistant message. Old chat.js
-        // wrote it back to OpenAI via modifyMessage; here it rides the `messages` frame's
-        // per-message `metadata` (frontend reads message.metadata). messages.data[0] is
-        // the newest message (unreversed list, newest first).
-        if (Object.keys(metadata).length > 0) {
-          const latest = messages.data[0];
-          if (latest) latest.metadata = { ...(latest.metadata || {}), ...metadata };
-        }
-
-        await emit('messages', messages);
-      } else {
-        // failed or otherwise incomplete
-        await emit('error', { message: `Processing incomplete for thread ${threadId}: Status ${run.status}` });
-      }
+      const freshRows = await listMessages(sb, threadId);
+      await emit('runStatus', { status: 'completed' });
+      await emit('messages', buildMessagesFrame(freshRows));
     } catch (err) {
-      console.error('Failed to process message:', err?.message);
-      // never throw out of the stream — emit a terminal error frame instead
-      await emit('error', { message: 'Failed to process message' });
+      if (err instanceof BudgetError) {
+        await emit('error', { message: `Processing timed out for thread ${threadId}` });
+      } else {
+        console.error('Failed to process message:', err?.message);
+        // never throw out of the stream — emit a terminal error frame instead
+        await emit('error', { message: 'Failed to process message' });
+      }
     } finally {
       clearInterval(ping);
     }

@@ -66,13 +66,15 @@ export function splitToolResults(rawResults) {
     if (name === 'filter_products' && Array.isArray(out)) {
       // The model-passed filter args ARE the filtering condition the old /products/filter route
       // echoed back. Threads.jsx (line 78) renders metadata.filtering_condition even on an empty
-      // result, so emit it independent of whether any product had an image, and always tag the
-      // tool_call_name — otherwise the no-result filter display vanishes.
-      metadata.tool_call_name = 'filter_products';
+      // result, so emit it independent of whether any product had an image.
       metadata.filtering_condition = JSON.stringify(r.args ?? {});
 
       const productImageList = out.map((p) => p.productImageList?.[0]).filter(Boolean);
       if (productImageList.length > 0) {
+        // tool_call_name is set ONLY when there are products — old chat.js (lines 434-443) left
+        // it unset on an empty filter, so Threads.jsx:48 must NOT auto-open the hybrid buffer for
+        // a no-result filter.
+        metadata.tool_call_name = 'filter_products';
         chunkImages(metadata, productImageList);
         // product names capped at 70 chars (matches old substring(0, 70)).
         metadata.product_name_list = JSON.stringify(out.map((p) => (p.productName || '').slice(0, 70)));

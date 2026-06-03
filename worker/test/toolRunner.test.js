@@ -35,8 +35,10 @@ describe('splitToolResults — filter_products', () => {
     const { metadata } = splitToolResults(filterResult([], args));
 
     // The no-result render in Threads.jsx keys off filtering_condition being present.
-    expect(metadata.tool_call_name).toBe('filter_products');
     expect(JSON.parse(metadata.filtering_condition)).toEqual(args);
+    // tool_call_name is intentionally NOT set on an empty filter (parity with old chat.js:434-443),
+    // so Threads.jsx:48 does not auto-open the hybrid buffer on a no-result filter.
+    expect(metadata.tool_call_name).toBeUndefined();
     // no products → no product lists / images
     expect(metadata.product_id_list).toBeUndefined();
     expect(metadata.img_list_1).toBeUndefined();

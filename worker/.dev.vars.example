@@ -1,4 +1,8 @@
+# Chat runs on an OpenAI-compatible Chat Completions endpoint (Groq free tier by default).
+GROQ_API_KEY=
 OPENAI_API_KEY=
-OPENAI_ASSISTANT_ID=
+# Optional overrides (defaults: Groq base URL + llama-3.3-70b-versatile)
+OPENAI_BASE_URL=https://api.groq.com/openai/v1
+OPENAI_MODEL=llama-3.3-70b-versatile
 SUPABASE_URL=http://127.0.0.1:54321
 SUPABASE_SERVICE_ROLE_KEY=
