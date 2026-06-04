@@ -45,12 +45,23 @@ function buildMessagesFrame(rows) {
 }
 
 // GET /chat/threads — list conversations for a user.
+// Shape raw `conversations` rows into the { threadId, updatedAt } envelope the frontend
+// reads (session: threads[].threadId + sort/display by threads[].updatedAt). The old
+// Mongo ThreadModel exposed `threadId` + timestamps `updatedAt`; Supabase rows carry
+// `id` + `last_active`, so map them here (same row-shaping pattern as buildMessagesFrame).
+function buildThreadsFrame(rows) {
+  return rows.map((r) => ({
+    threadId: String(r.id),
+    updatedAt: r.last_active ?? r.created_at,
+  }));
+}
+
 chat.get('/threads', async (c) => {
   const userId = c.req.query('userId');
   if (!userId) return c.json({ error: 'User ID is required' }, 400);
 
   try {
-    const threads = await getThreadsForUser(supa(c.env), userId);
+    const threads = buildThreadsFrame(await getThreadsForUser(supa(c.env), userId));
     return c.json({ threads });
   } catch (err) {
     console.error('Failed to retrieve chat threads:', err?.message);

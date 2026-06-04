@@ -76,6 +76,36 @@ describe('chat routes (shape only — no OpenAI)', () => {
     expect(res.status).toBe(400);
   });
 
+  // Regression: GET /chat/threads must return the frontend contract { threadId, updatedAt },
+  // NOT raw Supabase rows ({ id, last_active }). The old Mongo ThreadModel exposed
+  // threadId + updatedAt; session.svelte.js sorts/displays by exactly those keys, so raw
+  // rows rendered "Invalid Date" and left currentThreadID undefined. (Found by QA 2026-06-04.)
+  it('GET /chat/threads returns { threadId, updatedAt } shape', async () => {
+    const userId = `qa-threads-shape-${Date.now()}`;
+    const created = await app.request('/chat/threads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId }),
+    }, ENV);
+    expect(created.status).toBe(200);
+
+    const res = await app.request(`/chat/threads?userId=${userId}`, {}, ENV);
+    expect(res.status).toBe(200);
+    const { threads } = await res.json();
+    expect(Array.isArray(threads)).toBe(true);
+    expect(threads.length).toBeGreaterThan(0);
+    const t = threads[0];
+    expect(typeof t.threadId).toBe('string');
+    expect(t.updatedAt).toBeTruthy();
+    expect(Number.isNaN(new Date(t.updatedAt).getTime())).toBe(false);
+    // must not leak the raw row keys the frontend doesn't read
+    expect(t.id).toBeUndefined();
+    expect(t.last_active).toBeUndefined();
+
+    // cleanup
+    await app.request(`/chat/threads?userId=${userId}&threadId=${t.threadId}`, { method: 'DELETE' }, ENV);
+  });
+
   it('POST /chat/messages without threadId/message is 400 (no stream opened)', async () => {
     const res = await app.request('/chat/messages', {
       method: 'POST',
