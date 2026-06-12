@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-02
 **Branch:** `feat/backend`
-**Status:** IMPLEMENTED — all 4 tracks committed on `feat/backend` (A 5e321d5, B a1ba713, C 32e4448, D 5099347) as of 2026-06-03. Remaining: live side-by-side QA + deploy. **Deviation:** Track C uses the OpenAI-compatible **Chat Completions API on Groq** (free), NOT the OpenAI Responses API — Assistants/Responses are OpenAI-proprietary and the OpenAI account was quota-dead. Thread export (§6.1a) was skipped (fresh start; Atlas decommissioned).
+**Status:** IMPLEMENTED + QA PASSED — all 4 tracks committed on `feat/backend` (A 5e321d5, B a1ba713, C 32e4448, D 5099347) as of 2026-06-03. Live §4.4 side-by-side QA done 2026-06-04: all 3 routes + product detail pass, both flagged risks (D2 toast, R3 driver.js tour) cleared, timer/times-up + Groq chat stream + history delete verified. One real bug found+fixed: `GET /chat/threads` returned raw Supabase rows instead of the frontend `{threadId, updatedAt}` contract → "Invalid Date" in history (fix + regression test in 2624658, worker 24/24 green). **Remaining: delete `frontend/src.react/` (QA reference), deploy (§9), AWS cleanup (§9).** **Deviation:** Track C uses the OpenAI-compatible **Chat Completions API on Groq** (free), NOT the OpenAI Responses API — Assistants/Responses are OpenAI-proprietary and the OpenAI account was quota-dead. Thread export (§6.1a) was skipped (fresh start; Atlas decommissioned).
 
 > Designed autonomously per the user's instruction ("you decide, I check the result").
 > Validated by a 5-agent design workflow (4 subsystem designers + 1 adversarial staff-engineer review).
