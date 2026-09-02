@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  backend:
+    image: leeminchen/shopulse-backend
+    restart: always
+    networks:
+      - shopulse
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - "3000:3000"
+
+networks:
+  shopulse:
+    driver: bridge

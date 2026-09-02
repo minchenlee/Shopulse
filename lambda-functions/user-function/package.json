@@ -1,0 +1,22 @@
+{
+  "name": "shopulse-user-function",
+  "version": "1.0.0",
+  "description": "AWS Lambda function for Shopulse user API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "mongoose": "^8.1.3",
+    "short-unique-id": "^5.0.3"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "serverless",
+    "user",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT"
+}
