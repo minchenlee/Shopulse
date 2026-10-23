@@ -1,6 +1,6 @@
 # Stage 1: Build
 # Use a specific version of the Node.js Alpine image for a smaller final image
-FROM node:18-alpine as builder
+FROM node:22-alpine as builder
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -16,7 +16,7 @@ RUN npm install && npm cache clean --force
 COPY . .
 
 # Stage 2: Runtime
-FROM node:18-alpine
+FROM node:22-alpine
 
 # Create app directory and set as working directory
 WORKDIR /app
